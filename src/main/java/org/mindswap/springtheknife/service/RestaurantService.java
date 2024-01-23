@@ -1,23 +1,13 @@
 package org.mindswap.springtheknife.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.mindswap.springtheknife.dto.RestaurantGetDto;
+import org.mindswap.springtheknife.model.Restaurant;
 
-@Service
-public class RestaurantService {
+import java.util.List;
 
-    RestaurantService restaurantService;
+public interface RestaurantService {
 
-    @Autowired
-    public RestaurantService(RestaurantService restaurantService) {
-        this.restaurantService = restaurantService;
-    }
+    List<RestaurantGetDto> getRestaurants();
 
-    @GetMapping("/")
-    public ResponseEntity<List<RestaurantGetDto>> getRestaurants() {
-        return new ResponseEntity<>(restaurantService.getRestaurants(), HttpStatus.OK);
-    }
+    RestaurantGetDto getById(Long id);
 }
