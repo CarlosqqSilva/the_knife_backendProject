@@ -2,11 +2,13 @@ package org.mindswap.springtheknife.service;
 
 import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.dto.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.RestaurantPatchDto;
 import org.mindswap.springtheknife.dto.RestaurantPostDto;
 import org.mindswap.springtheknife.exceptions.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +51,20 @@ public class RestaurantServiceImpl implements RestaurantService{
     public void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException {
         restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found."));
         restaurantRepository.deleteById(restaurantId);
+    }
+
+    @Override
+    public RestaurantGetDto patchRestaurant(Long id, RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
+        Restaurant dbRestaurant = restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + id + " not found."));
+        if (restaurantRepository.findByEmail(restaurant.email()).isPresent()) {
+            throw new IllegalStateException("email taken");
+        }
+        if (restaurant.address() != null) {
+            dbRestaurant.setAddress(restaurant.address());
+        }
+        if (restaurant.email() != null) {
+            dbRestaurant.setEmail(restaurant.email());
+        }
+        return RestaurantConverter.fromModeltoRestaurantDto(restaurantRepository.save(dbRestaurant));
     }
 }
