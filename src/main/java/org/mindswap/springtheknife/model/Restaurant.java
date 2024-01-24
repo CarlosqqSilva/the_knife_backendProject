@@ -23,13 +23,14 @@ public class Restaurant {
     private String name;
     @NotBlank(message = "Restaurant must have a address.")
     private String address;
+    @NotBlank()
+    @Column(unique = true)
+    private String email;
     @NotBlank(message = "Restaurant must have a phone number.")
+    @Column(unique = true)
     private String phoneNumber;
-    @NotEmpty
     private Double latitude;
-    @NotEmpty
     private Double longitude;
-    @NotEmpty
     private Double rating;
     /*@ManyToOne
     @JoinColumn(name = "city_id")

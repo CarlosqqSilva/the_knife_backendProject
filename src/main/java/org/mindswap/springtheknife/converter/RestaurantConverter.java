@@ -1,6 +1,7 @@
 package org.mindswap.springtheknife.converter;
 
 import org.mindswap.springtheknife.dto.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.RestaurantPostDto;
 import org.mindswap.springtheknife.model.Restaurant;
 
 public class RestaurantConverter {
@@ -15,12 +16,14 @@ public class RestaurantConverter {
         );
     }
 
-    public static Restaurant fromRestaurantDtoToModel(RestaurantGetDto restaurantDto) {
+    public static Restaurant fromRestaurantDtoToModel(RestaurantPostDto restaurantDto) {
         return Restaurant.builder()
-              .name(restaurantDto.name())
-              .address(restaurantDto.address())
-              .phoneNumber(restaurantDto.phoneNumber())
-              .rating(restaurantDto.rating())
-              .build();
+                .name(restaurantDto.name())
+                .address(restaurantDto.address())
+                .email(restaurantDto.email())
+                .phoneNumber(restaurantDto.phoneNumber())
+                .latitude(restaurantDto.latitude())
+                .longitude(restaurantDto.longitude())
+                .build();
     }
 }
