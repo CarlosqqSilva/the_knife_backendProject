@@ -3,10 +3,7 @@ package org.mindswap.springtheknife.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "restaurants")
@@ -21,9 +18,9 @@ public class Restaurant {
     private Long id;
     @NotBlank(message = "Restaurant must have a name.")
     private String name;
-    @NotBlank(message = "Restaurant must have a address.")
+    @Setter
     private String address;
-    @NotBlank()
+    @Setter
     @Column(unique = true)
     private String email;
     @NotBlank(message = "Restaurant must have a phone number.")

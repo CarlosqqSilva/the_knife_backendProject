@@ -10,6 +10,7 @@ public class RestaurantConverter {
     public static RestaurantGetDto fromModeltoRestaurantDto(Restaurant restaurant) {
         return new RestaurantGetDto(
                 restaurant.getName(),
+                restaurant.getEmail(),
                 restaurant.getAddress(),
                 restaurant.getPhoneNumber(),
                 restaurant.getRating()
