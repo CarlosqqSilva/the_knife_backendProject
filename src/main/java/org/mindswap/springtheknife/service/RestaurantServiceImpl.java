@@ -8,7 +8,6 @@ import org.mindswap.springtheknife.exceptions.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
