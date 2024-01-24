@@ -25,7 +25,7 @@ public class User {
     private List<UserExperience> userExperiences = new ArrayList<>();*/
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Restaurant> favouriteRestaurants = new ArrayList<>();;
+    private List<Restaurant> favouriteRestaurants = new ArrayList<>();
 
     @Setter
     @Column(unique = true)
