@@ -32,15 +32,12 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private Double rating;
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Booking> bookingList;
     @OneToMany
     @JoinColumn(name = "restaurant")
-    private List<UserExperience> userExperienceList;*/
-
-    /*@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Menu> menus;*/
+    private List<UserExperience> userExperienceList;
 }
