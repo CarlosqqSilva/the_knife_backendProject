@@ -18,16 +18,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-  /*  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+   /* @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Booking> bookings = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserExperience> userExperiences = new ArrayList<>();*/
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Restaurant> favouriteRestaurants = new ArrayList<>();
+
     @Setter
     @Column(unique = true)
     private String userName;
-
 
     private String password;
 
@@ -35,14 +37,13 @@ public class User {
     @Column(unique = true)
     private String email;
 
-
     private String firstName;
-
 
     private String lastName;
 
-
     private LocalDate dateOfBirth;
+
+
 
     public User() {
     }
