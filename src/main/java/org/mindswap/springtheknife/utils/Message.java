@@ -10,14 +10,19 @@ public class Message {
     public static final String LASTNAME_MANDATORY = "Insert LastName";
     public static final String DATE_OF_BIRTH_MANDATORY = "Insert Date of Birth";
     public static final String VALID_EMAIL = "Insert a valid Email";
-       public static final String VALID_LASTNAME = "Insert a valid LastName";
+    public static final String VALID_LASTNAME = "Insert a valid LastName";
     public static final String VALID_DATE_OF_BIRTH = "Insert a valid Date of Birth";
     public static final String EMAIL_MANDATORY = "Insert an Email";
     public static final String VALID_USERNAME = "Insert a valid UserName";
     public static final String VALID_PASSWORD = "Insert a valid Password";
     public static final String EMAIL_TAKEN = "Email already taken";
     public static final String USER_EXPERIENCE_ID_NOT_FOUND = "Invalid UserName";
-
-
     public static final Object USER_EXPERIENCE_ID_ALREADY_EXISTS = "User Experience ID already exists.";
+    public static final String BOOKING_ID = "Booking with Id";
+    public static final String DELETE_SUCCESSFULLY = "deleted successfully";
+    public static final String BOOKING_MANDATORY = "Insert Booking";
+    public static final String STATUS_MANDATORY = "Insert Status";
+    public static final String NOT_FOUND = "not found";
+    public static final String ALREADY_EXISTS = "Already exists";
+    public static final String VALID_STATUS = "Valid status";
 }
