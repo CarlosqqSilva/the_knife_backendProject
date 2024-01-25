@@ -14,7 +14,7 @@ public interface UserServiceInterface {
 
     List<UserGetDto> getAllUsers();
 
-    UserGetDto getUser(Long id) throws UserNotFoundException;
+    UserGetDto getUserById(Long id) throws UserNotFoundException;
 
 
     UserCreateDto createUser(UserCreateDto user) throws UserNotFoundException, UserAlreadyExists, UserEmailTaken;
@@ -22,4 +22,8 @@ public interface UserServiceInterface {
     UserPatchDto updateUser(Long id, UserPatchDto user) throws UserNotFoundException;
 
     void deleteUser(Long id) throws UserNotFoundException;
+
+
 }
+
+

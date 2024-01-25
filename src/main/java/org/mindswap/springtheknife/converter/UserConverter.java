@@ -2,9 +2,12 @@ package org.mindswap.springtheknife.converter;
 
 
 import org.mindswap.springtheknife.dto.UserCreateDto;
+import org.mindswap.springtheknife.dto.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.UserGetDto;
 import org.mindswap.springtheknife.dto.UserPatchDto;
 import org.mindswap.springtheknife.model.User;
+import org.mindswap.springtheknife.model.UserExperience;
+import org.mindswap.springtheknife.service.RestaurantService;
 
 public class UserConverter {
 
@@ -22,6 +25,8 @@ public class UserConverter {
 
     public static UserGetDto fromEntityToGetDto(User user) {
         return new UserGetDto(
+                user.getId(),
+
                 user.getUserName()
 
         );
@@ -47,4 +52,12 @@ public class UserConverter {
         );
     }
 
-}
+
+    public static User fromGetDtoToEntity(UserGetDto user) {
+        return  User.builder()
+                .id(user.userId())
+                .userName(user.userName())
+                .build();
+    }
+    }
+

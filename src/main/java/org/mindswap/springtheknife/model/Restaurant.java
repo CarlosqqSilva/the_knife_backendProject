@@ -1,9 +1,14 @@
 package org.mindswap.springtheknife.model;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "restaurants")
@@ -29,12 +34,15 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private Double rating;
-    @ManyToOne
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant",orphanRemoval = true)
+    private List<UserExperience> userExperienceList = new ArrayList<>();
+   /* @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<Booking> bookingList;
-    @OneToMany
-    @JoinColumn(name = "restaurant")
-    private List<UserExperience> userExperienceList;
+    private List<Booking> bookingList;*/
+
+  /* @OneToMany(mappedBy ="restaurant", cascade= CascadeType.ALL)
+   private List<UserExperience> userExperienceList = new ArrayList<>();*/
 }

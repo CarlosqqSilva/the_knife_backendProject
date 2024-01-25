@@ -54,8 +54,9 @@ public class UserController {
     })
     @GetMapping("/{userId}")
     public ResponseEntity<UserGetDto> getUser(@PathVariable("userId") Long userId) throws UserNotFoundException {
-        userService.getUser(userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+       UserGetDto user = userService.getUserById(userId);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @Operation(summary = "Create a new user", description = "This method creates a new user")
@@ -69,7 +70,7 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user)
             throws UserAlreadyExists, UserEmailTaken {
-        userService.createUser(user);
+       userService.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -81,6 +82,7 @@ public class UserController {
     public ResponseEntity<UserPatchDto> patchUser(@Valid @PathVariable("userId") Long id,
                                                   @Valid @RequestBody UserPatchDto user) throws UserNotFoundException {
         userService.updateUser(id, user);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
