@@ -1,6 +1,6 @@
 package org.mindswap.springtheknife.converter;
-import org.mindswap.springtheknife.dto.BookingCreateDto;
-import org.mindswap.springtheknife.dto.BookingGetDto;
+import org.mindswap.springtheknife.dto.booking.BookingCreateDto;
+import org.mindswap.springtheknife.dto.booking.BookingGetDto;
 import org.mindswap.springtheknife.model.Booking;
 
 public class BookingConverter {

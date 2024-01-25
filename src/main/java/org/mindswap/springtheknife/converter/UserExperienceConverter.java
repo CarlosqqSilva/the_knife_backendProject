@@ -1,8 +1,8 @@
 package org.mindswap.springtheknife.converter;
 
 
-import org.mindswap.springtheknife.dto.UserExperienceCreateDto;
-import org.mindswap.springtheknife.dto.UserExperienceGetDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.model.UserExperience;

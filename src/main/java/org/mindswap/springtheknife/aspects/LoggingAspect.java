@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-    @Before("execution( * org.mindswap.springtheknife.service.UserService.createUser*.*(..))")
+    @Before("execution( * org.mindswap.springtheknife.service.user.UserService.createUser*.*(..))")
     public void logBeforeServiceToCreate(JoinPoint joinPoint) {
         logger.info("Before " + joinPoint.getSignature().getName() + " method call");
     }
@@ -29,7 +29,7 @@ public class LoggingAspect {
         logger.error("Response: " + exception);
     }
 
-    @Around("execution(* org.mindswap.springtheknife.service.UserService.getUser(..))")
+    @Around("execution(* org.mindswap.springtheknife.service.user.UserService.getUser(..))")
         public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
             long startTime = System.currentTimeMillis();
             logger.info("Before " + joinPoint.getSignature().getName() + " method call");

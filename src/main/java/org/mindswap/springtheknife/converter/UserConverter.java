@@ -1,13 +1,10 @@
 package org.mindswap.springtheknife.converter;
 
 
-import org.mindswap.springtheknife.dto.UserCreateDto;
-import org.mindswap.springtheknife.dto.UserExperienceCreateDto;
-import org.mindswap.springtheknife.dto.UserGetDto;
-import org.mindswap.springtheknife.dto.UserPatchDto;
+import org.mindswap.springtheknife.dto.user.UserCreateDto;
+import org.mindswap.springtheknife.dto.user.UserGetDto;
+import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.model.User;
-import org.mindswap.springtheknife.model.UserExperience;
-import org.mindswap.springtheknife.service.RestaurantService;
 
 public class UserConverter {
 

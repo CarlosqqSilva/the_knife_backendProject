@@ -37,12 +37,9 @@ public class Restaurant {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant",orphanRemoval = true)
     private List<UserExperience> userExperienceList = new ArrayList<>();
-   /* @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<Booking> bookingList;*/
-
-  /* @OneToMany(mappedBy ="restaurant", cascade= CascadeType.ALL)
-   private List<UserExperience> userExperienceList = new ArrayList<>();*/
+    private List<Booking> bookingList;
 }

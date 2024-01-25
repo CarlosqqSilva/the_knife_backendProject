@@ -6,14 +6,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.mindswap.springtheknife.dto.UserExperienceCreateDto;
-import org.mindswap.springtheknife.dto.UserExperienceGetDto;
-import org.mindswap.springtheknife.exceptions.RestaurantNotFoundException;
-import org.mindswap.springtheknife.exceptions.UserExperienceIdAlreadyExists;
-import org.mindswap.springtheknife.exceptions.UserExperienceNotFoundException;
-import org.mindswap.springtheknife.exceptions.UserNotFoundException;
+import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
+import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
+import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceIdAlreadyExists;
+import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
+import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.UserExperience;
-import org.mindswap.springtheknife.service.UserExperienceService;
+import org.mindswap.springtheknife.service.userexperience.UserExperienceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/userExperience")
+@RequestMapping("api/v1/userexperiences")
 public class UserExperienceController {
 
-    private final UserExperienceService userExperienceService;
+    private final UserExperienceServiceImpl userExperienceService;
 
     @Autowired
-    public UserExperienceController(UserExperienceService userExperienceService) {
+    public UserExperienceController(UserExperienceServiceImpl userExperienceService) {
         this.userExperienceService = userExperienceService;
     }
 

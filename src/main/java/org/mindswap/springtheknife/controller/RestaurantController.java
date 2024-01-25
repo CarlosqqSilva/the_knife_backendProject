@@ -1,12 +1,12 @@
 package org.mindswap.springtheknife.controller;
 
 import jakarta.validation.Valid;
-import org.mindswap.springtheknife.dto.RestaurantGetDto;
-import org.mindswap.springtheknife.dto.RestaurantPatchDto;
-import org.mindswap.springtheknife.dto.RestaurantPostDto;
-import org.mindswap.springtheknife.exceptions.RestaurantAlreadyExistsException;
-import org.mindswap.springtheknife.exceptions.RestaurantNotFoundException;
-import org.mindswap.springtheknife.service.RestaurantService;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
+import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
+import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
+import org.mindswap.springtheknife.service.restaurant.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

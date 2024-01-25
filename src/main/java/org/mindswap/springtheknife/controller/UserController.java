@@ -6,14 +6,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.mindswap.springtheknife.dto.UserCreateDto;
-import org.mindswap.springtheknife.dto.UserGetDto;
-import org.mindswap.springtheknife.dto.UserPatchDto;
-import org.mindswap.springtheknife.exceptions.UserAlreadyExists;
-import org.mindswap.springtheknife.exceptions.UserEmailTaken;
-import org.mindswap.springtheknife.exceptions.UserNotFoundException;
+import org.mindswap.springtheknife.dto.user.UserCreateDto;
+import org.mindswap.springtheknife.dto.user.UserGetDto;
+import org.mindswap.springtheknife.dto.user.UserPatchDto;
+import org.mindswap.springtheknife.exceptions.user.UserAlreadyExists;
+import org.mindswap.springtheknife.exceptions.user.UserEmailTaken;
+import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.User;
-import org.mindswap.springtheknife.service.UserService;
+import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +26,10 @@ import java.util.List;
 public class UserController {
 
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 

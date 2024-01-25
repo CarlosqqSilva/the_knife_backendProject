@@ -1,7 +1,7 @@
 package org.mindswap.springtheknife.aspects;
 
-import org.mindswap.springtheknife.exceptions.UserAlreadyExists;
-import org.mindswap.springtheknife.exceptions.UserNotFoundException;
+import org.mindswap.springtheknife.exceptions.user.UserAlreadyExists;
+import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

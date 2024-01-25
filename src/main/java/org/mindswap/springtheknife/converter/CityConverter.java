@@ -1,6 +1,6 @@
 package org.mindswap.springtheknife.converter;
 
-import org.mindswap.springtheknife.dto.CityDto;
+import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.model.City;
 
 public class CityConverter {

@@ -1,7 +1,7 @@
 package org.mindswap.springtheknife.converter;
 
-import org.mindswap.springtheknife.dto.RestaurantGetDto;
-import org.mindswap.springtheknife.dto.RestaurantPostDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
 import org.mindswap.springtheknife.model.Restaurant;
 
 public class RestaurantConverter {

@@ -3,7 +3,7 @@ package org.mindswap.springtheknife.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.mindswap.springtheknife.utilities.Messages;
+import org.mindswap.springtheknife.utils.Message;
 
 @Entity
 @Table
@@ -18,7 +18,7 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cityId;
 
-    @NotNull(message = Messages.NAME_ERROR)
+    @NotNull(message = Message.NAME_ERROR)
     @Column(unique = true)
     private String name;
 
