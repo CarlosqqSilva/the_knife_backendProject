@@ -36,7 +36,7 @@ public class UserService implements UserServiceInterface {
    }
 
     @Override
-    public UserGetDto getUser(Long id) throws UserNotFoundException {
+    public UserGetDto getUserById(Long id) throws UserNotFoundException {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST);
@@ -45,7 +45,6 @@ public class UserService implements UserServiceInterface {
        return UserConverter.fromEntityToGetDto(user);
 
     }
-
 
 
     @Override
@@ -86,7 +85,6 @@ public class UserService implements UserServiceInterface {
         userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST));
         userRepository.deleteById(id);
     }
-
 
 }
 

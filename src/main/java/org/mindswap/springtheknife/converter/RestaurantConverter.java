@@ -27,4 +27,14 @@ public class RestaurantConverter {
                 .longitude(restaurantDto.longitude())
                 .build();
     }
+
+    public static Restaurant fromRestaurantDtoToModel(RestaurantGetDto byId) {
+        return Restaurant.builder()
+                .name(byId.name())
+                .address(byId.address())
+                .email(byId.email())
+                .phoneNumber(byId.phoneNumber())
+                .build();
+
+    }
 }

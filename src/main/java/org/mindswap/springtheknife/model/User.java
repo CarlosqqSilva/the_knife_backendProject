@@ -9,6 +9,8 @@ import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Entity
 @Table(name = "users")
@@ -19,13 +21,13 @@ public class User {
     private Long id;
 
    /* @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Booking> bookings = new ArrayList<>();
+    private List<Booking> bookings = new ArrayList<>();*/
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<UserExperience> userExperiences = new ArrayList<>();*/
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<UserExperience> userExperiences = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Restaurant> favouriteRestaurants = new ArrayList<>();
+  /*  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Restaurant> favouriteRestaurants = new ArrayList<>();*/
 
     @Setter
     @Column(unique = true)
@@ -44,17 +46,4 @@ public class User {
     private LocalDate dateOfBirth;
 
 
-
-    public User() {
-    }
-
-    public User(Long id, String userName, String password, String email, String firstName, String lastName, LocalDate dateOfBirth) {
-        this.id = id;
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-    }
 }

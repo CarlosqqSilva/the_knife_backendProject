@@ -16,4 +16,8 @@ public class Message {
     public static final String VALID_USERNAME = "Insert a valid UserName";
     public static final String VALID_PASSWORD = "Insert a valid Password";
     public static final String EMAIL_TAKEN = "Email already taken";
+    public static final String USER_EXPERIENCE_ID_NOT_FOUND = "Invalid UserName";
+
+
+    public static final Object USER_EXPERIENCE_ID_ALREADY_EXISTS = "User Experience ID already exists.";
 }
