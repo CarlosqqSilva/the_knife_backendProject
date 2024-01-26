@@ -60,7 +60,6 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         return UserExperienceConverter.fromEntityToGetDto(userExperience);
     }
 
-
     @Override
     public UserExperienceGetDto addNewUserExperience(UserExperienceCreateDto userExperience) throws UserNotFoundException, RestaurantNotFoundException {
         User newUser = UserConverter.fromGetDtoToEntity(userService.getUserById(userExperience.userId()));
@@ -69,13 +68,14 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         UserExperience userExperienceSaved = userExperienceRepository.saveAndFlush(userExperienceEntity);
         return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);
     }
-@Override
+  
+    @Override
     public UserExperiencePatchDto updateUserExperience(Long id, UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException {
      Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
      if(!userExperienceOptional.isPresent()) {
          throw new UserExperienceNotFoundException(id + Message.USER_EXPERIENCE_ID_NOT_FOUND);
      }
-      UserExperience userExperienceToUpdate = userExperienceOptional.get();
+     UserExperience userExperienceToUpdate = userExperienceOptional.get();
      if(userExperience.rating() >0 && userExperience.rating() !=(userExperienceToUpdate.getRating())) {
          userExperienceToUpdate.setRating(userExperience.rating());
      }
@@ -83,7 +83,11 @@ public class UserExperienceServiceImpl implements UserExperienceService {
          userExperienceToUpdate.setComment(userExperience.comment());
      }
      return UserExperienceConverter.fromEntityToPatchDto(userExperienceRepository.save(userExperienceToUpdate));
+    }
 
+    public void deleteUserExperience(Long userExperienceId) throws UserExperienceNotFoundException {
+        userExperienceRepository.findById(userExperienceId).orElseThrow(() -> new UserExperienceNotFoundException(userExperienceId + Message.USER_EXPERIENCE_ID_NOT_FOUND));
+        userExperienceRepository.deleteById(userExperienceId);
     }
 
 }

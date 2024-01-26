@@ -30,4 +30,5 @@ public class Message {
     public static final String DUPLICATE_NAME ="City with name";
     public static final String EXIST = "already exists";
     public static final String NAME_ERROR = "Must have name";
+    public static final String USER_EXPERIENCE_ID_DELETED = " - User Experience ID deleted successfully";
 }
