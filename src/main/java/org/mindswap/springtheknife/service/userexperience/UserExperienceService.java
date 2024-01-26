@@ -19,5 +19,7 @@ public interface UserExperienceService {
 
 
     UserExperiencePatchDto updateUserExperience(Long id, UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException;
+
+    void deleteUserExperience(Long userExperienceId) throws UserExperienceNotFoundException;
 }
 

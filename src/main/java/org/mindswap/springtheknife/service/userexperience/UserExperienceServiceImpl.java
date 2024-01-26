@@ -85,6 +85,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
      return UserExperienceConverter.fromEntityToPatchDto(userExperienceRepository.save(userExperienceToUpdate));
     }
 
+    @Override
     public void deleteUserExperience(Long userExperienceId) throws UserExperienceNotFoundException {
         userExperienceRepository.findById(userExperienceId).orElseThrow(() -> new UserExperienceNotFoundException(userExperienceId + Message.USER_EXPERIENCE_ID_NOT_FOUND));
         userExperienceRepository.deleteById(userExperienceId);

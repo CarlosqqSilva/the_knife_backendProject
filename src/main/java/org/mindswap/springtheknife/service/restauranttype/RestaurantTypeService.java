@@ -1,4 +1,4 @@
-package org.mindswap.springtheknife.service.restaurantType;
+package org.mindswap.springtheknife.service.restauranttype;
 
 import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeAlreadyExistsException;

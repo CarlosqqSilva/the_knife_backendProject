@@ -1,4 +1,4 @@
-package org.mindswap.springtheknife.service.restaurantType;
+package org.mindswap.springtheknife.service.restauranttype;
 
 import org.mindswap.springtheknife.converter.RestaurantTypeConverter;
 import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;

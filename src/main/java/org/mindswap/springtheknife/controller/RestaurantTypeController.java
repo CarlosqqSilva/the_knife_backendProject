@@ -10,7 +10,7 @@ import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeNotFoundException;
 import org.mindswap.springtheknife.model.RestaurantType;
-import org.mindswap.springtheknife.service.restaurantType.RestaurantTypeService;
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeService;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
