@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -37,9 +39,11 @@ public class Restaurant {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant",orphanRemoval = true)
     private List<UserExperience> userExperienceList = new ArrayList<>();
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "city_id")
     private City city;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Booking> bookingList;
+    @ManyToMany
+    private Set<RestaurantType> restaurantTypes = new HashSet<>();
 }
