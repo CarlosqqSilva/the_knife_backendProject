@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceIdAlreadyExists;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
@@ -49,15 +50,23 @@ public class UserExperienceController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserExperience.class))}),})
     @GetMapping("/{userExperienceId}")
-    public ResponseEntity<UserExperienceGetDto> getUserExperienceById(@PathVariable Long id) throws UserExperienceNotFoundException {
-        userExperienceService.getUserExperienceById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<UserExperienceGetDto> getUserExperienceById(@PathVariable("userExperienceId") Long id) throws UserExperienceNotFoundException {
+        UserExperienceGetDto userExperience = userExperienceService.getUserExperienceById(id);
+        return new ResponseEntity<>(userExperience, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserExperienceGetDto> addUserExperience(@Valid @RequestBody UserExperienceCreateDto userExperienceCreateDto) throws UserExperienceIdAlreadyExists, UserNotFoundException, RestaurantNotFoundException {
+    public ResponseEntity<UserExperienceGetDto> addUserExperience(@Valid @RequestBody UserExperienceCreateDto userExperienceCreateDto) throws UserNotFoundException, RestaurantNotFoundException {
         return new ResponseEntity<>(userExperienceService.addNewUserExperience(userExperienceCreateDto),
                 HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/{userExperienceId}")
+    public ResponseEntity<UserExperiencePatchDto> updateUserExperience
+            (@PathVariable("userExperienceId") Long userExperienceId,
+             @Valid @RequestBody UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException {
+        userExperienceService.updateUserExperience(userExperienceId, userExperience);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

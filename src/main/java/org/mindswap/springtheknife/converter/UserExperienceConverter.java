@@ -3,6 +3,7 @@ package org.mindswap.springtheknife.converter;
 
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.model.UserExperience;
@@ -45,5 +46,14 @@ public class UserExperienceConverter {
     }
 
 
+    public static UserExperiencePatchDto fromEntityToPatchDto(UserExperience userExperience) {
+    return new UserExperiencePatchDto(
+            userExperience.getRating(),
+            userExperience.getComment()
+
+    );
+
+
+    }
 }
 
