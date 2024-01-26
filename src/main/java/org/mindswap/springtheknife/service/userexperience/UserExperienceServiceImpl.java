@@ -6,6 +6,7 @@ import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.converter.UserExperienceConverter;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
@@ -38,7 +39,6 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         this.userService = userService;
         this.restaurantService = restaurantService;
 
-
     }
 
 
@@ -60,7 +60,6 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         return UserExperienceConverter.fromEntityToGetDto(userExperience);
     }
 
-
     @Override
     public UserExperienceGetDto addNewUserExperience(UserExperienceCreateDto userExperience) throws UserNotFoundException, RestaurantNotFoundException {
         User newUser = UserConverter.fromGetDtoToEntity(userService.getUserById(userExperience.userId()));
@@ -68,12 +67,28 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         UserExperience userExperienceEntity = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperience, newUser, newRestaurant);
         UserExperience userExperienceSaved = userExperienceRepository.saveAndFlush(userExperienceEntity);
         return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);
-
+    }
+  
+    @Override
+    public UserExperiencePatchDto updateUserExperience(Long id, UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException {
+     Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
+     if(!userExperienceOptional.isPresent()) {
+         throw new UserExperienceNotFoundException(id + Message.USER_EXPERIENCE_ID_NOT_FOUND);
+     }
+     UserExperience userExperienceToUpdate = userExperienceOptional.get();
+     if(userExperience.rating() >0 && userExperience.rating() !=(userExperienceToUpdate.getRating())) {
+         userExperienceToUpdate.setRating(userExperience.rating());
+     }
+     if(userExperience.comment() != null && !userExperience.comment().equals(userExperienceToUpdate.getComment())) {
+         userExperienceToUpdate.setComment(userExperience.comment());
+     }
+     return UserExperienceConverter.fromEntityToPatchDto(userExperienceRepository.save(userExperienceToUpdate));
     }
 
     public void deleteUserExperience(Long userExperienceId) throws UserExperienceNotFoundException {
         userExperienceRepository.findById(userExperienceId).orElseThrow(() -> new UserExperienceNotFoundException(userExperienceId + Message.USER_EXPERIENCE_ID_NOT_FOUND));
         userExperienceRepository.deleteById(userExperienceId);
     }
+
 }
 
