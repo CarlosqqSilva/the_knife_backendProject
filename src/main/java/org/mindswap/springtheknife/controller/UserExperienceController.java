@@ -14,6 +14,7 @@ import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFo
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.UserExperience;
 import org.mindswap.springtheknife.service.userexperience.UserExperienceServiceImpl;
+import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,13 @@ public class UserExperienceController {
     public ResponseEntity<UserExperienceGetDto> addUserExperience(@Valid @RequestBody UserExperienceCreateDto userExperienceCreateDto) throws UserExperienceIdAlreadyExists, UserNotFoundException, RestaurantNotFoundException {
         return new ResponseEntity<>(userExperienceService.addNewUserExperience(userExperienceCreateDto),
                 HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{userExperienceId}")
+    public ResponseEntity<String> deleteUserExperience(@PathVariable("userExperienceId") Long userExperienceId)
+            throws UserExperienceNotFoundException {
+        userExperienceService.deleteUserExperience(userExperienceId);
+        return new ResponseEntity<>(userExperienceId + Message.USER_EXPERIENCE_ID_DELETED,HttpStatus.OK);
     }
 
 }

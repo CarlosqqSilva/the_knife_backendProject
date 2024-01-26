@@ -69,7 +69,11 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         UserExperience userExperienceSaved = userExperienceRepository.saveAndFlush(userExperienceEntity);
         return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);
 
+    }
 
+    public void deleteUserExperience(Long userExperienceId) throws UserExperienceNotFoundException {
+        userExperienceRepository.findById(userExperienceId).orElseThrow(() -> new UserExperienceNotFoundException(userExperienceId + Message.USER_EXPERIENCE_ID_NOT_FOUND));
+        userExperienceRepository.deleteById(userExperienceId);
     }
 }
 
