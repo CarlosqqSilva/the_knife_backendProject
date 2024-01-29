@@ -56,5 +56,10 @@ public class UserConverter {
                 .userName(user.userName())
                 .build();
     }
+
+    public static UserGetDto fromCreateDtoToGetDto(UserCreateDto userCreateDto){
+        User tempUser = fromCreateDtoToEntity(userCreateDto);
+        return fromEntityToGetDto(tempUser);
+    }
     }
 

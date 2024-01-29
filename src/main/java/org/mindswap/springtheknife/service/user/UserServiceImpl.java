@@ -36,19 +36,24 @@ public class UserServiceImpl implements UserService {
    }
 
     @Override
-    public UserGetDto getUserById(Long id) throws UserNotFoundException {
+    public UserGetDto getUser(Long id) throws UserNotFoundException {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST);
         }
-       User user = userOptional.get();
-       return UserConverter.fromEntityToGetDto(user);
+       return UserConverter.fromEntityToGetDto(userOptional.get());
 
     }
 
-
+    public User getUserById(Long userId) throws UserNotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException(Message.USER_ID_DOES_NOT_EXIST + userId + Message.NOT_EXIST);
+        }
+        return userOptional.get();
+    }
     @Override
-    public UserCreateDto createUser(UserCreateDto user) throws UserAlreadyExists, UserEmailTaken {
+    public UserGetDto createUser(UserCreateDto user) throws UserAlreadyExists, UserEmailTaken {
         Optional<User> userOptional = this.userRepository.findByUserName(user.userName());
         if (userOptional.isPresent()) {
             throw new UserAlreadyExists(Message.USER_ID_ALREADY_EXISTS);
@@ -56,21 +61,25 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.email()).isPresent()) {
             throw new UserEmailTaken(user.email() + Message.EMAIL_TAKEN);
         }
-        User userToAdd =UserConverter.fromCreateDtoToEntity(user);
+        userRepository.save(UserConverter.fromCreateDtoToEntity(user));
 
-        userRepository.save(userToAdd);
-       return user;
+       return UserConverter.fromCreateDtoToGetDto(user);
+
 
     }
 
     @Override
-    public UserPatchDto updateUser(Long id, UserPatchDto user) throws UserNotFoundException {
+    public UserPatchDto updateUser(Long id, UserPatchDto user) throws UserNotFoundException, UserAlreadyExists {
         Optional<User> userOptional= userRepository.findById(id);
         if(userOptional.isEmpty()) {
             throw new UserNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST);
         }
     User userToUpdate = userOptional.get();
-        if (user.userName()!= null &&!user.userName().isEmpty() &&!user.userName().equals(userToUpdate)){
+        if(user.userName().equals(userToUpdate.getUserName())) {
+            throw new UserAlreadyExists(Message.USER_NAME_ALREADY_INSERTED);
+        }
+
+        if (user.userName()!= null &&!user.userName().isEmpty() &&!user.userName().equals(userToUpdate.getUserName())){
             userToUpdate.setUserName(user.userName());
         }
         if (user.email()!= null &&!user.email().isEmpty() &&!user.email().equals(userToUpdate)){
