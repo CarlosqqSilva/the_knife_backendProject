@@ -37,7 +37,7 @@ public class UserExperienceConverter {
         return new UserExperienceGetDto(
                 userExperience.getId(),
                 UserConverter.fromEntityToGetDto(userExperience.getUser()),
-                RestaurantConverter.fromModeltoRestaurantDto(userExperience.getRestaurant()),
+                RestaurantConverter.fromModelToRestaurantDto(userExperience.getRestaurant()),
                 userExperience.getRating(),
                 userExperience.getComment(),
                 userExperience.getTimestamp()

@@ -4,6 +4,7 @@ import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
 import org.mindswap.springtheknife.dto.user.UserGetDto;
+import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
@@ -19,7 +20,7 @@ public interface RestaurantService {
 
     Restaurant getById(Long id) throws RestaurantNotFoundException;
 
-    RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException;
+    RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException;
 
     void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException;
 

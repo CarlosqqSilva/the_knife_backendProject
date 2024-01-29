@@ -7,12 +7,15 @@ import org.mindswap.springtheknife.utils.Message;
 
 import java.util.List;
 
-public record CityDto(
-        @Schema(example = "Porto")
-        @NotNull(message = Message.NAME_ERROR)
-        String name,
+public record CityGetDto (
+
+        Long id,
+
+    @Schema(example = "Porto")
+    @NotNull(message = Message.NAME_ERROR)
+    String name,
 
         List<RestaurantGetDto> restaurantList
-) {
 
-}
+) {
+    }

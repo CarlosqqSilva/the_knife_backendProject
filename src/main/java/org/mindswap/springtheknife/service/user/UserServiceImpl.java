@@ -44,12 +44,13 @@ public class UserServiceImpl implements UserService {
        return UserConverter.fromEntityToGetDto(userOptional.get());
 
     }
+
     public User getUserById(Long userId) throws UserNotFoundException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException(Message.USER_ID_DOES_NOT_EXIST + userId + Message.NOT_EXIST);
         }
-        return (userOptional.get());
+        return userOptional.get();
     }
     @Override
     public UserGetDto createUser(UserCreateDto user) throws UserAlreadyExists, UserEmailTaken {

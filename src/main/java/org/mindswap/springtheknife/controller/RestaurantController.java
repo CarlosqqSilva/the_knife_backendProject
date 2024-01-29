@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
+import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.service.restaurant.RestaurantService;
@@ -22,7 +23,7 @@ public class RestaurantController {
    private final RestaurantServiceImpl restaurantServiceImpl;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, RestaurantServiceImpl restaurantServiceImpl) {
+    public RestaurantController(RestaurantServiceImpl restaurantServiceImpl) {
         this.restaurantServiceImpl = restaurantServiceImpl;
 
     }
@@ -38,7 +39,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException {
+    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurant(restaurant), HttpStatus.OK);
     }
 

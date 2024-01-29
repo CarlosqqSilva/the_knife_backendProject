@@ -38,4 +38,5 @@ public class Message {
     public static final String USER_EXPERIENCE_ID_DELETED = " - Deleted successfully User Experience with ID";
     public static final String USER_NAME_ALREADY_INSERTED = "User Name already inserted";
 
+    public static final String CITY_NOT_FOUND = "City not found";
 }

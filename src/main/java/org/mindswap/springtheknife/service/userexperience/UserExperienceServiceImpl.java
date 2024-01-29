@@ -60,11 +60,11 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         UserExperience userExperienceEntity = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperience, newUser, newRestaurant);
         UserExperience userExperienceSaved = userExperienceRepository.save(userExperienceEntity);
         return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);*/
-        UserExperience userExperienceSaved = UserExperienceConverter.fromUserExperienceCreateDtoToEntity
+        UserExperience userExperienceToSave = UserExperienceConverter.fromUserExperienceCreateDtoToEntity
                 (userExperience, userServiceImpl.getUserById(userExperience.userId()),
                         restaurantServiceImpl.getById(userExperience.restaurantId()));
-        userExperienceRepository.save(userExperienceSaved);
-        return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);
+        userExperienceRepository.save(userExperienceToSave);
+        return UserExperienceConverter.fromEntityToGetDto(userExperienceToSave);
     }
 
     @Override
