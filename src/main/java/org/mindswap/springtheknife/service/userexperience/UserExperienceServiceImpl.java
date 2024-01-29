@@ -28,7 +28,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     private final RestaurantServiceImpl restaurantServiceImpl;
 
     @Autowired
-    public UserExperienceServiceImpl(UserExperienceRepository userExperienceRepository, UserServiceImpl userService, UserServiceImpl userServiceImpl, RestaurantServiceImpl restaurantService, RestaurantServiceImpl restaurantServiceImpl) {
+    public UserExperienceServiceImpl(UserExperienceRepository userExperienceRepository, UserServiceImpl userServiceImpl, RestaurantServiceImpl restaurantServiceImpl) {
         this.userExperienceRepository = userExperienceRepository;
         this.userServiceImpl = userServiceImpl;
         this.restaurantServiceImpl = restaurantServiceImpl;

@@ -44,7 +44,7 @@ public class Restaurant {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Booking> bookingList;
 
     @ManyToMany

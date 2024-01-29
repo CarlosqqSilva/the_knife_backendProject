@@ -41,8 +41,7 @@ public class UserExperienceController {
                             schema = @Schema(implementation = UserExperience.class))}),})
     @GetMapping("/")
     public ResponseEntity<List<UserExperienceGetDto>> getAllUsersExperiences() {
-        return new ResponseEntity<>(userExperienceService.getAllUsersExperiences(),
-                HttpStatus.OK);
+        return new ResponseEntity<>(userExperienceService.getAllUsersExperiences(),HttpStatus.OK);
     }
 
     @Operation(summary = "Get user experience by id", description = "This method returns a user experience by id")

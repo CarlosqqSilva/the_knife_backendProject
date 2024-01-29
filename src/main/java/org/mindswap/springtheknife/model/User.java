@@ -20,8 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   /* @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Booking> bookings = new ArrayList<>();*/
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Booking> bookings = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserExperience> userExperiences = new ArrayList<>();
