@@ -61,11 +61,11 @@ public class CityController {
             @ApiResponse(responseCode = "200", description = "Addition successfully completed"),
             @ApiResponse(responseCode = "400", description = "City already exists")})
     @PostMapping("/")
-    public ResponseEntity<CityGetDto> addNewCity (@Valid @RequestBody CityDto city, BindingResult bindingResult) throws DuplicateCityException {
+    public ResponseEntity<CityDto> addNewCity (@Valid @RequestBody CityDto city, BindingResult bindingResult) throws DuplicateCityException {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CityGetDto city1 = cityServiceImpl.create(city);
+        CityDto city1 = cityServiceImpl.create(city);
         return new ResponseEntity<>(city1, HttpStatus.CREATED);
     }
 

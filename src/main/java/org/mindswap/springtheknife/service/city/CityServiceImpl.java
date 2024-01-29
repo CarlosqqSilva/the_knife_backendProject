@@ -28,7 +28,7 @@ public class CityServiceImpl implements CityService {
     public List<CityGetDto> getCities() {
         List<City> cities = this.cityRepository.findAll();
         return cities.stream()
-        .map(CityConverter::fromModelToCityDto)
+        .map(CityConverter::fromModelToCityGetDto)
                 .toList();
     }
 
@@ -38,7 +38,7 @@ public class CityServiceImpl implements CityService {
         if (cityOptional.isEmpty()) {
             throw new CityNotFoundException(id + Message.CITY_NOT_FOUND);
         }
-        return CityConverter.fromModelToCityDto(cityOptional.get());
+        return CityConverter.fromModelToCityGetDto(cityOptional.get());
 
     }
 
@@ -51,7 +51,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public CityGetDto create(CityDto city) throws DuplicateCityException {
+    public CityDto create(CityDto city) throws DuplicateCityException {
         Optional<City> cityOptional = this.cityRepository.findByName(city.name());
         if(cityOptional.isPresent())
             throw new DuplicateCityException(Message.DUPLICATE_NAME + city.name() + Message.EXIST);
