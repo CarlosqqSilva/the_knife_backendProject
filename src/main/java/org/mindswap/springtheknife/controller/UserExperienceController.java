@@ -67,7 +67,7 @@ public class UserExperienceController {
     public ResponseEntity<String> deleteUserExperience(@PathVariable("userExperienceId") Long userExperienceId)
             throws UserExperienceNotFoundException {
         userExperienceService.deleteUserExperience(userExperienceId);
-        return new ResponseEntity<>(userExperienceId + Message.USER_EXPERIENCE_ID_DELETED,HttpStatus.OK);
+        return new ResponseEntity<>(Message.USER_EXPERIENCE_ID_DELETED + userExperienceId,HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{userExperienceId}")

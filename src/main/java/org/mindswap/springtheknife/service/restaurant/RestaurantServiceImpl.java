@@ -8,6 +8,7 @@ import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExists
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
+import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +31,24 @@ public class RestaurantServiceImpl implements RestaurantService{
         return restaurants.stream().map(RestaurantConverter::fromModeltoRestaurantDto).toList();
     }
 
+
     @Override
-    public RestaurantGetDto getById(Long id) throws RestaurantNotFoundException {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + id + " not found."));
-        return RestaurantConverter.fromModeltoRestaurantDto(restaurant);
+    public RestaurantGetDto getRestaurant(Long id) throws RestaurantNotFoundException {
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+        if (restaurantOptional.isEmpty()) {
+            throw new RestaurantNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST);
+        }
+        return RestaurantConverter.fromModeltoRestaurantDto(restaurantOptional.get());
+
+    }
+
+    @Override
+    public Restaurant getById(Long id) throws RestaurantNotFoundException {
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+        if (restaurantOptional.isEmpty()) {
+            throw new RestaurantNotFoundException(id + Message.NOT_EXIST);
+        }
+        return (restaurantOptional.get());
     }
 
     @Override

@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 
 public record BookingCreateDto(
 
+        Long userId,
+
+        Long restaurantId,
+
         @NotNull(message = Message.BOOKING_MANDATORY)
         LocalDateTime bookingTime,
         @Enumerated(EnumType.STRING)

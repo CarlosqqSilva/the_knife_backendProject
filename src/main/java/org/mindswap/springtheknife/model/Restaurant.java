@@ -37,12 +37,12 @@ public class Restaurant {
     private Double longitude;
     private Double rating;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant",orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
     private List<UserExperience> userExperienceList = new ArrayList<>();
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     private City city;
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookingList;
     @ManyToMany
     private Set<RestaurantType> restaurantTypes = new HashSet<>();

@@ -26,11 +26,12 @@ import java.util.List;
 public class UserController {
 
 
-    private final UserServiceImpl userService;
+    private final UserServiceImpl userServiceImpl;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
+    public UserController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+
     }
 
     @Operation(summary = "Get all users", description = "This method returns a list of all users")
@@ -40,7 +41,7 @@ public class UserController {
                             schema = @Schema(implementation = User.class))}),})
     @GetMapping("/")
     public ResponseEntity<List<UserGetDto>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userServiceImpl.getAllUsers(), HttpStatus.OK);
     }
 
 
@@ -54,9 +55,10 @@ public class UserController {
     })
     @GetMapping("/{userId}")
     public ResponseEntity<UserGetDto> getUser(@PathVariable("userId") Long userId) throws UserNotFoundException {
-       UserGetDto user = userService.getUserById(userId);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userServiceImpl.getUser(userId),HttpStatus.OK);
+
+
     }
 
     @Operation(summary = "Create a new user", description = "This method creates a new user")
@@ -70,7 +72,7 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user)
             throws UserAlreadyExists, UserEmailTaken {
-       userService.createUser(user);
+       userServiceImpl.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -80,8 +82,8 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "User property already exists")})
     @PatchMapping("/{userId}")
     public ResponseEntity<UserPatchDto> patchUser(@Valid @PathVariable("userId") Long id,
-                                                  @Valid @RequestBody UserPatchDto user) throws UserNotFoundException {
-        userService.updateUser(id, user);
+                                                  @Valid @RequestBody UserPatchDto user) throws UserNotFoundException, UserAlreadyExists {
+        userServiceImpl.updateUser(id, user);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -92,7 +94,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User id not found")})
     @DeleteMapping(path = "/{userId}")
     public ResponseEntity<User> deleteUser(@Valid @PathVariable("userId") Long id) throws UserNotFoundException {
-        userService.deleteUser(id);
+        userServiceImpl.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

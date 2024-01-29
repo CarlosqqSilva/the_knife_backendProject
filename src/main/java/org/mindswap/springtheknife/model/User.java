@@ -23,7 +23,7 @@ public class User {
    /* @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Booking> bookings = new ArrayList<>();*/
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserExperience> userExperiences = new ArrayList<>();
 
   /*  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
