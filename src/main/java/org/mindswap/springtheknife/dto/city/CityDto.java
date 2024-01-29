@@ -10,9 +10,9 @@ import java.util.List;
 public record CityDto(
         @Schema(example = "Porto")
         @NotNull(message = Message.NAME_ERROR)
-        String name,
+        String name
 
-        List<RestaurantGetDto> restaurantList
+
 ) {
 
 }

@@ -13,7 +13,7 @@ public interface CityService {
 
     City getCityById(Long cityId) throws CityNotFoundException;
 
-    CityGetDto create(CityDto city) throws DuplicateCityException;
+    CityDto create(CityDto city) throws DuplicateCityException;
 
     void update(long cityId, City city) throws CityNotFoundException;
 

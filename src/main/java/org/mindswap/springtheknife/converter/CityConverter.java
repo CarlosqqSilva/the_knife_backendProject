@@ -6,12 +6,12 @@ import org.mindswap.springtheknife.model.City;
 
 public class CityConverter {
 
-    public static CityDto fromModelToCreateDto(City city) {
+ /*   public static CityDto fromModelToCreateDto(City city) {
         return new CityDto(
                 city.getName(),
                 city.getRestaurants().stream().map(RestaurantConverter::fromModelToRestaurantDto).toList()
         );
-    }
+    }*/
 
     public static City fromCreateDtoToModel (CityDto cityDto){
         return City.builder()
@@ -19,7 +19,7 @@ public class CityConverter {
                 .build();
     }
 
-    public static CityGetDto fromModelToCityDto(City city) {
+    public static CityGetDto fromModelToCityGetDto(City city) {
         return new CityGetDto(
                 city.getCityId(),
                 city.getName(),
@@ -29,8 +29,15 @@ public class CityConverter {
     }
 
 
-    public static CityGetDto fromCreateDtoToDto(CityDto city) {
+    public static CityDto fromCreateDtoToDto(CityDto city) {
         City tempCity = fromCreateDtoToModel(city);
         return fromModelToCityDto(tempCity);
+    }
+
+    private static CityDto fromModelToCityDto(City city) {
+        return new CityDto(
+                city.getName()
+        )
+                ;
     }
 }
