@@ -7,5 +7,7 @@ public record RestaurantPatchDto(
         String address,
         @Email
         String email
+
+
 ) {
 }

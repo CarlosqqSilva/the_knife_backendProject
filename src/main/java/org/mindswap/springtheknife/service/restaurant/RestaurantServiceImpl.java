@@ -1,6 +1,5 @@
 package org.mindswap.springtheknife.service.restaurant;
 
-import org.mindswap.springtheknife.converter.CityConverter;
 import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
@@ -10,14 +9,19 @@ import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExists
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.model.Restaurant;
+import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
+import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService{
@@ -26,10 +30,15 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     private final CityServiceImpl cityServiceImpl;
 
+    private final RestaurantTypeImpl restaurantTypeImpl;
+    private final RestaurantTypeRepository restaurantTypeRepository;
+
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl) {
+    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeImpl restaurantTypeImpl, RestaurantTypeRepository restaurantTypeRepository) {
         this.restaurantRepository = clientRepository;
         this.cityServiceImpl = cityServiceImpl;
+        this.restaurantTypeImpl = restaurantTypeImpl;
+        this.restaurantTypeRepository = restaurantTypeRepository;
     }
 
     @Override
@@ -60,14 +69,20 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     @Override
     public RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
+        Set<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+
+        Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurant.cityId()));
+        if (cityOptional.isEmpty()) {
+            throw new CityNotFoundException(restaurant.cityId() + Message.CITY_NOT_FOUND);
+        }
         Optional<Restaurant> departmentOptional = this.restaurantRepository.findByEmail(restaurant.email());
         if (departmentOptional.isPresent()) {
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
-        Restaurant departmentCreated = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()));
+        Restaurant departmentCreated = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+
         restaurantRepository.save(departmentCreated);
         return RestaurantConverter.fromModelToRestaurantDto(departmentCreated);
-
 
     }
 

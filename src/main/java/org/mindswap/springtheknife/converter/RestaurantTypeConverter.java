@@ -5,9 +5,12 @@ import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.model.RestaurantType;
 
+import java.util.Set;
+
 public class RestaurantTypeConverter {
     public static RestaurantTypeDto fromModelToRestaurantTypeDto(RestaurantType restaurantType) {
         return new RestaurantTypeDto(
+                restaurantType.getId(),
                 restaurantType.getType()
         );
     }
@@ -17,4 +20,5 @@ public class RestaurantTypeConverter {
                 .type(restaurantTypeDto.type())
                 .build();
     }
+
 }
