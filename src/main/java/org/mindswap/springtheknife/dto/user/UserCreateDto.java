@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 import org.mindswap.springtheknife.utils.Message;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 public record UserCreateDto (
 
@@ -26,7 +28,9 @@ public record UserCreateDto (
      String lastName,
      @NotNull(message = Message.DATE_OF_BIRTH_MANDATORY)
      @Past(message = Message.VALID_DATE_OF_BIRTH)
-     LocalDate dateOfBirth
+     LocalDate dateOfBirth,
+
+     Set<Long> favoriteRestaurants
 )  {
 
 }

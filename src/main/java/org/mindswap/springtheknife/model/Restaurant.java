@@ -47,6 +47,6 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Booking> bookingList;
 
-    @ManyToMany
-    private Set<RestaurantType> restaurantTypes = new HashSet<>();
+    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER)
+    private Set<User> usersWhoFavorited = new HashSet<>();
 }
