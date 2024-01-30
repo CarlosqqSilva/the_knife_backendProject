@@ -53,8 +53,9 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto create(CityDto city) throws DuplicateCityException {
         Optional<City> cityOptional = this.cityRepository.findByName(city.name());
-        if(cityOptional.isPresent())
-            throw new DuplicateCityException(Message.DUPLICATE_NAME + city.name() + Message.EXIST);
+        if(cityOptional.isPresent()) {
+            throw new DuplicateCityException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
+        }
         cityRepository.save(CityConverter.fromCreateDtoToModel(city));
         return CityConverter.fromCreateDtoToDto(city);
 
@@ -63,7 +64,7 @@ public class CityServiceImpl implements CityService {
     public void update(long cityId, City city) throws CityNotFoundException {
         Optional<City> cityOptional = cityRepository.findById(cityId);
         if (cityOptional.isEmpty()) {
-            throw new CityNotFoundException(Message.CITY_WITH_ID + cityId + Message.NOT_EXIST);
+            throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " "  + Message.NOT_EXIST);
         }
         City cityToUpdate = cityOptional.get();
         if (city.getName() != null && !city.getName().isEmpty() && !city.getName().equals(cityToUpdate.getName())) {
@@ -75,9 +76,9 @@ public class CityServiceImpl implements CityService {
     public void delete(long cityId) throws CityNotFoundException {
         boolean exists = cityRepository.existsById(cityId);
         if (!exists) {
-            throw new CityNotFoundException(Message.CITY_WITH_ID + cityId + Message.NOT_EXIST);
+            throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " " + Message.NOT_EXIST);
         }
         cityRepository.deleteById(cityId);
     }
-
+  
 }
