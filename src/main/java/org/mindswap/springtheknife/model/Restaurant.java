@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,4 +48,10 @@ public class Restaurant {
 
     @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER)
     private Set<User> usersWhoFavorited = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "restaurants_by_type",
+               joinColumns = @JoinColumn(name = "restaurant_id"),
+               inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
+    private Set<RestaurantType> restaurantTypes;
 }

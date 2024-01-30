@@ -21,6 +21,9 @@ public class RestaurantType {
     @Column(unique = true)
     private String type;
 
-    @ManyToMany
-    private Set<Restaurant> restaurants = new HashSet<>();
+    @ManyToMany(mappedBy = "restaurantTypes")
+   private Set<Restaurant> restaurants;
+
+
+
 }

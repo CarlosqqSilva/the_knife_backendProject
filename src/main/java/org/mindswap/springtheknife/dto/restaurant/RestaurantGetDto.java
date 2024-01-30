@@ -1,13 +1,21 @@
 package org.mindswap.springtheknife.dto.restaurant;
 
+
+import jakarta.validation.constraints.NotEmpty;
+import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
+import org.mindswap.springtheknife.model.RestaurantType;
+import java.util.Set;
+
 public record RestaurantGetDto(
 
-        Long cityId,
+        String cityName,
         String name,
         String email,
         String address,
         String phoneNumber,
-        Double rating
+        Double rating,
+        @NotEmpty
+        Set<RestaurantTypeDto> restaurantTypes
 
 ) {
 }
