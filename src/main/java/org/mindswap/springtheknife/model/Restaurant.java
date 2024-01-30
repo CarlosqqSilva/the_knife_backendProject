@@ -46,9 +46,12 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Booking> bookingList;
 
+    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER)
+    private Set<User> usersWhoFavorited = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.EAGER)
-   @JoinTable(name = "restaurants_by_type",
-           joinColumns = @JoinColumn(name = "restaurant_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
+    @JoinTable(name = "restaurants_by_type",
+               joinColumns = @JoinColumn(name = "restaurant_id"),
+               inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
     private Set<RestaurantType> restaurantTypes;
 }

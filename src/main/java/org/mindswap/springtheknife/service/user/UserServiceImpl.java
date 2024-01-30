@@ -7,8 +7,13 @@ import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.user.UserAlreadyExists;
 import org.mindswap.springtheknife.exceptions.user.UserEmailTaken;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
+import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.User;
+import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.UserRepository;
+import org.mindswap.springtheknife.service.restaurant.RestaurantService;
+import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +21,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RestaurantRepository restaurantService) {
         this.userRepository = userRepository;
+        this.restaurantRepository = restaurantService;
     }
 
     @Override
@@ -61,9 +70,11 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.email()).isPresent()) {
             throw new UserEmailTaken(user.email() + Message.EMAIL_TAKEN);
         }
-        userRepository.save(UserConverter.fromCreateDtoToEntity(user));
+        Set<Restaurant> favorites = user.favoriteRestaurants().stream().map(restaurantRepository::findById).filter(Optional::isPresent)
+                .map(Optional::get).collect(Collectors.toSet());
+        User newUser = userRepository.save(UserConverter.fromCreateDtoToEntity(user, favorites));
 
-       return UserConverter.fromCreateDtoToGetDto(user);
+        return UserConverter.fromEntityToGetDto(newUser);
 
 
     }

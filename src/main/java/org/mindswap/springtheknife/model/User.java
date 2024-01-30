@@ -5,7 +5,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -26,8 +28,13 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserExperience> userExperiences = new ArrayList<>();
 
-  /*  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Restaurant> favouriteRestaurants = new ArrayList<>();*/
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_favourite_restaurants",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "restaurant_id")
+    )
+    private Set<Restaurant> favoriteRestaurants = new HashSet<>();
 
     @Setter
     @Column(unique = true)
