@@ -13,7 +13,7 @@ public class UserExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserExceptionHandler.class);
 
-    @ExceptionHandler(value = {UserNotFoundException.class})
+    @ExceptionHandler(value = {UserNotFoundException.class,})
     public ResponseEntity<String> UserNotFoundHandler(Exception ex) {
         logger.error("Known Exception: " + ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

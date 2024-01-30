@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantTypeImpl implements RestaurantTypeService {
@@ -27,6 +29,10 @@ public class RestaurantTypeImpl implements RestaurantTypeService {
         List<RestaurantType> restaurantType = restaurantTypeRepository.findAll();
         return restaurantType.stream().map(RestaurantTypeConverter::fromModelToRestaurantTypeDto).toList();
     }
+    public Set<RestaurantTypeDto> getRestaurantTypeById(Set<Long> restaurantTypeId){
+        List<RestaurantType> restaurantType = restaurantTypeRepository.findAllById(restaurantTypeId);
+        return restaurantType.stream().map(RestaurantTypeConverter::fromModelToRestaurantTypeDto).collect(Collectors.toSet());
+            }
 
     @Override
     public RestaurantTypeDto getById(Long id) throws RestaurantTypeNotFoundException {
