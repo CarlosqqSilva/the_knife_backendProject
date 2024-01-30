@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +26,13 @@ public class Restaurant {
     @NotBlank(message = "Restaurant must have a name.")
     private String name;
     @Setter
-    private String address;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride( name = "street", column = @Column(name = "restaurant_street")),
+            @AttributeOverride( name = "number", column = @Column(name = "restaurant_number")),
+            @AttributeOverride( name = "zipCode", column = @Column(name = "restaurant_zip_code"))
+    })
+    private Address address;
     @Setter
     @Column(unique = true)
     private String email;
