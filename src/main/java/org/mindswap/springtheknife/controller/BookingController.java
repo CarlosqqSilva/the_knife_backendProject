@@ -11,8 +11,10 @@ import org.mindswap.springtheknife.dto.booking.BookingGetDto;
 import org.mindswap.springtheknife.dto.booking.BookingPatchDto;
 import org.mindswap.springtheknife.exceptions.booking.BookingAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
+import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
+import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.Booking;
-import org.mindswap.springtheknife.service.booking.BookingService;
+import org.mindswap.springtheknife.service.booking.BookingServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,11 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/v1/bookings")
 public class BookingController {
-   BookingService bookingService;
+   private final BookingServiceImpl bookingServiceImpl;
 
     @Autowired
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
+    public BookingController(BookingServiceImpl bookingService) {
+        this.bookingServiceImpl = bookingService;
     }
 
     @Operation(summary = "Get all Bookings", description = "This method returns a list of all Bookings")
@@ -37,8 +39,8 @@ public class BookingController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Booking.class))}),})
     @GetMapping("/")
-    public ResponseEntity<List<BookingGetDto>> getBooking() {
-        return new ResponseEntity<>(bookingService.getBooking(), HttpStatus.OK);
+    public ResponseEntity<List<BookingGetDto>> getAllBookings() {
+        return new ResponseEntity<>(bookingServiceImpl.getAllBookings(), HttpStatus.OK);
     }
 
     @Operation(summary = "Get a Booking by id", description = "This method returns a booking by id")
@@ -51,7 +53,8 @@ public class BookingController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<BookingGetDto> getBookingById (@PathVariable("id") Long id) throws BookingNotFoundException {
-        return new ResponseEntity<>(bookingService.getById(id), HttpStatus.OK);
+        BookingGetDto booking = bookingServiceImpl.getBookingById(id);
+        return new ResponseEntity<>(booking, HttpStatus.OK);
     }
     @Operation(summary = "Create a new Booking", description = "This method creates a new Booking")
     @ApiResponses(value = {
@@ -62,9 +65,11 @@ public class BookingController {
                     content = @Content),
     })
     @PostMapping("/")
-    public ResponseEntity<BookingGetDto> addBooking(@Valid @RequestBody BookingCreateDto booking) throws BookingAlreadyExistsException {
-        return new ResponseEntity<>(bookingService.addBooking(booking), HttpStatus.OK);
+    public ResponseEntity<BookingGetDto> addBooking(@Valid @RequestBody BookingCreateDto booking) throws BookingAlreadyExistsException, UserNotFoundException, RestaurantNotFoundException {
+
+        return new ResponseEntity<>(bookingServiceImpl.addBooking(booking), HttpStatus.OK);
     }
+
 
     @Operation(summary = "Update a Booking", description = "Updates a Booking in the database")
     @ApiResponses(value = {
@@ -72,15 +77,18 @@ public class BookingController {
             @ApiResponse(responseCode = "400", description = "Booking property already exists")})
     @PatchMapping("/{id}")
     public ResponseEntity<BookingGetDto> patchBooking (@PathVariable("id") Long id, @Valid @RequestBody BookingPatchDto booking) throws BookingNotFoundException {
-        return new ResponseEntity<>(bookingService.patchBooking(id, booking), HttpStatus.OK);
+        bookingServiceImpl.patchBooking(id, booking);
+        return new ResponseEntity<>(bookingServiceImpl.patchBooking(id, booking), HttpStatus.OK);
     }
+
+
     @Operation(summary = "Delete a Booking", description = "Deletes a Booking from the database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Booking id not found")})
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBooking (@PathVariable("id") Long id) throws BookingNotFoundException {
-        bookingService.deleteBooking(id);
+        bookingServiceImpl.deleteBooking(id);
         return new ResponseEntity<>(Message.BOOKING_ID + id + Message.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 }

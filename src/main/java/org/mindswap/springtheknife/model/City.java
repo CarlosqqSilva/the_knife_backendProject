@@ -24,7 +24,7 @@ public class City {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "city")
+    @OneToMany(mappedBy = "city",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Restaurant> restaurants = new HashSet<>();
 }
 

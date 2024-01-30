@@ -1,8 +1,8 @@
 package org.mindswap.springtheknife.service.city;
 
-import jakarta.validation.Valid;
 import org.mindswap.springtheknife.converter.CityConverter;
 import org.mindswap.springtheknife.dto.city.CityDto;
+import org.mindswap.springtheknife.dto.city.CityGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.city.DuplicateCityException;
 import org.mindswap.springtheknife.model.City;
@@ -25,20 +25,41 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<City> getCities() {
-        return cityRepository.findAll();
+    public List<CityGetDto> getCities() {
+        List<City> cities = this.cityRepository.findAll();
+        return cities.stream()
+        .map(CityConverter::fromModelToCityGetDto)
+                .toList();
     }
 
     @Override
-    public City create(CityDto city) throws DuplicateCityException {
-        Optional<City> cityOptional = this.cityRepository.findByName(city.name());
-        if(cityOptional.isPresent())
-            throw new DuplicateCityException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
-        @Valid City newCity = CityConverter.fromCreateDtoToModel(city);
-        return cityRepository.save(newCity);
+    public CityGetDto getCity(Long id) throws CityNotFoundException {
+        Optional<City> cityOptional = cityRepository.findById(id);
+        if (cityOptional.isEmpty()) {
+            throw new CityNotFoundException(id + Message.CITY_NOT_FOUND);
+        }
+        return CityConverter.fromModelToCityGetDto(cityOptional.get());
 
     }
 
+    public City getCityById(Long cityId) throws CityNotFoundException {
+        Optional<City> cityOptional = cityRepository.findById(cityId);
+        if (cityOptional.isEmpty()) {
+            throw new CityNotFoundException(Message.CITY_WITH_ID + cityId + Message.NOT_EXIST);
+        }
+        return cityOptional.get();
+    }
+
+    @Override
+    public CityDto create(CityDto city) throws DuplicateCityException {
+        Optional<City> cityOptional = this.cityRepository.findByName(city.name());
+        if(cityOptional.isPresent()) {
+            throw new DuplicateCityException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
+        }
+        cityRepository.save(CityConverter.fromCreateDtoToModel(city));
+        return CityConverter.fromCreateDtoToDto(city);
+
+    }
     @Override
     public void update(long cityId, City city) throws CityNotFoundException {
         Optional<City> cityOptional = cityRepository.findById(cityId);
@@ -59,12 +80,5 @@ public class CityServiceImpl implements CityService {
         }
         cityRepository.deleteById(cityId);
     }
-    @Override
-    public City get(Long cityId) throws CityNotFoundException {
-        Optional<City> cityOptional = cityRepository.findById(cityId);
-        if (cityOptional.isEmpty()) {
-            throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " " + Message.NOT_EXIST);
-        }
-        return cityOptional.get();
-    }
+  
 }

@@ -1,8 +1,5 @@
 package org.mindswap.springtheknife.service.userexperience;
 
-import org.mindswap.springtheknife.converter.UserConverter;
-import org.mindswap.springtheknife.converter.RestaurantConverter;
-
 import org.mindswap.springtheknife.converter.UserExperienceConverter;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
@@ -10,12 +7,9 @@ import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
-import org.mindswap.springtheknife.model.Restaurant;
-import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.model.UserExperience;
 import org.mindswap.springtheknife.repository.UserExperienceRepository;
-import org.mindswap.springtheknife.service.restaurant.RestaurantService;
-import org.mindswap.springtheknife.service.user.UserService;
+import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +23,17 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
     private final UserExperienceRepository userExperienceRepository;
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
-    private final RestaurantService restaurantService;
+    private final RestaurantServiceImpl restaurantServiceImpl;
 
     @Autowired
-    public UserExperienceServiceImpl(UserExperienceRepository userExperienceRepository, UserServiceImpl userService, RestaurantService restaurantService) {
+    public UserExperienceServiceImpl(UserExperienceRepository userExperienceRepository, UserServiceImpl userServiceImpl, RestaurantServiceImpl restaurantServiceImpl) {
         this.userExperienceRepository = userExperienceRepository;
-        this.userService = userService;
-        this.restaurantService = restaurantService;
+        this.userServiceImpl = userServiceImpl;
+        this.restaurantServiceImpl = restaurantServiceImpl;
 
     }
-
 
     @Override
     public List<UserExperienceGetDto> getAllUsersExperiences() {
@@ -62,27 +55,32 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
     @Override
     public UserExperienceGetDto addNewUserExperience(UserExperienceCreateDto userExperience) throws UserNotFoundException, RestaurantNotFoundException {
-        User newUser = UserConverter.fromGetDtoToEntity(userService.getUserById(userExperience.userId()));
+       /* User newUser = UserConverter.fromGetDtoToEntity(userService.getUserById(userExperience.userId()));
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantDtoToModel(restaurantService.getById(userExperience.restaurantId()));
         UserExperience userExperienceEntity = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperience, newUser, newRestaurant);
-        UserExperience userExperienceSaved = userExperienceRepository.saveAndFlush(userExperienceEntity);
-        return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);
+        UserExperience userExperienceSaved = userExperienceRepository.save(userExperienceEntity);
+        return UserExperienceConverter.fromEntityToGetDto(userExperienceSaved);*/
+        UserExperience userExperienceToSave = UserExperienceConverter.fromUserExperienceCreateDtoToEntity
+                (userExperience, userServiceImpl.getUserById(userExperience.userId()),
+                        restaurantServiceImpl.getById(userExperience.restaurantId()));
+        userExperienceRepository.save(userExperienceToSave);
+        return UserExperienceConverter.fromEntityToGetDto(userExperienceToSave);
     }
-  
+
     @Override
     public UserExperiencePatchDto updateUserExperience(Long id, UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException {
-     Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
-     if(!userExperienceOptional.isPresent()) {
-         throw new UserExperienceNotFoundException(id + Message.USER_EXPERIENCE_ID_NOT_FOUND);
-     }
-     UserExperience userExperienceToUpdate = userExperienceOptional.get();
-     if(userExperience.rating() >0 && userExperience.rating() !=(userExperienceToUpdate.getRating())) {
-         userExperienceToUpdate.setRating(userExperience.rating());
-     }
-     if(userExperience.comment() != null && !userExperience.comment().equals(userExperienceToUpdate.getComment())) {
-         userExperienceToUpdate.setComment(userExperience.comment());
-     }
-     return UserExperienceConverter.fromEntityToPatchDto(userExperienceRepository.save(userExperienceToUpdate));
+        Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
+        if (!userExperienceOptional.isPresent()) {
+            throw new UserExperienceNotFoundException(id + Message.USER_EXPERIENCE_ID_NOT_FOUND);
+        }
+        UserExperience userExperienceToUpdate = userExperienceOptional.get();
+        if (userExperience.rating() > 0 && userExperience.rating() != (userExperienceToUpdate.getRating())) {
+            userExperienceToUpdate.setRating(userExperience.rating());
+        }
+        if (userExperience.comment() != null && !userExperience.comment().equals(userExperienceToUpdate.getComment())) {
+            userExperienceToUpdate.setComment(userExperience.comment());
+        }
+        return UserExperienceConverter.fromEntityToPatchDto(userExperienceRepository.save(userExperienceToUpdate));
     }
 
     @Override

@@ -21,15 +21,19 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull(message = Message.BOOKING_MANDATORY)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime bookingTime;
+
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
-    @ManyToOne
+
+    @ManyToOne(cascade =CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
+
+    @ManyToOne(cascade =CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 }

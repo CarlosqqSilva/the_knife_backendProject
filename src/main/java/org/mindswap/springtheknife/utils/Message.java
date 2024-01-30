@@ -35,5 +35,8 @@ public class Message {
     public static final String TYPE_MANDATORY = "Must have Type";
     public static final String TYPE_ID = "Type Id";
     public static final String TYPE_TAKEN = "Type taken";
-    public static final String USER_EXPERIENCE_ID_DELETED = " - User Experience ID deleted successfully";
+    public static final String USER_EXPERIENCE_ID_DELETED = " - Deleted successfully User Experience with ID";
+    public static final String USER_NAME_ALREADY_INSERTED = "User Name already inserted";
+
+    public static final String CITY_NOT_FOUND = "City not found";
 }

@@ -8,33 +8,38 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.city.CityDto;
+import org.mindswap.springtheknife.dto.city.CityGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.city.DuplicateCityException;
-import org.mindswap.springtheknife.service.city.CityService;
 import org.mindswap.springtheknife.model.City;
+import org.mindswap.springtheknife.service.city.CityService;
+import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
+;
 
 @RestController
 @RequestMapping("api/v1/cities")
 public class CityController {
 
-    private final CityService cityService;
+    private final CityServiceImpl cityServiceImpl;
 
     @Autowired
-    public CityController(CityService cityService) {
-        this.cityService = cityService;
+    public CityController(CityServiceImpl cityServiceImpl) {
+        this.cityServiceImpl = cityServiceImpl;
     }
 
     @Operation(summary = "Get all cities", description = "Returns a list of add clities")
     @ApiResponse(responseCode = "200", description = "Return successfully completed")
     @GetMapping("/")
-    public ResponseEntity<List<City>> getCities() throws Exception {
-        return new ResponseEntity<>(cityService.getCities(), HttpStatus.OK);
+    public ResponseEntity<List<CityGetDto>> getCities() {
+        return new ResponseEntity<>(cityServiceImpl.getCities(), HttpStatus.OK);
     }
 
     @Operation(summary = "Get a city by its id")
@@ -47,8 +52,8 @@ public class CityController {
             @ApiResponse(responseCode = "404", description = "City not found",
                     content = @Content) })
     @GetMapping("/{cityId}")
-    public ResponseEntity<City> getCity (@PathVariable("cityId") Long cityId) throws CityNotFoundException {
-        return new ResponseEntity<>(cityService.get(cityId), HttpStatus.OK);
+    public ResponseEntity<CityGetDto> getCity (@PathVariable("cityId") Long cityId) throws CityNotFoundException {
+        return new ResponseEntity<>(cityServiceImpl.getCity(cityId), HttpStatus.OK);
     }
 
     @Operation(summary = "Add a city", description = "Adds a city to the database")
@@ -56,13 +61,11 @@ public class CityController {
             @ApiResponse(responseCode = "200", description = "Addition successfully completed"),
             @ApiResponse(responseCode = "400", description = "City already exists")})
     @PostMapping("/")
-    public ResponseEntity<City> addNewCity (@Valid
-                                                  @RequestBody
-                                            CityDto city, BindingResult bindingResult) throws DuplicateCityException {
+    public ResponseEntity<CityDto> addNewCity (@Valid @RequestBody CityDto city, BindingResult bindingResult) throws DuplicateCityException {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        City city1 = cityService.create(city);
+        CityDto city1 = cityServiceImpl.create(city);
         return new ResponseEntity<>(city1, HttpStatus.CREATED);
     }
 
@@ -72,7 +75,7 @@ public class CityController {
             @ApiResponse(responseCode = "400", description = "City property already exists")})
     @PatchMapping(path = "{cityId}")
     public ResponseEntity<String> updateCity (@Valid @RequestBody City city, @PathVariable @Parameter(name = "cityId", description = "city_id", example = "1") long cityId) throws CityNotFoundException {
-        cityService.update(cityId, city);
+        cityServiceImpl.update(cityId, city);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -82,7 +85,7 @@ public class CityController {
             @ApiResponse(responseCode = "404", description = "City id not found")})
     @DeleteMapping("/{cityId}")
     public ResponseEntity<String> deleteCity (@PathVariable @Parameter(name = "cityId", example = "1") long cityId) throws CityNotFoundException {
-        cityService.delete(cityId);
+        cityServiceImpl.delete(cityId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

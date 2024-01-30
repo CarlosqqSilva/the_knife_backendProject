@@ -41,8 +41,7 @@ public class UserExperienceController {
                             schema = @Schema(implementation = UserExperience.class))}),})
     @GetMapping("/")
     public ResponseEntity<List<UserExperienceGetDto>> getAllUsersExperiences() {
-        return new ResponseEntity<>(userExperienceService.getAllUsersExperiences(),
-                HttpStatus.OK);
+        return new ResponseEntity<>(userExperienceService.getAllUsersExperiences(),HttpStatus.OK);
     }
 
     @Operation(summary = "Get user experience by id", description = "This method returns a user experience by id")
@@ -67,7 +66,7 @@ public class UserExperienceController {
     public ResponseEntity<String> deleteUserExperience(@PathVariable("userExperienceId") Long userExperienceId)
             throws UserExperienceNotFoundException {
         userExperienceService.deleteUserExperience(userExperienceId);
-        return new ResponseEntity<>(userExperienceId + Message.USER_EXPERIENCE_ID_DELETED,HttpStatus.OK);
+        return new ResponseEntity<>(Message.USER_EXPERIENCE_ID_DELETED + userExperienceId,HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{userExperienceId}")

@@ -14,9 +14,7 @@ public interface UserExperienceService {
 
     UserExperienceGetDto getUserExperienceById(Long id) throws UserExperienceNotFoundException;
 
-
     UserExperienceGetDto addNewUserExperience(UserExperienceCreateDto userExperience) throws UserNotFoundException, RestaurantNotFoundException, UserExperienceNotFoundException;
-
 
     UserExperiencePatchDto updateUserExperience(Long id, UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException;
 

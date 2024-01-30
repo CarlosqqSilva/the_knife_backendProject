@@ -2,6 +2,7 @@ package org.mindswap.springtheknife.dto.restaurant;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.mindswap.springtheknife.dto.city.CityDto;
 
 public record RestaurantPostDto(
         @NotBlank(message = "Restaurant must have a name.")
@@ -13,6 +14,9 @@ public record RestaurantPostDto(
         @NotBlank(message = "Restaurant must have a phone number.")
         String phoneNumber,
         Double latitude,
-        Double longitude
+        Double longitude,
+
+        Long cityId
 ) {
+
 }
