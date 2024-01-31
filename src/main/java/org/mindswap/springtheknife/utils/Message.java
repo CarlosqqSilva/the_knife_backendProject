@@ -1,5 +1,7 @@
 package org.mindswap.springtheknife.utils;
 
+import jakarta.validation.constraints.Pattern;
+
 import javax.swing.text.html.parser.DTDConstants;
 
 public class Message {
@@ -37,6 +39,23 @@ public class Message {
     public static final String TYPE_TAKEN = "Type taken";
     public static final String USER_EXPERIENCE_ID_DELETED = " - Deleted successfully User Experience with ID";
     public static final String USER_NAME_ALREADY_INSERTED = "User Name already inserted";
-
     public static final String CITY_NOT_FOUND = "City not found";
+    public static final String RESTAURANT_NAME_MANDATORY = "Restaurant must have a name.";
+    public static final String VALID_RESTAURANT_NAME = "Restaurant must have a valid name.";
+    public static final String RESTAURANT_VALIDATOR = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,25}$";
+    public static final String RESTAURANT_ADDRESS_MANDATORY = "Restaurant must have an address.";
+    public static final String EMAIL_VALIDATOR = "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$";
+    public static final String PHONE_NUMBER_MANDATORY = "Restaurant must have a phone number.";
+    public static final String PHONE_NUMBER_VALIDATOR = "^\\+351(9[1236]|2)\\d{8}$";
+    public static final String LATITUDE_MANDATORY = "Insert Restaurant Latitude";
+    public static final String LONGITUDE_MANDATORY = "Insert Restaurant Longitude";
+    public static final String LONGITUDE_VALIDATOR = "^[-+]?((1[0-7]\\d(\\.\\d+)?)|(180(\\.0+)?)|([1-9]?\\d(\\.\\d+)?))$";
+    public static final String INVALID_CITY_ID = "Insert a valid City Id";
+    public static final String INVALID_PHONE_NUMBER = "Insert a valid phone number";
+    public static final String INVALID_RATING = "Insert a valid Rating between 0 and 10";
+    public static final String RATING_MANDATORY = "Insert Rating";
+    public static final String COMMENT_MANDATORY = "Insert Comment";
+    public static final String INVALID_COMMENT = "Insert a valid Comment";
+    public static final String USER_ID_MANDATORY = "Insert User Id";
+    public static final String RESTAURANT_ID_MANDATORY = "Insert Restaurant Id";
 }

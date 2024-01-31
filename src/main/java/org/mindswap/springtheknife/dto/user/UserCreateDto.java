@@ -1,33 +1,34 @@
 package org.mindswap.springtheknife.dto.user;
 
 import jakarta.validation.constraints.*;
-import org.mindswap.springtheknife.utils.Message;
+
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import static org.mindswap.springtheknife.utils.Message.*;
+
 public record UserCreateDto (
 
-     @NotBlank(message = Message.USERNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = Message.VALID_USERNAME)
+     @NotBlank(message = USERNAME_MANDATORY)
+     @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = VALID_USERNAME)
      String userName,
-     @NotBlank(message = Message.PASSWORD_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = Message.VALID_PASSWORD)
+     @NotBlank(message = PASSWORD_MANDATORY)
+     @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = VALID_PASSWORD)
      String password,
-     @Email(message = Message.EMAIL_MANDATORY)
-     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = Message.VALID_EMAIL)
+     @Email(message = EMAIL_MANDATORY)
+     @Pattern(regexp = EMAIL_VALIDATOR, message = VALID_EMAIL)
      String email,
 
-     @NotBlank(message = Message.FIRSTNAME_MANDATORY)
+     @NotBlank(message = FIRSTNAME_MANDATORY)
      @Pattern(regexp = "^[a-zA-Z ]{0,25}$")
      String firstName,
-     @NotBlank(message = Message.LASTNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z ]{0,25}$", message = Message.VALID_LASTNAME)
+     @NotBlank(message = LASTNAME_MANDATORY)
+     @Pattern(regexp = "^[a-zA-Z ]{0,25}$", message = VALID_LASTNAME)
      String lastName,
-     @NotNull(message = Message.DATE_OF_BIRTH_MANDATORY)
-     @Past(message = Message.VALID_DATE_OF_BIRTH)
+     @NotNull(message = DATE_OF_BIRTH_MANDATORY)
+     @Past(message = VALID_DATE_OF_BIRTH)
      LocalDate dateOfBirth,
 
      Set<Long> favoriteRestaurants

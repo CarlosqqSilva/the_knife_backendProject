@@ -13,7 +13,7 @@ public record UserExperienceGetDto(
 
         RestaurantGetDto restaurant,
 
-        int rating,
+        double rating,
 
         String comment,
 
