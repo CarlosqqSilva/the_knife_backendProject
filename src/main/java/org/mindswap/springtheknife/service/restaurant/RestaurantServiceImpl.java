@@ -75,14 +75,14 @@ public class RestaurantServiceImpl implements RestaurantService{
         if (cityOptional.isEmpty()) {
             throw new CityNotFoundException(restaurant.cityId() + Message.CITY_NOT_FOUND);
         }
-        Optional<Restaurant> departmentOptional = this.restaurantRepository.findByEmail(restaurant.email());
-        if (departmentOptional.isPresent()) {
+        Optional<Restaurant> restaurantOpt = this.restaurantRepository.findByEmail(restaurant.email());
+        if (restaurantOpt.isPresent()) {
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
-        Restaurant departmentCreated = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
 
-        restaurantRepository.save(departmentCreated);
-        return RestaurantConverter.fromModelToRestaurantDto(departmentCreated);
+        restaurantRepository.save(newRestaurant);
+        return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
 
     }
 

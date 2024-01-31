@@ -26,7 +26,13 @@ public class Restaurant {
     @NotBlank(message = "Restaurant must have a name.")
     private String name;
     @Setter
-    private String address;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride( name = "street", column = @Column(name = "street")),
+            @AttributeOverride( name = "number", column = @Column(name = "door_number")),
+            @AttributeOverride( name = "zipCode", column = @Column(name = "zip_code"))
+    })
+    private Address address;
     @Setter
     @Column(unique = true)
     private String email;

@@ -1,6 +1,10 @@
 package org.mindswap.springtheknife.dto.restaurant;
 
 import jakarta.validation.constraints.*;
+import org.mindswap.springtheknife.dto.city.CityDto;
+import org.mindswap.springtheknife.model.Address;
+import org.mindswap.springtheknife.model.RestaurantType;
+
 import java.util.Set;
 import static org.mindswap.springtheknife.utils.Message.*;
 
@@ -8,7 +12,7 @@ public record RestaurantPostDto(
         @NotBlank(message = RESTAURANT_NAME_MANDATORY)
         @Pattern(regexp = RESTAURANT_VALIDATOR, message = VALID_RESTAURANT_NAME)
         String name,
-        @NotBlank(message = RESTAURANT_ADDRESS_MANDATORY)
+        @NotNull(message = RESTAURANT_ADDRESS_MANDATORY)
         String address,
         @Email(message = EMAIL_MANDATORY)
         @Pattern(regexp = EMAIL_VALIDATOR, message =VALID_EMAIL)
@@ -26,6 +30,6 @@ public record RestaurantPostDto(
         Long cityId,
         @NotNull
         Set<Long> restaurantTypes
+        
 ) {
-
 }
