@@ -13,7 +13,7 @@ public record RestaurantPostDto(
         @Pattern(regexp = RESTAURANT_VALIDATOR, message = VALID_RESTAURANT_NAME)
         String name,
         @NotNull(message = RESTAURANT_ADDRESS_MANDATORY)
-        String address,
+        Address address,
         @Email(message = EMAIL_MANDATORY)
         @Pattern(regexp = EMAIL_VALIDATOR, message =VALID_EMAIL)
         String email,
