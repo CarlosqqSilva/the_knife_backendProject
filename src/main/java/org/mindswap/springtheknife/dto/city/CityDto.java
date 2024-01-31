@@ -12,7 +12,6 @@ public record CityDto(
         @NotNull(message = Message.NAME_ERROR)
         String name
 
-
 ) {
 
 }

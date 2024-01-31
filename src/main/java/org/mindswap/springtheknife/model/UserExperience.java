@@ -36,11 +36,10 @@ public class UserExperience {
    /* @OneToMany(mappedBy = "customerExperience", cascade = CascadeType.ALL)
     private List<CustomerPhoto> photos = new ArrayList<>();*/
 
-    private int rating;
+    private Double rating;
 
     private String comment;
 
     private LocalDateTime timestamp;
-
 
 }
