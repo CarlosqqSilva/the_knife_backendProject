@@ -21,6 +21,7 @@ public interface RestaurantService {
     Restaurant getById(Long id) throws RestaurantNotFoundException;
 
     RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException;
+    List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException;
 
     void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException;
 
