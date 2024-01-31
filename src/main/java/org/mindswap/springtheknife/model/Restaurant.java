@@ -28,9 +28,9 @@ public class Restaurant {
     @Setter
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride( name = "street", column = @Column(name = "restaurant_street")),
-            @AttributeOverride( name = "number", column = @Column(name = "restaurant_number")),
-            @AttributeOverride( name = "zipCode", column = @Column(name = "restaurant_zip_code"))
+            @AttributeOverride( name = "street", column = @Column(name = "street")),
+            @AttributeOverride( name = "number", column = @Column(name = "door_number")),
+            @AttributeOverride( name = "zipCode", column = @Column(name = "zip_code"))
     })
     private Address address;
     @Setter
