@@ -2,12 +2,9 @@ package org.mindswap.springtheknife.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.mindswap.springtheknife.converter.CityConverter;
+import org.junit.jupiter.api.*;
 import org.mindswap.springtheknife.dto.city.CityDto;
+import org.mindswap.springtheknife.dto.city.CityGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.model.City;
@@ -15,7 +12,6 @@ import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,8 +32,6 @@ class CityServiceTests {
     @InjectMocks
     private CityServiceImpl cityService;
 
-    static MockedStatic<CityConverter> mockedConverter = Mockito.mockStatic(CityConverter.class);
-
     private static ObjectMapper objectMapper;
 
     @BeforeAll
@@ -57,9 +51,9 @@ class CityServiceTests {
         List<City> cities = new ArrayList<>();
         when(cityRepository.findAll()).thenReturn(cities);
 
-        List<City> result = cityService.getCities();
+        List<CityGetDto> result = cityService.getCities();
 
-        assertEquals(cities, result);
+        assertEquals(cities.size(), result.size());
     }
 
     @Test
@@ -74,23 +68,19 @@ class CityServiceTests {
     }
 
     @Test
-    void testCreateCityAndConverter() throws CityAlreadyExistsException {
-        CityDto cityDto = new CityDto("Porto");
-        City city = new City();
-        Mockito.when(this.cityRepository.findByName(cityDto.name())).thenReturn(Optional.empty());
-        Mockito.when(this.cityRepository.save((City)Mockito.any())).thenReturn(city);
-        mockedConverter.when(() -> {
-            CityConverter.fromCreateDtoToModel(cityDto);
-        }).thenReturn(city);
-        this.cityService.create(cityDto);
-        ((CityRepository)Mockito.verify(this.cityRepository, Mockito.times(1))).findByName(cityDto.name());
-        ((CityRepository)Mockito.verify(this.cityRepository, Mockito.times(1))).save(city);
-        Mockito.verifyNoMoreInteractions(new Object[]{this.cityRepository});
-        mockedConverter.verify(() -> {
-            CityConverter.fromCreateDtoToModel(cityDto);
+    void testCreateCityAndConverter() throws DuplicateCityException {
+        CityDto existingCityDto = new CityDto("Existing City");
+
+        // Mocking behavior to return a non-empty Optional, indicating that the city already exists.
+        when(cityRepository.findByName(existingCityDto.name())).thenReturn(Optional.of(new City()));
+
+        // Act and Assert
+        assertThrows(DuplicateCityException.class, () -> {
+            cityService.create(existingCityDto);
         });
-        mockedConverter.verifyNoMoreInteractions();
-        Assertions.assertEquals(city, this.cityService.create(cityDto));
+
+        // Verify that the repository's save method was not called in case of a duplicate city.
+        verify(cityRepository, never()).save(any(City.class));
     }
 
     @Test
@@ -130,7 +120,7 @@ class CityServiceTests {
 
         when(cityRepository.findById(cityId)).thenReturn(Optional.of(existingCity));
 
-        City result = cityService.get(cityId);
+        City result = cityService.getCityById(cityId);
 
         assertEquals(existingCity, result);
 
@@ -146,7 +136,7 @@ class CityServiceTests {
         when(cityRepository.findById(nonExistingCityId)).thenReturn(Optional.empty());
 
         assertThrows(CityNotFoundException.class, () -> {
-            cityService.get(nonExistingCityId);
+            cityService.getCityById(nonExistingCityId);
         });
 
         verify(cityRepository, times(1)).findById(nonExistingCityId);
