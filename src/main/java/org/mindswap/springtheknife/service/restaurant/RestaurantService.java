@@ -10,6 +10,7 @@ import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundExcep
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.Restaurant;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface RestaurantService {
@@ -20,7 +21,7 @@ public interface RestaurantService {
 
     Restaurant getById(Long id) throws RestaurantNotFoundException;
 
-    RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException;
+    RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException;
     List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException;
 
     void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException;

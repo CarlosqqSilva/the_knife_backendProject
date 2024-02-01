@@ -42,6 +42,8 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private Double rating;
+    @Setter
+    @Column
     private String imagePath;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
@@ -61,5 +63,5 @@ public class Restaurant {
     @JoinTable(name = "restaurants_by_type",
                joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
-    private Set<RestaurantType> restaurantTypes;
+    private List<RestaurantType> restaurantTypes;
 }

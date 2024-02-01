@@ -5,6 +5,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RestaurantImageService {
 
@@ -20,8 +21,9 @@ public class RestaurantImageService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(payload, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
+        String resultString = Objects.requireNonNull(response.getBody()).get("images").toString().replaceAll("[\\[\\]]", "");
 
-        return response.getBody();
+        return resultString;
     }
 }

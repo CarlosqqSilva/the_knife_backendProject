@@ -9,6 +9,7 @@ import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExists
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.model.Restaurant;
+import org.mindswap.springtheknife.model.RestaurantImage;
 import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
@@ -18,6 +19,7 @@ import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,8 +71,8 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
-        Set<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+    public RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        List<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
 
         Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurant.cityId()));
         if (cityOptional.isEmpty()) {
@@ -80,8 +82,10 @@ public class RestaurantServiceImpl implements RestaurantService{
         if (restaurantOpt.isPresent()) {
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
+        RestaurantImage newRestaurantImage = new RestaurantImage();
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
-        
+        String prompt = newRestaurant.getRestaurantTypes().getFirst().getType();
+        newRestaurant.setImagePath(newRestaurantImage.setImages(prompt + " restaurant facade", prompt));
         restaurantRepository.save(newRestaurant);
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
 
@@ -91,7 +95,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     public List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
         List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
         for (RestaurantPostDto restaurantPostDto : restaurantList) {
-            Set<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+            List<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
             Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurantPostDto.cityId()));
             if (cityOptional.isEmpty()) {
                 throw new CityNotFoundException(restaurantPostDto.cityId() + Message.CITY_NOT_FOUND);
