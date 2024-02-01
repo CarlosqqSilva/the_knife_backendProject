@@ -173,6 +173,7 @@ class RestaurantServiceTest {
 
         verifyNoMoreInteractions(restaurantRepository);
     }
+}
 /*
     @Test
     void testpatchRestaurant() throws RestaurantNotFoundException {
@@ -193,5 +194,6 @@ class RestaurantServiceTest {
         verify(restaurantRepository, times(1)).findByEmail("exm@exm.com");
         verify(restaurantRepository, times(1)).save(existingRestaurant);
         verifyNoMoreInteractions(restaurantRepository);
-    }*/
-}
+    }
+
+*/
