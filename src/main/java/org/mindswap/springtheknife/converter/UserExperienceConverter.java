@@ -17,7 +17,6 @@ public class UserExperienceConverter {
                 .restaurant(restaurant)
                 .rating(userExperienceCreateDto.rating())
                 .comment(userExperienceCreateDto.comment())
-                .timestamp(userExperienceCreateDto.timestamp())
                 .build();
     }
 
@@ -27,8 +26,8 @@ public class UserExperienceConverter {
                 userExperience.getUser().getId(),
                 userExperience.getRestaurant().getId(),
                 userExperience.getRating(),
-                userExperience.getComment(),
-                userExperience.getTimestamp()
+                userExperience.getComment()
+
         );
     }
 

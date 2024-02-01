@@ -15,6 +15,7 @@ import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
         UserExperience userExperienceToSave = UserExperienceConverter.fromUserExperienceCreateDtoToEntity
                 (userExperience, userServiceImpl.getUserById(userExperience.userId()),
                         restaurantServiceImpl.getById(userExperience.restaurantId()));
+        userExperienceToSave.setTimestamp(LocalDateTime.now());
         userExperienceRepository.save(userExperienceToSave);
         return UserExperienceConverter.fromEntityToGetDto(userExperienceToSave);
     }
