@@ -40,8 +40,13 @@ public class UserController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = User.class))}),})
     @GetMapping("/")
-    public ResponseEntity<List<UserGetDto>> getAllUsers() {
-        return new ResponseEntity<>(userServiceImpl.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<List<UserGetDto>> getAllUsers(
+            @RequestParam(value ="pageNumber", defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5",required = false) int pageSize,
+            @RequestParam(value = "sortBy") String sortBy
+
+    ) {
+        return new ResponseEntity<>(userServiceImpl.getAllUsers(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
 
@@ -55,7 +60,7 @@ public class UserController {
     })
     @GetMapping("/{userId}")
     public ResponseEntity<UserGetDto> getUser(@PathVariable("userId") Long userId) throws UserNotFoundException {
-        return new ResponseEntity<>(userServiceImpl.getUser(userId),HttpStatus.OK);
+        return new ResponseEntity<>(userServiceImpl.getUser(userId), HttpStatus.OK);
 
     }
 
@@ -70,7 +75,7 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user)
             throws UserAlreadyExists, UserEmailTaken {
-       userServiceImpl.createUser(user);
+        userServiceImpl.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

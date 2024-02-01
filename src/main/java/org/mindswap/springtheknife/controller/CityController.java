@@ -38,8 +38,12 @@ public class CityController {
     @Operation(summary = "Get all cities", description = "Returns a list of add clities")
     @ApiResponse(responseCode = "200", description = "Return successfully completed")
     @GetMapping("/")
-    public ResponseEntity<List<CityGetDto>> getCities() {
-        return new ResponseEntity<>(cityServiceImpl.getCities(), HttpStatus.OK);
+    public ResponseEntity<List<CityGetDto>> getAllCities(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy
+    ) throws Exception {
+        return new ResponseEntity<>(cityServiceImpl.getAllCities(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
     @Operation(summary = "Get a city by its id")

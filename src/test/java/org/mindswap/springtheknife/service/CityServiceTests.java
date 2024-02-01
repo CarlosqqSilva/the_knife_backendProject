@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.converter.CityConverter;
 import org.mindswap.springtheknife.dto.city.CityDto;
+import org.mindswap.springtheknife.dto.city.CityGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.city.DuplicateCityException;
 import org.mindswap.springtheknife.model.City;
@@ -53,11 +54,11 @@ class CityServiceTests {
     }
 
     @Test
-    public void testGetCities() {
+    public void testGetCities() throws Exception {
         List<City> cities = new ArrayList<>();
         when(cityRepository.findAll()).thenReturn(cities);
 
-        List<City> result = cityService.getCities();
+        List<CityGetDto> result = cityService.getAllCities();
 
         assertEquals(cities, result);
     }

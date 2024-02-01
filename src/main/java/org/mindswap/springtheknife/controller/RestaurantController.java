@@ -29,8 +29,12 @@ public class RestaurantController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<RestaurantGetDto>> getRestaurants() {
-        return new ResponseEntity<>(restaurantServiceImpl.getRestaurants(), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantGetDto>> getRestaurants(
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @RequestParam(value = "sortBy", required = false) String sortBy
+    ) {
+        return new ResponseEntity<>(restaurantServiceImpl.getAllRestaurants(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

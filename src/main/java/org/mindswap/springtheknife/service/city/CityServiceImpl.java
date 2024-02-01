@@ -9,6 +9,9 @@ import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +28,10 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CityGetDto> getCities() {
-        List<City> cities = this.cityRepository.findAll();
-        return cities.stream()
+    public List<CityGetDto> getAllCities(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<City> pageCities = this.cityRepository.findAll(pageRequest);
+        return pageCities.stream()
         .map(CityConverter::fromModelToCityGetDto)
                 .toList();
     }
@@ -39,7 +43,6 @@ public class CityServiceImpl implements CityService {
             throw new CityNotFoundException(id + Message.CITY_NOT_FOUND);
         }
         return CityConverter.fromModelToCityGetDto(cityOptional.get());
-
     }
 
     public City getCityById(Long cityId) throws CityNotFoundException {

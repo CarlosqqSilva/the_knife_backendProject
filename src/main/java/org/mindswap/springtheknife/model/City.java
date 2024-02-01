@@ -18,7 +18,7 @@ public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cityId;
+    private Long id;
 
     @NotNull(message = Message.NAME_ERROR)
     @Column(unique = true)

@@ -39,8 +39,12 @@ public class BookingController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Booking.class))}),})
     @GetMapping("/")
-    public ResponseEntity<List<BookingGetDto>> getAllBookings() {
-        return new ResponseEntity<>(bookingServiceImpl.getAllBookings(), HttpStatus.OK);
+    public ResponseEntity<List<BookingGetDto>> getAllBookings(
+            @RequestParam(value = "pageNumber", defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5",required = false) int pageSize,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy
+    ) {
+        return new ResponseEntity<>(bookingServiceImpl.getAllBookings(pageNumber,pageSize,sortBy), HttpStatus.OK);
     }
 
     @Operation(summary = "Get a Booking by id", description = "This method returns a booking by id")

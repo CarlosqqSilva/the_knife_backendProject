@@ -6,13 +6,13 @@ import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.user.UserAlreadyExists;
 import org.mindswap.springtheknife.exceptions.user.UserEmailTaken;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
-import org.mindswap.springtheknife.model.User;
+
 
 import java.util.List;
 
 public interface UserService {
 
-    List<UserGetDto> getAllUsers();
+    List<UserGetDto> getAllUsers(int pageNumber, int pageSize, String sortBy);
 
     UserGetDto getUser(Long id) throws UserNotFoundException;
 

@@ -11,11 +11,11 @@ import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.UserRepository;
-import org.mindswap.springtheknife.service.restaurant.RestaurantService;
-import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
-import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -37,9 +37,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserGetDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
+    public List<UserGetDto> getAllUsers(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<User> pageUsers = userRepository.findAll(pageRequest);
+        return pageUsers.stream()
              .map(UserConverter::fromEntityToGetDto)
              .toList();
    }

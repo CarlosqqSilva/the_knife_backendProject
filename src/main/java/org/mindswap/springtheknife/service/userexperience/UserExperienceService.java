@@ -10,7 +10,8 @@ import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import java.util.List;
 
 public interface UserExperienceService {
-    List<UserExperienceGetDto> getAllUsersExperiences();
+
+    List<UserExperienceGetDto> getAllUsersExperiences(int pageNumber, int pageSize, String sortBy);
 
     UserExperienceGetDto getUserExperienceById(Long id) throws UserExperienceNotFoundException;
 

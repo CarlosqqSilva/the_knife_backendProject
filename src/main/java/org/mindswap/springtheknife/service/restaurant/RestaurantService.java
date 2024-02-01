@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface RestaurantService {
 
-    List<RestaurantGetDto> getRestaurants();
+    List<RestaurantGetDto> getAllRestaurants(int pageNumber, int pageSize, String sortBy);
 
     RestaurantGetDto getRestaurant(Long id) throws RestaurantNotFoundException;
 
