@@ -4,7 +4,7 @@ import org.mindswap.springtheknife.converter.CityConverter;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.dto.city.CityGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
-import org.mindswap.springtheknife.exceptions.city.DuplicateCityException;
+import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.utils.Message;
@@ -54,10 +54,10 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public CityDto create(CityDto city) throws DuplicateCityException {
+    public CityDto create(CityDto city) throws CityAlreadyExistsException {
         Optional<City> cityOptional = this.cityRepository.findByName(city.name());
         if(cityOptional.isPresent()) {
-            throw new DuplicateCityException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
+            throw new CityAlreadyExistsException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
         }
         cityRepository.save(CityConverter.fromCreateDtoToModel(city));
         return CityConverter.fromCreateDtoToDto(city);

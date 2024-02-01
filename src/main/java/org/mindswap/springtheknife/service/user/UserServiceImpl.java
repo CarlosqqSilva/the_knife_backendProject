@@ -4,8 +4,8 @@ import org.mindswap.springtheknife.converter.UserConverter;
 import org.mindswap.springtheknife.dto.user.UserCreateDto;
 import org.mindswap.springtheknife.dto.user.UserGetDto;
 import org.mindswap.springtheknife.dto.user.UserPatchDto;
-import org.mindswap.springtheknife.exceptions.user.UserAlreadyExists;
-import org.mindswap.springtheknife.exceptions.user.UserEmailTaken;
+import org.mindswap.springtheknife.exceptions.user.UserAlreadyExistsException;
+import org.mindswap.springtheknife.exceptions.user.UserEmailAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.User;
@@ -63,13 +63,13 @@ public class UserServiceImpl implements UserService {
         return userOptional.get();
     }
     @Override
-    public UserGetDto createUser(UserCreateDto user) throws UserAlreadyExists, UserEmailTaken {
+    public UserGetDto createUser(UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
         Optional<User> userOptional = this.userRepository.findByUserName(user.userName());
         if (userOptional.isPresent()) {
-            throw new UserAlreadyExists(Message.USER_ID_ALREADY_EXISTS);
+            throw new UserAlreadyExistsException(Message.USER_ID_ALREADY_EXISTS);
         }
         if (userRepository.findByEmail(user.email()).isPresent()) {
-            throw new UserEmailTaken(user.email() + Message.EMAIL_TAKEN);
+            throw new UserEmailAlreadyExistsException(user.email() + Message.EMAIL_TAKEN);
         }
         Set<Restaurant> favorites = user.favoriteRestaurants().stream().map(restaurantRepository::findById).filter(Optional::isPresent)
                 .map(Optional::get).collect(Collectors.toSet());
@@ -81,14 +81,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserPatchDto updateUser(Long id, UserPatchDto user) throws UserNotFoundException, UserAlreadyExists {
+    public UserPatchDto updateUser(Long id, UserPatchDto user) throws UserNotFoundException, UserAlreadyExistsException {
         Optional<User> userOptional= userRepository.findById(id);
         if(userOptional.isEmpty()) {
             throw new UserNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST);
         }
     User userToUpdate = userOptional.get();
         if(user.userName().equals(userToUpdate.getUserName())) {
-            throw new UserAlreadyExists(Message.USER_NAME_ALREADY_INSERTED);
+            throw new UserAlreadyExistsException(Message.USER_NAME_ALREADY_INSERTED);
         }
 
         if (user.userName()!= null &&!user.userName().isEmpty() &&!user.userName().equals(userToUpdate.getUserName())){

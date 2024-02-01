@@ -9,8 +9,8 @@ import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.user.UserCreateDto;
 import org.mindswap.springtheknife.dto.user.UserGetDto;
 import org.mindswap.springtheknife.dto.user.UserPatchDto;
-import org.mindswap.springtheknife.exceptions.user.UserAlreadyExists;
-import org.mindswap.springtheknife.exceptions.user.UserEmailTaken;
+import org.mindswap.springtheknife.exceptions.user.UserAlreadyExistsException;
+import org.mindswap.springtheknife.exceptions.user.UserEmailAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
@@ -73,9 +73,8 @@ public class UserController {
                     content = @Content),
     })
     @PostMapping("/")
-    public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user)
-            throws UserAlreadyExists, UserEmailTaken {
-        userServiceImpl.createUser(user);
+    public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
+       userServiceImpl.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -85,7 +84,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "User property already exists")})
     @PatchMapping("/{userId}")
     public ResponseEntity<UserPatchDto> patchUser(@Valid @PathVariable("userId") Long id,
-                                                  @Valid @RequestBody UserPatchDto user) throws UserNotFoundException, UserAlreadyExists {
+                                                  @Valid @RequestBody UserPatchDto user) throws UserNotFoundException, UserAlreadyExistsException {
         userServiceImpl.updateUser(id, user);
 
         return new ResponseEntity<>(HttpStatus.OK);

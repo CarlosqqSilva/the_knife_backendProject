@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -90,6 +91,28 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurantRepository.save(newRestaurant);
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
 
+    }
+
+    @Override
+    public List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
+        List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
+        for (RestaurantPostDto restaurantPostDto : restaurantList) {
+            Set<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+            Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurantPostDto.cityId()));
+            if (cityOptional.isEmpty()) {
+                throw new CityNotFoundException(restaurantPostDto.cityId() + Message.CITY_NOT_FOUND);
+            }
+            Optional<Restaurant> restaurantOpt = this.restaurantRepository.findByEmail(restaurantPostDto.email());
+            if (restaurantOpt.isPresent()) {
+                throw new RestaurantAlreadyExistsException("This restaurant already exists.");
+            }
+            Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurantPostDto, cityServiceImpl.getCityById(restaurantPostDto.cityId()), restaurantTypes);
+
+            restaurantRepository.save(newRestaurant);
+            newRestaurantsList.add(RestaurantConverter.fromModelToRestaurantDto(newRestaurant));
+        }
+
+        return newRestaurantsList;
     }
 
     @Override
