@@ -20,7 +20,8 @@ import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
-import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
+
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,7 +49,7 @@ class RestaurantServiceTest {
     private CityServiceImpl cityServiceImpl;
 
     @Mock
-    private RestaurantTypeImpl restaurantTypeImpl;
+    private RestaurantTypeServiceImpl restaurantTypeServiceImpl;
 
     @Mock
     private RestaurantTypeRepository restaurantTypeRepository;
@@ -78,7 +79,7 @@ class RestaurantServiceTest {
         List<Restaurant> restaurants = new ArrayList<>();
         when(restaurantRepository.findAll()).thenReturn(restaurants);
 
-        List<RestaurantGetDto> result = restaurantService.getRestaurants();
+        List<RestaurantGetDto> result = restaurantService.getAllRestaurants(0,3,"name");
 
         assertEquals(restaurants.size(), result.size());
     }

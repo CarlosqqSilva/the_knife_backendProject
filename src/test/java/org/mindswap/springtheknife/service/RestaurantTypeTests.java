@@ -11,7 +11,8 @@ import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeAlrea
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeNotFoundException;
 import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
-import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
+
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,7 +34,7 @@ public class RestaurantTypeTests {
     private RestaurantTypeRepository restaurantTypeRepository;
 
     @InjectMocks
-    private RestaurantTypeImpl restaurantTypeService;
+    private RestaurantTypeServiceImpl restaurantTypeService;
 
     private static ObjectMapper objectMapper;
 
@@ -54,7 +55,7 @@ public class RestaurantTypeTests {
         List<RestaurantType> types = new ArrayList<>();
         when(restaurantTypeRepository.findAll()).thenReturn(types);
 
-        List<RestaurantTypeDto> result = restaurantTypeService.getRestaurantType();
+        List<RestaurantTypeDto> result = restaurantTypeService.getAllRestaurantType(0,2, "name");
 
         assertEquals(types.size(), result.size());
     }
