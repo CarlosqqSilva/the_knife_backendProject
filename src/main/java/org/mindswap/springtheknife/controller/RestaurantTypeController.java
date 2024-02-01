@@ -36,8 +36,12 @@ public class RestaurantTypeController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = RestaurantType.class))}),})
     @GetMapping("/")
-    public ResponseEntity<List<RestaurantTypeDto>> getRestaurantType() {
-        return new ResponseEntity<>(restaurantTypeService.getRestaurantType(), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantTypeDto>> getRestaurantType(
+            @RequestParam(value = "pageNumber", defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @RequestParam(value = "sortBy") String sortBy
+    ) {
+        return new ResponseEntity<>(restaurantTypeService.getAllRestaurantType(pageNumber,pageSize, sortBy), HttpStatus.OK);
     }
     @Operation(summary = "Get a Type by id", description = "This method returns a Type by id")
     @ApiResponses(value = {

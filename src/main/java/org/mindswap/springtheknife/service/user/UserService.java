@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserGetDto> getAllUsers();
+    List<UserGetDto> getAllUsers(int pageNumber, int pageSize, String sortBy);
 
     UserGetDto getUser(Long id) throws UserNotFoundException;
 

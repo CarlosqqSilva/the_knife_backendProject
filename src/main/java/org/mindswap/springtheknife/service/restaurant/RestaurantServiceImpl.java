@@ -13,9 +13,12 @@ import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
-import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,21 +34,24 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     private final CityServiceImpl cityServiceImpl;
 
-    private final RestaurantTypeImpl restaurantTypeImpl;
+    private final RestaurantTypeServiceImpl restaurantTypeServiceImpl;
     private final RestaurantTypeRepository restaurantTypeRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeImpl restaurantTypeImpl, RestaurantTypeRepository restaurantTypeRepository) {
+    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeServiceImpl restaurantTypeServiceImpl, RestaurantTypeRepository restaurantTypeRepository) {
         this.restaurantRepository = clientRepository;
         this.cityServiceImpl = cityServiceImpl;
-        this.restaurantTypeImpl = restaurantTypeImpl;
+        this.restaurantTypeServiceImpl = restaurantTypeServiceImpl;
         this.restaurantTypeRepository = restaurantTypeRepository;
     }
 
     @Override
-    public List<RestaurantGetDto> getRestaurants(){
-        List<Restaurant> restaurants = restaurantRepository.findAll();
-        return restaurants.stream().map(RestaurantConverter::fromModelToRestaurantDto).toList();
+    public List<RestaurantGetDto> getAllRestaurants(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<Restaurant> pageRestaurants = restaurantRepository.findAll(pageRequest);
+        return pageRestaurants.stream()
+                .map(RestaurantConverter::fromModelToRestaurantDto)
+                .toList();
     }
 
 

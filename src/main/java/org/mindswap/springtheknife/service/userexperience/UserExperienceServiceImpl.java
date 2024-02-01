@@ -13,6 +13,9 @@ import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,9 +41,10 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     }
 
     @Override
-    public List<UserExperienceGetDto> getAllUsersExperiences() {
-        List<UserExperience> userExperiences = userExperienceRepository.findAll();
-        return userExperiences.stream()
+    public List<UserExperienceGetDto> getAllUsersExperiences(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<UserExperience> pageUserExperiences = userExperienceRepository.findAll(pageRequest);
+        return pageUserExperiences.stream()
                 .map(UserExperienceConverter::fromEntityToGetDto)
                 .toList();
     }

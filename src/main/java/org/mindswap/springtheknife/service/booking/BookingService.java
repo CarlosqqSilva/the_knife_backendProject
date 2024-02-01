@@ -12,7 +12,8 @@ import java.util.List;
 
 public interface BookingService {
 
-    List<BookingGetDto> getAllBookings();
+
+    List<BookingGetDto> getAllBookings(int pageNumber, int pageSize, String sortBy);
 
     BookingGetDto getBookingById(Long id) throws BookingNotFoundException;
 

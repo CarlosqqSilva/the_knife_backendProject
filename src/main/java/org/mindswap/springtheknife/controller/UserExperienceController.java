@@ -39,8 +39,12 @@ public class UserExperienceController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserExperience.class))}),})
     @GetMapping("/")
-    public ResponseEntity<List<UserExperienceGetDto>> getAllUsersExperiences() {
-        return new ResponseEntity<>(userExperienceService.getAllUsersExperiences(),HttpStatus.OK);
+    public ResponseEntity<List<UserExperienceGetDto>> getAllUsersExperiences(
+            @RequestParam(value = "pageNumber", defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
+            @RequestParam(value = "sortBy") String sortBy
+    ) {
+        return new ResponseEntity<>(userExperienceService.getAllUsersExperiences(pageNumber, pageSize, sortBy),HttpStatus.OK);
     }
 
     @Operation(summary = "Get user experience by id", description = "This method returns a user experience by id")

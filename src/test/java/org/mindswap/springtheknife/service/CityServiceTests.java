@@ -47,11 +47,11 @@ class CityServiceTests {
     }
 
     @Test
-    public void testGetCities() {
+    public void testGetCities() throws Exception {
         List<City> cities = new ArrayList<>();
         when(cityRepository.findAll()).thenReturn(cities);
 
-        List<CityGetDto> result = cityService.getCities();
+        List<CityGetDto> result = cityService.getAllCities();
 
         assertEquals(cities.size(), result.size());
     }

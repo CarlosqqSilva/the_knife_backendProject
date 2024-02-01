@@ -13,6 +13,9 @@ import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,9 +37,12 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<BookingGetDto> getAllBookings(){
-        List<Booking> bookings = bookingRepository.findAll();
-        return bookings.stream().map(BookingConverter::fromModelToBookingDto).toList();
+    public List<BookingGetDto> getAllBookings(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<Booking> pageBookings = bookingRepository.findAll(pageRequest);
+        return pageBookings.stream()
+                .map(BookingConverter::fromModelToBookingDto)
+                .toList();
     }
 
     @Override
