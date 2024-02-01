@@ -51,7 +51,7 @@ class CityServiceTests {
         List<City> cities = new ArrayList<>();
         when(cityRepository.findAll()).thenReturn(cities);
 
-        List<CityGetDto> result = cityService.getAllCities();
+        List<CityGetDto> result = cityService.getAllCities(0,3, "name");
 
         assertEquals(cities.size(), result.size());
     }

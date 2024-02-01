@@ -73,7 +73,7 @@ public class BookingServiceTests {
         List<Booking> booking = new ArrayList<>();
         when(bookingRepository.findAll()).thenReturn(booking);
 
-        List<BookingGetDto> result = bookingService.getAllBookings();
+        List<BookingGetDto> result = bookingService.getAllBookings(0,1,"Id");
 
         assertEquals(booking, result);
     }
@@ -102,10 +102,10 @@ public class BookingServiceTests {
         when(userService.getUserById(1L)).thenReturn(user);
 
         City city = new City();
-        city.setCityId(1L);
+        city.setId(1L);
 
         Restaurant restaurant = new Restaurant();
-        restaurant.setCity(city);
+        restaurant.getCity().setId(1L);
         when(restaurantService.getById(1L)).thenReturn(restaurant);
 
         BookingGetDto result = bookingService.addBooking(bookingCreateDto);
@@ -118,7 +118,7 @@ public class BookingServiceTests {
         verify(restaurantService, times(1)).getById(1L);
 
         if (restaurant.getCity() != null) {
-            assertNotNull(restaurant.getCity().getCityId());
+            assertNotNull(restaurant.getCity().getId());
         }
     }
 
@@ -131,10 +131,10 @@ public class BookingServiceTests {
         when(userService.getUserById(1L)).thenReturn(user);
 
         City city = new City();
-        city.setCityId(1L);
+        city.setId(1L);
 
         Restaurant restaurant = new Restaurant();
-        restaurant.setCity(city);
+        restaurant.getCity().setId(1L);
         when(restaurantService.getById(1L)).thenReturn(restaurant);
 
         Booking existingBooking = new Booking();
@@ -176,10 +176,10 @@ public class BookingServiceTests {
         when(userService.getUserById(1L)).thenReturn(user);
 
         City city = new City();
-        city.setCityId(1L);
+        city.setId(1L);
 
         Restaurant restaurant = new Restaurant();
-        restaurant.setCity(city);
+        restaurant.getCity().setId(1L);
         when(restaurantService.getById(1L)).thenReturn(restaurant);
 
         Booking existingBooking = new Booking();

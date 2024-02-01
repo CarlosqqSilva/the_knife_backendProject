@@ -12,6 +12,7 @@ public record UserExperienceCreateDto(
         @NotNull(message = Message.RESTAURANT_ID_MANDATORY)
         Long restaurantId,
 
+
         @NotNull(message = Message.RATING_MANDATORY)
         @Min(0)
         @Max(10)
