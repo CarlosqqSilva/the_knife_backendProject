@@ -68,14 +68,14 @@ class CityServiceTests {
     }
 
     @Test
-    void testCreateCityAndConverter() throws DuplicateCityException {
+    void testCreateCityAndConverter() throws CityAlreadyExistsException {
         CityDto existingCityDto = new CityDto("Existing City");
 
         // Mocking behavior to return a non-empty Optional, indicating that the city already exists.
         when(cityRepository.findByName(existingCityDto.name())).thenReturn(Optional.of(new City()));
 
         // Act and Assert
-        assertThrows(DuplicateCityException.class, () -> {
+        assertThrows(CityAlreadyExistsException.class, () -> {
             cityService.create(existingCityDto);
         });
 

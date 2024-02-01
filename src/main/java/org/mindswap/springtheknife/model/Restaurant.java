@@ -42,6 +42,7 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private Double rating;
+    private String imagePath;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
     private List<UserExperience> userExperienceList = new ArrayList<>();
