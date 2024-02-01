@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.converter.CityConverter;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
-import org.mindswap.springtheknife.exceptions.city.DuplicateCityException;
+import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
@@ -74,7 +74,7 @@ class CityServiceTests {
     }
 
     @Test
-    void testCreateCityAndConverter() throws DuplicateCityException {
+    void testCreateCityAndConverter() throws CityAlreadyExistsException {
         CityDto cityDto = new CityDto("Porto");
         City city = new City();
         Mockito.when(this.cityRepository.findByName(cityDto.name())).thenReturn(Optional.empty());
@@ -97,10 +97,10 @@ class CityServiceTests {
     void createCityWithDuplicatedNameThrowsException() {
         CityDto cityDto = new CityDto("Porto");
         Mockito.when(this.cityRepository.findByName(cityDto.name())).thenReturn(Optional.of(new City()));
-        assertThrows(DuplicateCityException.class, () -> {
+        assertThrows(CityAlreadyExistsException.class, () -> {
             this.cityService.create(cityDto);
         });
-        Assertions.assertEquals("City with name Porto already exists", ((DuplicateCityException) assertThrows(DuplicateCityException.class, () -> {
+        Assertions.assertEquals("City with name Porto already exists", ((CityAlreadyExistsException) assertThrows(CityAlreadyExistsException.class, () -> {
             this.cityService.create(cityDto);
         })).getMessage());
     }

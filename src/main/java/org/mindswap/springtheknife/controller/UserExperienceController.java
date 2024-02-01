@@ -10,7 +10,6 @@ import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
-import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceIdAlreadyExists;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.UserExperience;

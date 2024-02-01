@@ -10,9 +10,8 @@ import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.dto.city.CityGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
-import org.mindswap.springtheknife.exceptions.city.DuplicateCityException;
+import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.model.City;
-import org.mindswap.springtheknife.service.city.CityService;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,7 +60,7 @@ public class CityController {
             @ApiResponse(responseCode = "200", description = "Addition successfully completed"),
             @ApiResponse(responseCode = "400", description = "City already exists")})
     @PostMapping("/")
-    public ResponseEntity<CityDto> addNewCity (@Valid @RequestBody CityDto city, BindingResult bindingResult) throws DuplicateCityException {
+    public ResponseEntity<CityDto> addNewCity (@Valid @RequestBody CityDto city, BindingResult bindingResult) throws CityAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
