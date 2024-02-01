@@ -8,6 +8,9 @@ import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,18 +19,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class RestaurantTypeImpl implements RestaurantTypeService {
+public class RestaurantTypeServiceImpl implements RestaurantTypeService {
     RestaurantTypeRepository restaurantTypeRepository;
 
     @Autowired
-    public RestaurantTypeImpl(RestaurantTypeRepository restaurantTypeRepository) {
+    public RestaurantTypeServiceImpl(RestaurantTypeRepository restaurantTypeRepository) {
         this.restaurantTypeRepository = restaurantTypeRepository;
     }
 
     @Override
-    public List<RestaurantTypeDto> getRestaurantType(){
-        List<RestaurantType> restaurantType = restaurantTypeRepository.findAll();
-        return restaurantType.stream().map(RestaurantTypeConverter::fromModelToRestaurantTypeDto).toList();
+    public List<RestaurantTypeDto> getAllRestaurantType(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<RestaurantType> pageRestaurantType = restaurantTypeRepository.findAll(pageRequest);
+        return pageRestaurantType.stream()
+                .map(RestaurantTypeConverter::fromModelToRestaurantTypeDto)
+                .toList();
     }
     public Set<RestaurantTypeDto> getRestaurantTypeById(Set<Long> restaurantTypeId){
         List<RestaurantType> restaurantType = restaurantTypeRepository.findAllById(restaurantTypeId);

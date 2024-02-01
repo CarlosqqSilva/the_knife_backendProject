@@ -21,7 +21,7 @@ public class CityConverter {
 
     public static CityGetDto fromModelToCityGetDto(City city) {
         return new CityGetDto(
-                city.getCityId(),
+                city.getId(),
                 city.getName(),
                 city.getRestaurants().stream().map(RestaurantConverter::fromModelToRestaurantDto).toList()
         );
