@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
@@ -172,4 +173,25 @@ class RestaurantServiceTest {
 
         verifyNoMoreInteractions(restaurantRepository);
     }
+/*
+    @Test
+    void testpatchRestaurant() throws RestaurantNotFoundException {
+        long id = 1L;
+        Restaurant existingRestaurant = new Restaurant();
+        Restaurant updatedRestaurant = new Restaurant();
+
+        when(restaurantRepository.findById(id)).thenReturn(Optional.of(existingRestaurant));
+        when(restaurantRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(restaurantRepository.save(existingRestaurant)).thenReturn(updatedRestaurant);
+
+        restaurantService.patchRestaurant(id, new RestaurantPatchDto(new Address(), "exm@exm.com"));
+
+        assertEquals(updatedRestaurant.getEmail(), existingRestaurant.getEmail());
+        assertEquals("exm@exm.com", updatedRestaurant.getEmail());
+
+        verify(restaurantRepository, times(1)).findById(id);
+        verify(restaurantRepository, times(1)).findByEmail("exm@exm.com");
+        verify(restaurantRepository, times(1)).save(existingRestaurant);
+        verifyNoMoreInteractions(restaurantRepository);
+    }*/
 }
