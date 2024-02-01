@@ -40,7 +40,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException, RestaurantNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurant(restaurant), HttpStatus.OK);
     }
     @PostMapping("/list/")

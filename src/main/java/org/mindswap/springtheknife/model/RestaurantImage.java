@@ -23,12 +23,14 @@ public class RestaurantImage {
     private byte[] images;
 
 
-    public String setImages(String prompt, String fileName) throws IOException {
+    public String setImages(String prompt, Long id, String fileName) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         images = mapper.convertValue(RestaurantImageService.getImageDataFromAPI(prompt), byte[].class);
-        ByteArrayInputStream bis = new ByteArrayInputStream(images);
-        ImageIO.write(ImageIO.read(bis), "png", new File("src/main/imagefiles/" + fileName + ".png"));
-        return "src/main/imagefiles/" + fileName + ".png";
+        ByteArrayInputStream stream = new ByteArrayInputStream(images);
+        File file = new File("src/main/imagefiles/" + id + "/");
+        file.mkdirs();
+        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/" + fileName + ".png"));
+        return "src/main/imagefiles/" + id + "/" + fileName + ".png";
     }
 
 

@@ -14,6 +14,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     Optional<Restaurant> findByEmail(String email);
     Optional<Restaurant> findByPhoneNumber(String phoneNumber);
 
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE restaurants AUTO_INCREMENT = 1", nativeQuery = true)
