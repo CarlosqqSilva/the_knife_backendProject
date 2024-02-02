@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.mindswap.springtheknife.service.RestaurantImageService;
+import lombok.Setter;
+import org.mindswap.springtheknife.utils.ImageApiHandler;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -24,22 +25,26 @@ public class RestaurantImage {
 
     private byte[] images;
 
+    @Setter
     private String imagePath;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
 
-    public String setImages(String prompt, Long id, String fileName) throws IOException {
+    public void setImages(String prompt) throws IOException {
+        images = ImageApiHandler.getImageDataFromAPI(prompt).getBytes();
+    }
+
+    private String createImageFile(String prompt, String fileName) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        images = mapper.convertValue(RestaurantImageService.getImageDataFromAPI(prompt), byte[].class);
+        images = mapper.convertValue(ImageApiHandler.getImageDataFromAPI(prompt), byte[].class);
         ByteArrayInputStream stream = new ByteArrayInputStream(images);
         File file = new File("src/main/imagefiles/" + id + "/");
         file.mkdirs();
-        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/" + fileName + ".png"));
+        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/" + fileName + this.id + ".png"));
         return "src/main/imagefiles/" + id + "/" + fileName + ".png";
     }
-
 
 }

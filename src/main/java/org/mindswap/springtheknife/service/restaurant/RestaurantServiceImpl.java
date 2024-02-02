@@ -86,11 +86,10 @@ public class RestaurantServiceImpl implements RestaurantService{
         RestaurantImage newRestaurantImage = new RestaurantImage();
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
         String prompt = newRestaurant.getRestaurantTypes().getFirst().getType();
-        //newRestaurant.setImagePath(newRestaurantImage.setImages(prompt + " restaurant facade", newRestaurant.getId(), prompt));
         restaurantRepository.save(newRestaurant);
+        newRestaurantImage.setImages(prompt);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
-
     }
 
     @Override
