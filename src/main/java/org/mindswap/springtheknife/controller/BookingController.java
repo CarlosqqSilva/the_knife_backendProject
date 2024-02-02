@@ -71,7 +71,7 @@ public class BookingController {
     @PostMapping("/")
     public ResponseEntity<BookingGetDto> addBooking(@Valid @RequestBody BookingCreateDto booking) throws BookingAlreadyExistsException, UserNotFoundException, RestaurantNotFoundException {
 
-        return new ResponseEntity<>(bookingServiceImpl.addBooking(booking), HttpStatus.OK);
+        return new ResponseEntity<>(bookingServiceImpl.addBooking(booking), HttpStatus.CREATED);
     }
 
 
