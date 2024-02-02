@@ -42,11 +42,8 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private Double rating;
-    @Setter
-    @Column
-    private String imagePath;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<UserExperience> userExperienceList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -64,4 +61,7 @@ public class Restaurant {
                joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
     private List<RestaurantType> restaurantTypes;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    Set<RestaurantImage> restaurantImages;
 }

@@ -2,25 +2,33 @@ package org.mindswap.springtheknife.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.mindswap.springtheknife.service.RestaurantImageService;
-import org.springframework.data.annotation.Id;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
+@Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class RestaurantImage {
 
-   /* @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;*/
+    private Long id;
 
     private byte[] images;
+
+    private String imagePath;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
 
     public String setImages(String prompt, Long id, String fileName) throws IOException {
