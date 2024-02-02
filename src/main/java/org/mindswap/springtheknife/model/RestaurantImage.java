@@ -28,23 +28,23 @@ public class RestaurantImage {
     @Setter
     private String imagePath;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
 
     public void setImages(String prompt) throws IOException {
-        images = ImageApiHandler.getImageDataFromAPI(prompt).getBytes();
-    }
-
-    private String createImageFile(String prompt, String fileName) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         images = mapper.convertValue(ImageApiHandler.getImageDataFromAPI(prompt), byte[].class);
+    }
+
+    public String createImageFile(Long id) throws IOException {
         ByteArrayInputStream stream = new ByteArrayInputStream(images);
         File file = new File("src/main/imagefiles/" + id + "/");
         file.mkdirs();
-        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/" + fileName + this.id + ".png"));
-        return "src/main/imagefiles/" + id + "/" + fileName + ".png";
+        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/restaurant.png"));
+        return "src/main/imagefiles/" + id + "/teste.png";
     }
 
 }

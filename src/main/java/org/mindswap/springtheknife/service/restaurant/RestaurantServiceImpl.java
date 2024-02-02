@@ -14,6 +14,7 @@ import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
+import org.mindswap.springtheknife.service.restaurantimage.RestaurantImageService;
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService{
@@ -36,12 +35,15 @@ public class RestaurantServiceImpl implements RestaurantService{
     private final RestaurantTypeImpl restaurantTypeImpl;
     private final RestaurantTypeRepository restaurantTypeRepository;
 
+    private final RestaurantImageService restaurantImageService;
+
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeImpl restaurantTypeImpl, RestaurantTypeRepository restaurantTypeRepository) {
+    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeImpl restaurantTypeImpl, RestaurantTypeRepository restaurantTypeRepository, RestaurantImageService restaurantImageService) {
         this.restaurantRepository = clientRepository;
         this.cityServiceImpl = cityServiceImpl;
         this.restaurantTypeImpl = restaurantTypeImpl;
         this.restaurantTypeRepository = restaurantTypeRepository;
+        this.restaurantImageService = restaurantImageService;
     }
 
     @Override
@@ -83,11 +85,11 @@ public class RestaurantServiceImpl implements RestaurantService{
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
 
-        RestaurantImage newRestaurantImage = new RestaurantImage();
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
-        String prompt = newRestaurant.getRestaurantTypes().getFirst().getType();
         restaurantRepository.save(newRestaurant);
-        newRestaurantImage.setImages(prompt);
+        RestaurantImage restImg = restaurantImageService.saveRestaurantImage(newRestaurant);
+        newRestaurant.getRestaurantImages().add(restImg);
+        restaurantRepository.save(newRestaurant);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
     }
