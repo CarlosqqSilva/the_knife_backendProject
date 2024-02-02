@@ -22,7 +22,7 @@ public interface RestaurantService {
     Restaurant getById(Long id) throws RestaurantNotFoundException;
 
     RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException;
-    List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException;
+    List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException;
 
     void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException;
 

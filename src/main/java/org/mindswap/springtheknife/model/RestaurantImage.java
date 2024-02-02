@@ -43,7 +43,7 @@ public class RestaurantImage {
         ByteArrayInputStream stream = new ByteArrayInputStream(images);
         File file = new File("src/main/imagefiles/" + id + "/");
         file.mkdirs();
-        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/restaurant.png"));
+        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/rest_exterior.png"));
         return "src/main/imagefiles/" + id + "/teste.png";
     }
 

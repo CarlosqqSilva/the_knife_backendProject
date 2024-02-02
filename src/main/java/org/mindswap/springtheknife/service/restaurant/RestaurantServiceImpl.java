@@ -9,7 +9,6 @@ import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExists
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.model.Restaurant;
-import org.mindswap.springtheknife.model.RestaurantImage;
 import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
@@ -87,15 +86,13 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
         restaurantRepository.save(newRestaurant);
-        RestaurantImage restImg = restaurantImageService.saveRestaurantImage(newRestaurant);
-        newRestaurant.getRestaurantImages().add(restImg);
-        restaurantRepository.save(newRestaurant);
+        restaurantImageService.saveRestaurantImage(newRestaurant);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
     }
 
     @Override
-    public List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
+    public List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
         List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
         for (RestaurantPostDto restaurantPostDto : restaurantList) {
             List<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
@@ -110,6 +107,10 @@ public class RestaurantServiceImpl implements RestaurantService{
             Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurantPostDto, cityServiceImpl.getCityById(restaurantPostDto.cityId()), restaurantTypes);
 
             restaurantRepository.save(newRestaurant);
+            restaurantImageService.saveRestaurantImage(newRestaurant);
+
+            //TODO: add the restaurant images to the restaurant model image set here?
+
             newRestaurantsList.add(RestaurantConverter.fromModelToRestaurantDto(newRestaurant));
         }
 
