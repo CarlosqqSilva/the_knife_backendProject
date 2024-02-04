@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
@@ -31,9 +32,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -60,6 +62,21 @@ public class UserExperienceControllerTests {
     void deleteData() {
         userExperienceRepository.deleteAll();
         userExperienceRepository.resetId();
+    }
+
+    @Test
+    void contextLoads() {
+
+    }
+
+    @Test
+    @DisplayName("Test get all UserExperience when users on database returns empty list")
+    void testGetAllUserExperienceWhenNoUserExperienceOnDatabaseReturnsEmptyList() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/userexperiences/")
+                        .param("sortBy", "id"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test

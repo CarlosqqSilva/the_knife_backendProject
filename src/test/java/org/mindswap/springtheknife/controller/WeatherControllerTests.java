@@ -17,6 +17,11 @@ public class WeatherControllerTests {
     private MockMvc mockMvc;
 
     @Test
+    void contextLoads() {
+
+    }
+
+    @Test
     public void testGetCurrentWeatherData() throws Exception {
         String location = "London";
 

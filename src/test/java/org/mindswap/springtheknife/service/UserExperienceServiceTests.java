@@ -69,6 +69,11 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    void contextLoads() {
+
+    }
+
+    @Test
     void testGetAllUsersExperiences() {
 
         int pageNumber = 0;

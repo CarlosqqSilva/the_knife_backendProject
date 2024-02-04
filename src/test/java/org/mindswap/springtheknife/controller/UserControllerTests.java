@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindswap.springtheknife.dto.user.UserCreateDto;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -53,6 +55,22 @@ public class UserControllerTests {
     void deleteData() {
         userRepository.deleteAll();
         userRepository.resetId();
+    }
+
+    @Test
+    void contextLoads() {
+
+    }
+
+
+    @Test
+    @DisplayName("Test get all Users when users on database returns empty list")
+    void testGetAllUsersWhenNoUsersOnDatabaseReturnsEmptyList() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/")
+                        .param("sortBy", "username"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test

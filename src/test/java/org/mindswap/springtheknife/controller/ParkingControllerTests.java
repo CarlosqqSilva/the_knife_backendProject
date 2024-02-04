@@ -17,6 +17,11 @@ public class ParkingControllerTests {
     private MockMvc mockMvc;
 
     @Test
+    void contextLoads() {
+
+    }
+
+    @Test
     public void testGetParkingData() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/parking/checkParking"))
                 .andExpect(status().isOk());
