@@ -84,7 +84,7 @@ public class UserExperienceServiceTests {
                     Mockito.when(restaurant.getCity()).thenReturn(city);
                     userExperience.setUser(user);
                     userExperience.setRestaurant(restaurant);
-                    userExperience.setRating(5.0); // Set the rating for the UserExperience
+                    userExperience.setRating(5.0);
                     return userExperience;
                 })
                 .collect(Collectors.toList());
@@ -99,7 +99,7 @@ public class UserExperienceServiceTests {
 
     @Test
     void testGetUserExperienceById() throws UserExperienceNotFoundException {
-        // Arrange
+
         Long id = 1L;
         UserExperience userExperience = new UserExperience();
         User user = new User();
@@ -109,7 +109,7 @@ public class UserExperienceServiceTests {
         Mockito.when(restaurant.getCity()).thenReturn(city);
         userExperience.setUser(user);
         userExperience.setRestaurant(restaurant);
-        userExperience.setRating(5.0); // Set the rating for the UserExperience
+        userExperience.setRating(5.0);
         when(userExperienceRepository.findById(id)).thenReturn(Optional.of(userExperience));
 
     }
@@ -160,15 +160,15 @@ public class UserExperienceServiceTests {
         String comment = "Test comment";
         UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(userId, restaurantId, rating, comment);
         User user = new User();
-        Restaurant restaurant = Mockito.mock(Restaurant.class); // Mock the Restaurant object
+        Restaurant restaurant = Mockito.mock(Restaurant.class);
         City city = new City();
         city.setName("Test City");
-        Mockito.when(restaurant.getCity()).thenReturn(city); // Mock the getCity() method to return the City object
+        Mockito.when(restaurant.getCity()).thenReturn(city);
         when(userServiceImpl.getUserById(userId)).thenReturn(user);
         when(restaurantServiceImpl.getById(restaurantId)).thenReturn(restaurant);
         UserExperience userExperience = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperienceCreateDto, user, restaurant);
         userExperience.setTimestamp(LocalDateTime.now());
-        when(userExperienceRepository.save(any())).thenReturn(userExperience); // Use Mockito's any()
+        when(userExperienceRepository.save(any())).thenReturn(userExperience);
 
         UserExperienceGetDto result = userExperienceService.addNewUserExperience(userExperienceCreateDto);
 
@@ -198,12 +198,12 @@ public class UserExperienceServiceTests {
 
     @Test
     void testUpdateUserExperience_UserExperienceNotFound() {
-        // Arrange
+
         Long userExperienceId = 1L;
         UserExperiencePatchDto userExperiencePatchDto = new UserExperiencePatchDto(4.0, "Updated comment");
         when(userExperienceRepository.findById(userExperienceId)).thenReturn(Optional.empty());
 
-        // Act & Assert
+
         assertThrows(UserExperienceNotFoundException.class, () -> userExperienceService.updateUserExperience(userExperienceId, userExperiencePatchDto));
     }
 
