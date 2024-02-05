@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
-import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
+import org.mindswap.springtheknife.dto.restaurant.*;
 import org.mindswap.springtheknife.model.Address;
-import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
@@ -97,6 +93,24 @@ public class RestaurantControllerTests {
     }
 
     @Test
+    @DisplayName("Test get a restaurant by id when restaurant does not exist")
+    void testGetRestaurantByIdWhenRestaurantDoesNotExist() throws Exception {
+        //Given
+        RestaurantPostDto newRestaurant = new RestaurantPostDto("Pizza", new Address(), "pizza@ge.com", "+351219879876", 8.123, -9.32, 1L, new HashSet<>());
+
+        //When
+        when(restaurantService.addRestaurant(any(RestaurantPostDto.class))).thenReturn(new RestaurantGetDto("Porto", "Pizza", "pizza@ge.com", new Address(), "+351219879876", 0.0, new HashSet<>()));
+
+        mockMvc.perform(post("/api/v1/departments/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(newRestaurant)));
+
+        //Then
+        mockMvc.perform(get("/api/v1/departments/2"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @DisplayName("Test adding a restaurant to the database")
     void testAddRestaurant() throws Exception {
 
@@ -151,5 +165,31 @@ public class RestaurantControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/restaurants/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Restaurant with id 1 deleted successfully."));
+    }
+
+    @Test
+    @DisplayName("Test patch a restaurant by id")
+    void testPatchRestaurantById() throws Exception {
+        String requestBody = """
+                {
+                  "address": {
+                    "street": "rua",
+                    "number": "33",
+                    "zipCode": "4100"
+                  },
+                  "email": "6@asdasd.pt"
+                }
+                """;
+
+        RestaurantGetDto patchedRestaurant= new RestaurantGetDto("Porto", "Pizza", "6@asdasd.pt", new Address("rua", "33", "4100"), "+351219879876", 0.0, new HashSet<>());
+
+        when(restaurantService.patchRestaurant(any(Long.class), any(RestaurantPatchDto.class))).thenReturn(patchedRestaurant);
+
+        mockMvc.perform(patch("/api/v1/restaurants/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk());
+
+        verify(restaurantService, times(1)).patchRestaurant(any(Long.class), any(RestaurantPatchDto.class));
     }
 }
