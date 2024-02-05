@@ -7,7 +7,6 @@ import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
-import org.mindswap.springtheknife.service.restaurant.RestaurantService;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequestMapping(path = "api/v1/restaurants")
 public class RestaurantController {
 
-   private final RestaurantServiceImpl restaurantServiceImpl;
+    private final RestaurantServiceImpl restaurantServiceImpl;
 
     @Autowired
     public RestaurantController(RestaurantServiceImpl restaurantServiceImpl) {
@@ -46,6 +45,7 @@ public class RestaurantController {
     public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurant(restaurant), HttpStatus.CREATED);
     }
+
     @PostMapping("/list/")
     public ResponseEntity<List<RestaurantGetDto>> addRestaurant(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurants(restaurantList), HttpStatus.OK);
@@ -60,5 +60,11 @@ public class RestaurantController {
     public ResponseEntity<String> deleteRestaurant(@PathVariable("id") Long id) throws RestaurantNotFoundException {
         restaurantServiceImpl.deleteRestaurant(id);
         return new ResponseEntity<>("Restaurant with id " + id + " deleted successfully.", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/averageRating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable("id") Long id) {
+        Double averageRating = restaurantServiceImpl.findAverageRating(id);
+        return ResponseEntity.ok(averageRating);
     }
 }

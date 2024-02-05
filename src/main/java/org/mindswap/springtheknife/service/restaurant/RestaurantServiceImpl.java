@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class RestaurantServiceImpl implements RestaurantService{
+public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
@@ -76,7 +76,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     @Override
     public RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
-        Set<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+        Set<RestaurantType> restaurantTypes = restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
 
         Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurant.cityId()));
         if (cityOptional.isEmpty()) {
@@ -86,7 +86,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         if (restaurantOpt.isPresent()) {
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
-        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()), restaurantTypes);
 
         restaurantRepository.save(newRestaurant);
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
@@ -97,7 +97,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     public List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
         List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
         for (RestaurantPostDto restaurantPostDto : restaurantList) {
-            Set<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+            Set<RestaurantType> restaurantTypes = restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
             Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurantPostDto.cityId()));
             if (cityOptional.isEmpty()) {
                 throw new CityNotFoundException(restaurantPostDto.cityId() + Message.CITY_NOT_FOUND);
@@ -134,5 +134,10 @@ public class RestaurantServiceImpl implements RestaurantService{
             dbRestaurant.setEmail(restaurant.email());
         }
         return RestaurantConverter.fromModelToRestaurantDto(restaurantRepository.save(dbRestaurant));
+    }
+
+    @Override
+    public Double findAverageRating(Long restaurantId) {
+        return restaurantRepository.findAverageRating(restaurantId);
     }
 }
