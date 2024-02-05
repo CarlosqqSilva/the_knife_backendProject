@@ -3,8 +3,6 @@ package org.mindswap.springtheknife.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.validation.constraints.NotNull;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,17 +10,16 @@ import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
-import org.mindswap.springtheknife.dto.user.UserGetDto;
-import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
-import org.mindswap.springtheknife.model.*;
+import org.mindswap.springtheknife.model.Address;
+import org.mindswap.springtheknife.model.City;
+import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
-
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.mockito.InjectMocks;
@@ -35,7 +32,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,27 +41,21 @@ import static org.mockito.Mockito.*;
 @AutoConfigureMockMvc
 class RestaurantServiceTest {
 
+    private static ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @Mock
     private RestaurantRepository restaurantRepository;
-
     @Mock
     private CityServiceImpl cityServiceImpl;
-
     @Mock
     private RestaurantTypeServiceImpl restaurantTypeServiceImpl;
-
     @Mock
     private RestaurantTypeRepository restaurantTypeRepository;
-
     @Mock
     private RestaurantConverter restaurantConverter;
-
     @InjectMocks
     private RestaurantServiceImpl restaurantService;
-
-    private static ObjectMapper objectMapper;
 
     @BeforeAll
     static void setup() {
@@ -180,6 +170,28 @@ class RestaurantServiceTest {
         verify(restaurantRepository, times(1)).findById(restaurantId);
 
         verifyNoMoreInteractions(restaurantRepository);
+    }
+
+    @Test
+    void testPatchRestaurantEmailTaken() {
+        // Arrange
+        Long id = 1L;
+        Restaurant existingRestaurant = mock(Restaurant.class);
+        when(existingRestaurant.getEmail()).thenReturn("existing.email@example.com");
+        when(existingRestaurant.getAddress()).thenReturn(new Address());
+
+        RestaurantPatchDto restaurantPatchDto = new RestaurantPatchDto(
+                new Address(),
+                "taken.email@example.com"
+        );
+
+        when(restaurantRepository.findById(id)).thenReturn(Optional.of(existingRestaurant));
+        when(restaurantRepository.findByEmail("taken.email@example.com")).thenReturn(Optional.of(new Restaurant()));
+
+        // Act and Assert
+        assertThrows(IllegalStateException.class, () -> {
+            restaurantService.patchRestaurant(id, restaurantPatchDto);
+        });
     }
 
   /*  @Test
