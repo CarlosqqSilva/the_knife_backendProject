@@ -1,5 +1,6 @@
 package org.mindswap.springtheknife.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,9 @@ import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
 import org.mindswap.springtheknife.model.Address;
+import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ public class RestaurantControllerTests {
     @MockBean
     RestaurantServiceImpl restaurantService;
 
+    ObjectMapper mapper = new ObjectMapper();
+
     @Test
     @AfterEach
     void init() {
@@ -48,6 +53,16 @@ public class RestaurantControllerTests {
         restaurantRepository.resetId();
     }
 
+
+    @Test
+    @DisplayName("Test get all restaurants when database is empty")
+    void testGetAllRestaurantsWhenDatabaseIsEmpty() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/restaurants/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
 
     @Test
     @DisplayName("Test get all restaurants when database has 1 user")
@@ -68,6 +83,64 @@ public class RestaurantControllerTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Pizza")));
+    }
+
+    @Test
+    @DisplayName("Test get a restaurant by id")
+    void testGetRestaurantById() throws Exception {
+        when(restaurantService.getRestaurant(1L)).thenReturn(new RestaurantGetDto("Porto", "Pizza", "pizza@ge.com", new Address(), "+351219879876", 0.0, new HashSet<>()));
+
+        mockMvc.perform(get("/api/v1/restaurants/{id}", 1L))
+              .andExpect(status().isOk())
+              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+              .andExpect(jsonPath("$.name", is("Pizza")));
+    }
+
+    @Test
+    @DisplayName("Test adding a restaurant to the database")
+    void testAddRestaurant() throws Exception {
+
+        //Given
+        RestaurantPostDto newRestaurant = new RestaurantPostDto("Pizza", new Address(), "pizza@ge.com", "+351219879876", 8.123, -9.32, 1L, new HashSet<>());
+
+        //When
+        when(restaurantService.addRestaurant(any(RestaurantPostDto.class))).thenReturn(new RestaurantGetDto("Porto", "Pizza", "pizza@ge.com", new Address(), "+351219879876", 0.0, new HashSet<>()));
+
+        //Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants/")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(mapper.writeValueAsString(newRestaurant)))
+              .andExpect(status().isCreated())
+              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+              .andExpect(jsonPath("$.name", is("Pizza")));
+    }
+
+    @Test
+    @DisplayName("Test adding a list of restaurants to the database")
+    void testAddListOfRestaurants() throws Exception {
+
+        //Given
+        List<RestaurantPostDto> restaurantsPost = new ArrayList<>();
+        restaurantsPost.add(new RestaurantPostDto("Pizza", new Address(), "pizza@ge.com", "+351219879876", 8.123, -9.32, 1L, new HashSet<>()));
+        restaurantsPost.add(new RestaurantPostDto("Sushi", new Address(), "sushi@ge.com", "+351219823476", 8.345, -9.56, 2L, new HashSet<>()));
+
+        List<RestaurantGetDto> restaurantsGet = new ArrayList<>();
+        restaurantsGet.add(new RestaurantGetDto("Porto", "Pizza", "pizza@ge.com", new Address(), "+351219879876", 0.0, new HashSet<>()));
+        restaurantsGet.add(new RestaurantGetDto("Lisbon", "Sushi", "sushi@ge.com", new Address(), "+351219823476", 0.0, new HashSet<>()));
+
+        //When
+        when(restaurantService.addListOfRestaurants(any(List.class))).thenReturn(restaurantsGet);
+
+        //Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants/list/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(restaurantsPost)))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("Pizza")))
+                .andExpect(jsonPath("$[1].name", is("Sushi")));
+
     }
 
     @Test

@@ -47,8 +47,8 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurant(restaurant), HttpStatus.CREATED);
     }
     @PostMapping("/list/")
-    public ResponseEntity<List<RestaurantGetDto>> addRestaurant(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
-        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurants(restaurantList), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantGetDto>> addRestaurantList(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
+        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurants(restaurantList), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
