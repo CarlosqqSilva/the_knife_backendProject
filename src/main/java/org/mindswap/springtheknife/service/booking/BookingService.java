@@ -5,6 +5,7 @@ import org.mindswap.springtheknife.dto.booking.BookingGetDto;
 import org.mindswap.springtheknife.dto.booking.BookingPatchDto;
 import org.mindswap.springtheknife.exceptions.booking.BookingAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
+import org.mindswap.springtheknife.exceptions.booking.OperationNotAllowedException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 
@@ -19,7 +20,7 @@ public interface BookingService {
 
     BookingGetDto addBooking(BookingCreateDto booking) throws BookingAlreadyExistsException, UserNotFoundException, RestaurantNotFoundException;
 
-    BookingGetDto patchBooking(Long id, BookingPatchDto booking) throws BookingNotFoundException;
+    BookingGetDto patchBooking(Long id, BookingPatchDto booking) throws BookingNotFoundException, OperationNotAllowedException;
 
     void deleteBooking(Long id) throws BookingNotFoundException;
 }

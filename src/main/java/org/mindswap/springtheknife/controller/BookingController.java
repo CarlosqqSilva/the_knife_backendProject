@@ -11,6 +11,7 @@ import org.mindswap.springtheknife.dto.booking.BookingGetDto;
 import org.mindswap.springtheknife.dto.booking.BookingPatchDto;
 import org.mindswap.springtheknife.exceptions.booking.BookingAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
+import org.mindswap.springtheknife.exceptions.booking.OperationNotAllowedException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.Booking;
@@ -56,9 +57,8 @@ public class BookingController {
                     content = @Content),
     })
     @GetMapping("/{id}")
-    public ResponseEntity<BookingGetDto> getBookingById(@PathVariable("id") Long id) throws BookingNotFoundException {
-        BookingGetDto booking = bookingServiceImpl.getBookingById(id);
-        return new ResponseEntity<>(booking, HttpStatus.OK);
+    public ResponseEntity<BookingGetDto> getBookingById (@PathVariable("id") Long id) throws BookingNotFoundException {
+        return new ResponseEntity<>(bookingServiceImpl.getBookingById(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Create a new Booking", description = "New Booking created")
@@ -87,8 +87,7 @@ public class BookingController {
                     content = @Content)
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<BookingGetDto> patchBooking(@PathVariable("id") Long id, @Valid @RequestBody BookingPatchDto booking) throws BookingNotFoundException {
-        bookingServiceImpl.patchBooking(id, booking);
+    public ResponseEntity<BookingGetDto> patchBooking (@PathVariable("id") Long id, @Valid @RequestBody BookingPatchDto booking) throws BookingNotFoundException, OperationNotAllowedException {
         return new ResponseEntity<>(bookingServiceImpl.patchBooking(id, booking), HttpStatus.OK);
     }
 

@@ -2,6 +2,7 @@ package org.mindswap.springtheknife.aspects;
 
 import org.mindswap.springtheknife.exceptions.booking.BookingAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
+import org.mindswap.springtheknife.exceptions.booking.OperationNotAllowedException;
 import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
@@ -36,5 +37,11 @@ public class ExceptionHandler {
     public ResponseEntity<String> AlreadyExistsHandler(Exception ex) {
         logger.error("Known Exception: " + ex);
         return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(ex.getMessage());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = {OperationNotAllowedException.class})
+    public ResponseEntity<String> NotAllowedHandler(Exception ex) {
+        logger.error("Known Exception: " + ex);
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ex.getMessage());
     }
 }

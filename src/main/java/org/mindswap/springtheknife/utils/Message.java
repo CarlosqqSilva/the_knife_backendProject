@@ -22,11 +22,11 @@ public class Message {
     public static final String EMAIL_TAKEN = "Email already taken";
     public static final String USER_EXPERIENCE_ID_NOT_FOUND = "Invalid UserName";
     public static final Object USER_EXPERIENCE_ID_ALREADY_EXISTS = "User Experience ID already exists.";
-    public static final String BOOKING_ID = "Booking with Id";
+    public static final String BOOKING_ID = "Booking with Id ";
     public static final String DELETE_SUCCESSFULLY = "deleted successfully";
     public static final String BOOKING_MANDATORY = "Insert BookingTime";
     public static final String STATUS_MANDATORY = "Insert Status";
-    public static final String NOT_FOUND = "not found";
+    public static final String NOT_FOUND = " not found.";
     public static final String ALREADY_EXISTS = "Already exists";
     public static final String VALID_STATUS = "Valid status";
     public static final String CITY_WITH_ID = "City with id";
@@ -58,4 +58,9 @@ public class Message {
     public static final String INVALID_COMMENT = "Insert a valid Comment";
     public static final String USER_ID_MANDATORY = "Insert User Id";
     public static final String RESTAURANT_ID_MANDATORY = "Insert Restaurant Id";
+    public static final String BOOKING_ID_MANDATORY = "Insert Booking Id";
+    public static final String BOOKING_ID_NOT_FOUND = "Invalid Booking Id";
+    public static final String BOOKING_STATUS_ILLEGAL = "Cannot give experience rating cause your booking status isn't COMPLETE.";
+    public static final String USER_EXPERIENCE_ID_EXISTS = "User Experience Id already exists.";
+    public static final String BOOKING_CLOSED = "Can´t change the booking status because it´s already closed.";
 }
