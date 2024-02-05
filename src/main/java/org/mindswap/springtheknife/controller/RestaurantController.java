@@ -118,4 +118,10 @@ public class RestaurantController {
         restaurantServiceImpl.deleteRestaurant(id);
         return new ResponseEntity<>("Restaurant with id " + id + " deleted successfully.", HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/averageRating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable("id") Long id) {
+        Double averageRating = restaurantServiceImpl.findAverageRating(id);
+        return ResponseEntity.ok(averageRating);
+    }
 }
