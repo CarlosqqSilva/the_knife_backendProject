@@ -62,4 +62,5 @@ public class Message {
     public static final String BOOKING_ID_NOT_FOUND = "Invalid Booking Id";
     public static final String BOOKING_STATUS_ILLEGAL = "Cannot give experience rating cause your booking status isn't COMPLETE.";
     public static final String USER_EXPERIENCE_ID_EXISTS = "User Experience Id already exists.";
+    public static final String BOOKING_CLOSED = "Can´t change the booking status because it´s already closed.";
 }
