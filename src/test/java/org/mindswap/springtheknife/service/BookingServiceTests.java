@@ -73,7 +73,7 @@ public class BookingServiceTests {
         List<Booking> booking = new ArrayList<>();
         when(bookingRepository.findAll()).thenReturn(booking);
 
-        List<BookingGetDto> result = bookingService.getAllBookings(0,1,"Id");
+        List<BookingGetDto> result = bookingService.getAllBookings(1,1,"Id");
 
         assertEquals(booking, result);
     }

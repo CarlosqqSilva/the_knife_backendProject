@@ -61,7 +61,7 @@ public class UserExperienceController {
     @PostMapping("/")
     public ResponseEntity<UserExperienceGetDto> addUserExperience(@Valid @RequestBody UserExperienceCreateDto userExperienceCreateDto) throws UserNotFoundException, RestaurantNotFoundException {
         return new ResponseEntity<>(userExperienceService.addNewUserExperience(userExperienceCreateDto),
-                HttpStatus.OK);
+                HttpStatus.CREATED);
     }
 
 

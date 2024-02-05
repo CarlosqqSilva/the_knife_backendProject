@@ -65,7 +65,7 @@ public class RestaurantTypeController {
     })
     @PostMapping("/")
     public ResponseEntity<RestaurantTypeDto> addType (@Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
-        return new ResponseEntity<>(restaurantTypeService.addType(restaurantType), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantTypeService.addType(restaurantType), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update a Type", description = "Updates a Type in the database")
