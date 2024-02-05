@@ -1,6 +1,7 @@
 package org.mindswap.springtheknife.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,15 +35,16 @@ public class UserController {
 
     }
 
-    @Operation(summary = "Get all users", description = "This method returns a list of all users")
+    @Operation(summary = "Get all users", description = "Returns a list of all users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the Users",
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of users",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))}),})
+                            array = @ArraySchema(schema = @Schema(implementation = UserGetDto.class)))})
+    })
     @GetMapping("/")
     public ResponseEntity<List<UserGetDto>> getAllUsers(
-            @RequestParam(value ="pageNumber", defaultValue = "0",required = false) int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5",required = false) int pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy") String sortBy
 
     ) {
@@ -50,13 +52,15 @@ public class UserController {
     }
 
 
-    @Operation(summary = "Get a user by id", description = "This method returns a users by id")
+    @Operation(summary = "Get a user by ID", description = "Returns a user by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the User",
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the user",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "400", description = "User id not found",
+                            schema = @Schema(implementation = UserGetDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
                     content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
     })
     @GetMapping("/{userId}")
     public ResponseEntity<UserGetDto> getUser(@PathVariable("userId") Long userId) throws UserNotFoundException {
@@ -64,24 +68,32 @@ public class UserController {
 
     }
 
-    @Operation(summary = "Create a new user", description = "This method creates a new user")
+    @Operation(summary = "Create a new user", description = "Creates a new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New user created",
+            @ApiResponse(responseCode = "201", description = "User successfully created",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "400", description = "Verify the user details",
+                            schema = @Schema(implementation = UserCreateDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid user details provided",
                     content = @Content),
+            @ApiResponse(responseCode = "409", description = "User or email already exists",
+                    content = @Content)
     })
     @PostMapping("/")
     public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
-       userServiceImpl.createUser(user);
+        userServiceImpl.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Update a user", description = "Updates a user in the database")
+    @Operation(summary = "Update a user", description = "Updates a user by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated"),
-            @ApiResponse(responseCode = "400", description = "User property already exists")})
+            @ApiResponse(responseCode = "200", description = "User successfully updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserPatchDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid user details provided",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
+    })
     @PatchMapping("/{userId}")
     public ResponseEntity<UserPatchDto> patchUser(@Valid @PathVariable("userId") Long id,
                                                   @Valid @RequestBody UserPatchDto user) throws UserNotFoundException, UserAlreadyExistsException {
@@ -90,10 +102,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "Delete a user", description = "Deletes a user from the database")
+    @Operation(summary = "Delete a user", description = "Deletes a user by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully deleted"),
-            @ApiResponse(responseCode = "404", description = "User id not found")})
+            @ApiResponse(responseCode = "200", description = "User successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
+    })
     @DeleteMapping(path = "/{userId}")
     public ResponseEntity<User> deleteUser(@Valid @PathVariable("userId") Long id) throws UserNotFoundException {
         userServiceImpl.deleteUser(id);
