@@ -3,6 +3,8 @@ package org.mindswap.springtheknife.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.validation.constraints.NotNull;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,12 +12,12 @@ import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
+import org.mindswap.springtheknife.dto.user.UserGetDto;
+import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
-import org.mindswap.springtheknife.model.Address;
-import org.mindswap.springtheknife.model.City;
-import org.mindswap.springtheknife.model.Restaurant;
+import org.mindswap.springtheknife.model.*;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
@@ -28,6 +30,9 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -77,9 +82,11 @@ class RestaurantServiceTest {
     @Test
     void testGetRestaurants() {
         List<Restaurant> restaurants = new ArrayList<>();
-        when(restaurantRepository.findAll()).thenReturn(restaurants);
+        Page<Restaurant> pageRestaurant = new PageImpl<>(restaurants);
 
-        List<RestaurantGetDto> result = restaurantService.getAllRestaurants(0,3,"name");
+        when(restaurantRepository.findAll(any(Pageable.class))).thenReturn(pageRestaurant);
+
+        List<RestaurantGetDto> result = restaurantService.getAllRestaurants(1, 3, "asc");
 
         assertEquals(restaurants.size(), result.size());
     }
@@ -174,27 +181,39 @@ class RestaurantServiceTest {
 
         verifyNoMoreInteractions(restaurantRepository);
     }
-}
-/*
-    @Test
-    void testpatchRestaurant() throws RestaurantNotFoundException {
-        long id = 1L;
+
+  /*  @Test
+    void testPatchRestaurant() throws RestaurantNotFoundException {
+        long restaurantId = 1L;
+
+        City city = new City();
+        city.setId(1L);
+
+        Restaurant restaurant = new Restaurant();
+        restaurant.setCity(city);
+        when(restaurantService.getById(1L)).thenReturn(restaurant);
+
         Restaurant existingRestaurant = new Restaurant();
         Restaurant updatedRestaurant = new Restaurant();
 
-        when(restaurantRepository.findById(id)).thenReturn(Optional.of(existingRestaurant));
+        // Mocking the repository behavior
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
         when(restaurantRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(restaurantRepository.save(existingRestaurant)).thenReturn(updatedRestaurant);
 
-        restaurantService.patchRestaurant(id, new RestaurantPatchDto(new Address(), "exm@exm.com"));
+        RestaurantPatchDto restaurantPatchDto = new RestaurantPatchDto(
+                new Address(), "newEmail@example.com");
+        restaurantPatchDto.email();
+        restaurantPatchDto.address();
 
         assertEquals(updatedRestaurant.getEmail(), existingRestaurant.getEmail());
-        assertEquals("exm@exm.com", updatedRestaurant.getEmail());
+        assertEquals("newEmail@example.com", updatedRestaurant.getEmail());
 
-        verify(restaurantRepository, times(1)).findById(id);
-        verify(restaurantRepository, times(1)).findByEmail("exm@exm.com");
+        verify(restaurantRepository, times(1)).findById(restaurantId);
+        verify(restaurantRepository, times(1)).findByEmail("newEmail@example.com");
         verify(restaurantRepository, times(1)).save(existingRestaurant);
         verifyNoMoreInteractions(restaurantRepository);
-    }
-
-*/
+    }*/
+}

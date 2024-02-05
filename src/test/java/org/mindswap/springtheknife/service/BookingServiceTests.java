@@ -12,26 +12,29 @@ import org.mindswap.springtheknife.dto.booking.BookingGetDto;
 import org.mindswap.springtheknife.dto.booking.BookingPatchDto;
 import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
+import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
-import org.mindswap.springtheknife.model.Booking;
-import org.mindswap.springtheknife.model.City;
-import org.mindswap.springtheknife.model.Restaurant;
-import org.mindswap.springtheknife.model.User;
+import org.mindswap.springtheknife.model.*;
 import org.mindswap.springtheknife.repository.BookingRepository;
 import org.mindswap.springtheknife.service.booking.BookingService;
 import org.mindswap.springtheknife.service.booking.BookingServiceImpl;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,6 +56,10 @@ public class BookingServiceTests {
     private RestaurantServiceImpl restaurantService;
     @Mock
     private UserServiceImpl userService;
+    @Mock
+    private RestaurantTypeServiceImpl restaurantTypeService;
+    @Mock
+    private BookingStatus CONFIRMED;
 
     private static ObjectMapper objectMapper;
 
@@ -70,15 +77,36 @@ public class BookingServiceTests {
 
     @Test
     public void testAllBookings() {
-        List<Booking> booking = new ArrayList<>();
-        when(bookingRepository.findAll()).thenReturn(booking);
+        int pageNumber = 0;
+        int pageSize = 5;
+        String sortBy = "id";
+        List<Booking> booking = IntStream.range(0, pageSize)
+                .mapToObj(i -> {
+                    Booking booking1 = new Booking();
+                    User user = new User();
+                    City city = Mockito.mock(City.class);
+                    Mockito.when(city.getName()).thenReturn("Test City");
+                    Restaurant restaurant = Mockito.mock(Restaurant.class);
+                    Mockito.when(restaurant.getCity()).thenReturn(city);
+                    booking1.setRestaurant(restaurant);
+                    booking1.setBookingTime(LocalDateTime.now());
+                    booking1.setStatus(CONFIRMED);
+                    booking1.setUser(user);
+                    return booking1; // Adicione esta linha para corrigir o erro de inferência de tipo
+                })
+                .collect(Collectors.toList());
 
-        List<BookingGetDto> result = bookingService.getAllBookings(0,1,"Id");
+        Page<Booking> pageBooking = new PageImpl<>(booking);
+        when(bookingRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy)))
+                .thenReturn(pageBooking);
 
-        assertEquals(booking, result);
+        List<BookingGetDto> result = bookingService.getAllBookings(pageNumber, pageSize, sortBy);
+
+        assertEquals(pageSize, result.size());
     }
 
-    @Test
+
+        @Test
     void testDeleteBooking() throws BookingNotFoundException {
         long bookingId = 1L;
         Booking booking = new Booking();
@@ -95,7 +123,7 @@ public class BookingServiceTests {
     }
 
     @Test
-    void testAddBooking() throws UserNotFoundException, RestaurantNotFoundException {
+    void testAddBooking() throws UserNotFoundException, RestaurantNotFoundException, RestaurantTypeNotFoundException {
         BookingCreateDto bookingCreateDto = new BookingCreateDto(1L, 1L, LocalDateTime.now(), BookingStatus.CONFIRMED);
 
         User user = new User();
@@ -105,7 +133,7 @@ public class BookingServiceTests {
         city.setId(1L);
 
         Restaurant restaurant = new Restaurant();
-        restaurant.getCity().setId(1L);
+        restaurant.setCity(city);
         when(restaurantService.getById(1L)).thenReturn(restaurant);
 
         BookingGetDto result = bookingService.addBooking(bookingCreateDto);
@@ -113,13 +141,8 @@ public class BookingServiceTests {
         assertNotNull(result);
 
         verify(bookingRepository, times(1)).save(any(Booking.class));
-
         verify(userService, times(1)).getUserById(1L);
         verify(restaurantService, times(1)).getById(1L);
-
-        if (restaurant.getCity() != null) {
-            assertNotNull(restaurant.getCity().getId());
-        }
     }
 
     @Test
@@ -134,7 +157,7 @@ public class BookingServiceTests {
         city.setId(1L);
 
         Restaurant restaurant = new Restaurant();
-        restaurant.getCity().setId(1L);
+        restaurant.setCity(city);
         when(restaurantService.getById(1L)).thenReturn(restaurant);
 
         Booking existingBooking = new Booking();
@@ -179,7 +202,7 @@ public class BookingServiceTests {
         city.setId(1L);
 
         Restaurant restaurant = new Restaurant();
-        restaurant.getCity().setId(1L);
+        restaurant.setCity(city);
         when(restaurantService.getById(1L)).thenReturn(restaurant);
 
         Booking existingBooking = new Booking();
