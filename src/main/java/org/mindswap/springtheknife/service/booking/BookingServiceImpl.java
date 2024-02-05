@@ -8,6 +8,7 @@ import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.model.Booking;
+import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.repository.BookingRepository;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
@@ -55,6 +56,13 @@ public class BookingServiceImpl implements BookingService {
         return BookingConverter.fromModelToBookingDto(booking);
     }
 
+    public Booking getBookingId(Long id) throws BookingNotFoundException {
+        Optional<Booking> bookingOptional = bookingRepository.findById(id);
+        if (bookingOptional.isEmpty()) {
+            throw new BookingNotFoundException(Message.BOOKING_ID + id + Message.NOT_EXIST);
+        }
+        return bookingOptional.get();
+    }
     @Override
     public BookingGetDto addBooking (BookingCreateDto booking) throws UserNotFoundException, RestaurantNotFoundException {
         Booking bookingToSave = BookingConverter.fromBookingDtoToModel
@@ -81,6 +89,8 @@ public class BookingServiceImpl implements BookingService {
         }
         return BookingConverter.fromModelToBookingDto(bookingRepository.save(dbBooking));
     }
+
+
 }
 
 

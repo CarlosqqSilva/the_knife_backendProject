@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
+import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
@@ -59,7 +60,7 @@ public class UserExperienceController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserExperienceGetDto> addUserExperience(@Valid @RequestBody UserExperienceCreateDto userExperienceCreateDto) throws UserNotFoundException, RestaurantNotFoundException {
+    public ResponseEntity<UserExperienceGetDto> addUserExperience(@Valid @RequestBody UserExperienceCreateDto userExperienceCreateDto) throws UserNotFoundException, RestaurantNotFoundException, UserExperienceNotFoundException, BookingNotFoundException {
         return new ResponseEntity<>(userExperienceService.addNewUserExperience(userExperienceCreateDto),
                 HttpStatus.CREATED);
     }
