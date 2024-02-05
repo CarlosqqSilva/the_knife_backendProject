@@ -84,8 +84,12 @@ public class RestaurantServiceImpl implements RestaurantService{
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
 
+
+
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+
         restaurantRepository.save(newRestaurant);
+
         restaurantImageService.saveRestaurantImage(newRestaurant);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
