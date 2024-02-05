@@ -5,9 +5,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.dto.city.CityGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.model.City;
+import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mockito.InjectMocks;
@@ -15,6 +17,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,12 +55,15 @@ class CityServiceTests {
     @Test
     public void testGetCities() throws Exception {
         List<City> cities = new ArrayList<>();
-        when(cityRepository.findAll()).thenReturn(cities);
+        Page<City> pageCity = new PageImpl<>(cities);
 
-        List<CityGetDto> result = cityService.getAllCities(0,3, "name");
+        when(cityRepository.findAll(any(Pageable.class))).thenReturn(pageCity);
+
+        List<CityGetDto> result = cityService.getAllCities(1, 3, "asc");
 
         assertEquals(cities.size(), result.size());
     }
+
 
     @Test
     public void testDelete() throws CityNotFoundException {
@@ -71,15 +80,12 @@ class CityServiceTests {
     void testCreateCityAndConverter() throws CityAlreadyExistsException {
         CityDto existingCityDto = new CityDto("Existing City");
 
-        // Mocking behavior to return a non-empty Optional, indicating that the city already exists.
         when(cityRepository.findByName(existingCityDto.name())).thenReturn(Optional.of(new City()));
 
-        // Act and Assert
         assertThrows(CityAlreadyExistsException.class, () -> {
             cityService.create(existingCityDto);
         });
 
-        // Verify that the repository's save method was not called in case of a duplicate city.
         verify(cityRepository, never()).save(any(City.class));
     }
 
