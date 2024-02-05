@@ -53,6 +53,11 @@ public class UserServiceTests {
         userRepository.resetId();
     }
 
+    @Test
+    void contextLoads() {
+
+    }
+
 
     @Test
     void testGetAllUsers() {
