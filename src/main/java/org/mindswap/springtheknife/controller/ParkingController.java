@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mindswap.springtheknife.model.Parking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,10 +25,10 @@ public class ParkingController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/checkParking")
-    public Mono<List<Parking.Record>> getParkingData() {
+    @GetMapping("/checkParking/{limit}")
+    public Mono<List<Parking.Record>> getParkingData(@PathVariable("limit") Integer limit) {
 
-        String url = "http://localhost:8081/parking";
+        String url = "http://localhost:8081/parking/" + limit;
 
         return webClient.get()
                 .uri(url)

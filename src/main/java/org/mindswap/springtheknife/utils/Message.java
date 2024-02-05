@@ -24,7 +24,7 @@ public class Message {
     public static final Object USER_EXPERIENCE_ID_ALREADY_EXISTS = "User Experience ID already exists.";
     public static final String BOOKING_ID = "Booking with Id";
     public static final String DELETE_SUCCESSFULLY = "deleted successfully";
-    public static final String BOOKING_MANDATORY = "Insert Booking";
+    public static final String BOOKING_MANDATORY = "Insert BookingTime";
     public static final String STATUS_MANDATORY = "Insert Status";
     public static final String NOT_FOUND = "not found";
     public static final String ALREADY_EXISTS = "Already exists";
