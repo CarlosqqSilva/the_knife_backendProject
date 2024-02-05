@@ -1,6 +1,12 @@
 package org.mindswap.springtheknife.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.mindswap.springtheknife.model.Parking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +31,13 @@ public class ParkingController {
         this.objectMapper = objectMapper;
     }
 
+    @Operation(summary = "Get Parking Data", description = "Fetches parking data from an external service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved parking data",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Parking.Record.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
     @GetMapping("/checkParking/{limit}")
     public Mono<List<Parking.Record>> getParkingData(@PathVariable("limit") Integer limit) {
 
