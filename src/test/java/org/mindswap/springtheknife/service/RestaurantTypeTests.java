@@ -9,19 +9,24 @@ import org.mindswap.springtheknife.converter.RestaurantTypeConverter;
 import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeNotFoundException;
-import org.mindswap.springtheknife.model.RestaurantType;
+import org.mindswap.springtheknife.model.*;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -52,12 +57,33 @@ public class RestaurantTypeTests {
 
     @Test
     public void testGetRestaurantType() {
-        List<RestaurantType> types = new ArrayList<>();
-        when(restaurantTypeRepository.findAll()).thenReturn(types);
+        int pageNumber = 0;
+        int pageSize = 5;
+        String sortBy = "id";
+        List<RestaurantType> restaurantType = IntStream.range(0, pageSize)
+                .mapToObj(i -> {
+                    RestaurantType restaurantType1 = new RestaurantType();
+                    restaurantType1.setType("Test");
+                    restaurantType1.setId((long) (i + 1));
 
-        List<RestaurantTypeDto> result = restaurantTypeService.getAllRestaurantType(0,2, "name");
+                    City city = Mockito.mock(City.class);
+                    Mockito.when(city.getName()).thenReturn("Test City");
+                    Restaurant restaurant = Mockito.mock(Restaurant.class);
+                    Mockito.when(restaurant.getCity()).thenReturn(city);
 
-        assertEquals(types.size(), result.size());
+                    restaurantType1.setRestaurants(Set.of(restaurant));
+
+                    return restaurantType1;
+                })
+                .collect(Collectors.toList());
+
+        Page<RestaurantType> pageRestaurantType = new PageImpl<>(restaurantType);
+        when(restaurantTypeRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy)))
+                .thenReturn(pageRestaurantType);
+
+        List<RestaurantTypeDto> result = restaurantTypeService.getAllRestaurantType(pageNumber, pageSize, sortBy);
+
+        assertEquals(pageSize, result.size());
     }
 
     @Test
