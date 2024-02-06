@@ -15,7 +15,7 @@ public class Message {
     public static final String DATE_OF_BIRTH_MANDATORY = "Insert Date of Birth";
     public static final String VALID_EMAIL = "Insert a valid Email";
     public static final String VALID_LASTNAME = "Insert a valid LastName";
-    public static final String VALID_DATE_OF_BIRTH = "Insert a valid Date of Birth";
+    public static final String VALID_DATE_OF_BIRTH = "Insert a valid Date of Birth.";
     public static final String EMAIL_MANDATORY = "Insert an Email";
     public static final String VALID_USERNAME = "Insert a valid UserName";
     public static final String VALID_PASSWORD = "Insert a valid Password";
@@ -69,4 +69,10 @@ public class Message {
     public static final String INVALID_TYPE = "Insert a valid Type";
     public static final String TYPE_VALIDATOR = "^[a-zA-Z\\s]{1,50}$";
     public static final String VALID_FIRSTNAME = "Insert a valid first name";
+    public static final String NAME_VALIDATOR = "^[a-zA-Z]{1,50}$";
+    public static final String PASSWORD_VALIDATOR = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$";
+    public static final String USERNAME_VALIDATOR = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$";
+    public static final String VALID_DATE = "Insert a valid Date.";
+
+    public static final String COMMENT_VALIDATOR = "^[^\\n]{1,250}$";
 }
