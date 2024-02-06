@@ -12,11 +12,8 @@ public record CityGetDto (
 
         Long id,
 
-        @Schema(example = "Porto")
-        @NotNull(message = Message.NAME_ERROR)
         String name,
 
-        @NotEmpty
         List<RestaurantGetDto> restaurantList
 
 ) {

@@ -13,20 +13,20 @@ import static org.mindswap.springtheknife.utils.Message.*;
 public record UserCreateDto (
 
      @NotBlank(message = USERNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = VALID_USERNAME)
+     @Pattern(regexp = USERNAME_VALIDATOR, message = VALID_USERNAME)
      String userName,
      @NotBlank(message = PASSWORD_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = VALID_PASSWORD)
+     @Pattern(regexp = PASSWORD_VALIDATOR, message = VALID_PASSWORD)
      String password,
      @Email(message = EMAIL_MANDATORY)
      @Pattern(regexp = EMAIL_VALIDATOR, message = VALID_EMAIL)
      String email,
 
      @NotBlank(message = FIRSTNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z]{1,50}$", message = VALID_FIRSTNAME)
+     @Pattern(regexp = NAME_VALIDATOR, message = VALID_FIRSTNAME)
      String firstName,
      @NotBlank(message = LASTNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z]{1,50}$", message = VALID_LASTNAME)
+     @Pattern(regexp = NAME_VALIDATOR, message = VALID_LASTNAME)
      String lastName,
 
      @Valid

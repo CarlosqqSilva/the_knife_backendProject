@@ -14,18 +14,11 @@ import static org.mindswap.springtheknife.utils.Message.*;
 public record RestaurantGetDto(
 
         String cityName,
-        @NotBlank(message = RESTAURANT_NAME_MANDATORY)
-        @Pattern(regexp = RESTAURANT_VALIDATOR, message = VALID_RESTAURANT_NAME)
         String name,
-        @Email(message = EMAIL_MANDATORY)
-        @Pattern(regexp = EMAIL_VALIDATOR, message =VALID_EMAIL)
         String email,
         Address address,
-        @NotBlank(message = PHONE_NUMBER_MANDATORY)
-        @Pattern(regexp = PHONE_NUMBER_VALIDATOR, message = INVALID_PHONE_NUMBER)
         String phoneNumber,
         Double rating,
-        @NotEmpty
         Set<RestaurantTypeDto> restaurantTypes
         
 ) {
