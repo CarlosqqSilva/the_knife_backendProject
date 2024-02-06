@@ -58,6 +58,7 @@ public class Message {
     public static final String INVALID_COMMENT = "Insert a valid Comment";
     public static final String USER_ID_MANDATORY = "Insert User Id";
     public static final String RESTAURANT_ID_MANDATORY = "Insert Restaurant Id";
+    public static final String BOOKING_FUTURE = "Booking time must be in the present or in the future";
     public static final String BOOKING_ID_MANDATORY = "Insert Booking Id";
     public static final String BOOKING_ID_NOT_FOUND = "Invalid Booking Id";
     public static final String BOOKING_STATUS_ILLEGAL = "Cannot give experience rating cause your booking status isn't COMPLETE.";
