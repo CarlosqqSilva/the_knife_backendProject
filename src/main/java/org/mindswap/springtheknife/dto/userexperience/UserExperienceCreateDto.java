@@ -7,6 +7,8 @@ import org.mindswap.springtheknife.utils.Message;
 
 public record UserExperienceCreateDto(
 
+        @NotNull(message = Message.BOOKING_ID_MANDATORY)
+        Long bookingId,
         @NotNull(message = Message.USER_ID_MANDATORY)
         Long userId,
         @NotNull(message = Message.RESTAURANT_ID_MANDATORY)

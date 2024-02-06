@@ -20,7 +20,6 @@ import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
-
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.mockito.InjectMocks;
@@ -28,8 +27,10 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
-
 
 import java.util.*;
 
@@ -40,27 +41,21 @@ import static org.mockito.Mockito.*;
 @AutoConfigureMockMvc
 class RestaurantServiceTest {
 
+    private static ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @Mock
     private RestaurantRepository restaurantRepository;
-
     @Mock
     private CityServiceImpl cityServiceImpl;
-
     @Mock
     private RestaurantTypeServiceImpl restaurantTypeServiceImpl;
-
     @Mock
     private RestaurantTypeRepository restaurantTypeRepository;
-
     @Mock
     private RestaurantConverter restaurantConverter;
-
     @InjectMocks
     private RestaurantServiceImpl restaurantService;
-
-    private static ObjectMapper objectMapper;
 
     @BeforeAll
     static void setup() {
@@ -77,9 +72,11 @@ class RestaurantServiceTest {
     @Test
     void testGetRestaurants() {
         List<Restaurant> restaurants = new ArrayList<>();
-        when(restaurantRepository.findAll()).thenReturn(restaurants);
+        Page<Restaurant> pageRestaurant = new PageImpl<>(restaurants);
 
-        List<RestaurantGetDto> result = restaurantService.getAllRestaurants(0,3,"name");
+        when(restaurantRepository.findAll(any(Pageable.class))).thenReturn(pageRestaurant);
+
+        List<RestaurantGetDto> result = restaurantService.getAllRestaurants(1, 3, "asc");
 
         assertEquals(restaurants.size(), result.size());
     }
@@ -174,27 +171,61 @@ class RestaurantServiceTest {
 
         verifyNoMoreInteractions(restaurantRepository);
     }
-}
-/*
+
     @Test
-    void testpatchRestaurant() throws RestaurantNotFoundException {
-        long id = 1L;
+    void testPatchRestaurantEmailTaken() {
+        // Arrange
+        Long id = 1L;
+        Restaurant existingRestaurant = mock(Restaurant.class);
+        when(existingRestaurant.getEmail()).thenReturn("existing.email@example.com");
+        when(existingRestaurant.getAddress()).thenReturn(new Address());
+
+        RestaurantPatchDto restaurantPatchDto = new RestaurantPatchDto(
+                new Address(),
+                "taken.email@example.com"
+        );
+
+        when(restaurantRepository.findById(id)).thenReturn(Optional.of(existingRestaurant));
+        when(restaurantRepository.findByEmail("taken.email@example.com")).thenReturn(Optional.of(new Restaurant()));
+
+        // Act and Assert
+        assertThrows(IllegalStateException.class, () -> {
+            restaurantService.patchRestaurant(id, restaurantPatchDto);
+        });
+    }
+
+  /*  @Test
+    void testPatchRestaurant() throws RestaurantNotFoundException {
+        long restaurantId = 1L;
+
+        City city = new City();
+        city.setId(1L);
+
+        Restaurant restaurant = new Restaurant();
+        restaurant.setCity(city);
+        when(restaurantService.getById(1L)).thenReturn(restaurant);
+
         Restaurant existingRestaurant = new Restaurant();
         Restaurant updatedRestaurant = new Restaurant();
 
-        when(restaurantRepository.findById(id)).thenReturn(Optional.of(existingRestaurant));
+        // Mocking the repository behavior
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(existingRestaurant));
         when(restaurantRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(restaurantRepository.save(existingRestaurant)).thenReturn(updatedRestaurant);
 
-        restaurantService.patchRestaurant(id, new RestaurantPatchDto(new Address(), "exm@exm.com"));
+        RestaurantPatchDto restaurantPatchDto = new RestaurantPatchDto(
+                new Address(), "newEmail@example.com");
+        restaurantPatchDto.email();
+        restaurantPatchDto.address();
 
         assertEquals(updatedRestaurant.getEmail(), existingRestaurant.getEmail());
-        assertEquals("exm@exm.com", updatedRestaurant.getEmail());
+        assertEquals("newEmail@example.com", updatedRestaurant.getEmail());
 
-        verify(restaurantRepository, times(1)).findById(id);
-        verify(restaurantRepository, times(1)).findByEmail("exm@exm.com");
+        verify(restaurantRepository, times(1)).findById(restaurantId);
+        verify(restaurantRepository, times(1)).findByEmail("newEmail@example.com");
         verify(restaurantRepository, times(1)).save(existingRestaurant);
         verifyNoMoreInteractions(restaurantRepository);
-    }
-
-*/
+    }*/
+}
