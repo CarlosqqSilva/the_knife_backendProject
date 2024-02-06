@@ -11,5 +11,5 @@ public interface RestaurantImageService {
 
     RestaurantImage saveRestaurantImage(Restaurant restaurant) throws IOException;
     void uploadFile(MultipartFile file) throws Exception;
-    void uploadFileWithId(MultipartFile file, Long  id) throws Exception;
+    void uploadFileWithId(MultipartFile file, Long id) throws Exception;
 }

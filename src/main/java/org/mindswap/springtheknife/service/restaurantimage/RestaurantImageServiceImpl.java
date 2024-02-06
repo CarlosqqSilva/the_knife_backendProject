@@ -1,8 +1,10 @@
 package org.mindswap.springtheknife.service.restaurantimage;
 
+import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.RestaurantImage;
 import org.mindswap.springtheknife.repository.RestaurantImageRepository;
+import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +19,12 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
 
     private static final String UPLOAD_PATH = "src/main/imagefiles/";
     private final RestaurantImageRepository restaurantImageRepository;
-
+    private final RestaurantRepository restaurantRepository;
 
     @Autowired
-    public RestaurantImageServiceImpl(RestaurantImageRepository restaurantImageRepository) {
+    public RestaurantImageServiceImpl(RestaurantImageRepository restaurantImageRepository, RestaurantRepository restaurantRepository) {
         this.restaurantImageRepository = restaurantImageRepository;
+        this.restaurantRepository = restaurantRepository;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
         return restaurantImageRepository.save(restaurantImage);
     }
 
+    @Override
     public void uploadFile(MultipartFile file) throws Exception {
         if (file.isEmpty()) {
             throw new Exception("Empty file");
@@ -62,12 +66,18 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
             throw new Exception("Empty file");
         }
 
-        Path uploadPath = Paths.get(UPLOAD_PATH);
+        Path uploadPath = Paths.get(UPLOAD_PATH + "/" + id + "/");
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        Path filePath = uploadPath.resolve(String.format("%s/usr_img.jpg", id));
+        Path filePath = uploadPath.resolve("usr_img.jpg");
         Files.copy(file.getInputStream(), filePath);
+
+        Restaurant restToAdd = restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + id + " not found."));
+        RestaurantImage restaurantImage = new RestaurantImage();
+        restaurantImage.setImagePath(filePath.toString());
+        restaurantImage.setRestaurant(restToAdd);
+        restaurantImageRepository.save(restaurantImage);
     }
 }

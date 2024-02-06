@@ -35,7 +35,7 @@ public class RestaurantImage {
     private Restaurant restaurant;
 
 
-    public byte[] convertToByteArray(String prompt) throws IOException {
+    public byte[] convertToByteArray(String prompt) {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(ImageApiHandler.getImageDataFromAPI(prompt), byte[].class);
     }

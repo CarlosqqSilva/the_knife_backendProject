@@ -49,7 +49,7 @@ public class RestaurantController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantGetDto> patchRestaurant(@Valid @PathVariable("id") Long id, @Valid @RequestBody RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
+    public ResponseEntity<RestaurantGetDto> patchRestaurant(@PathVariable("id") Long id, @Valid @RequestBody RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.patchRestaurant(id, restaurant), HttpStatus.OK);
     }
 

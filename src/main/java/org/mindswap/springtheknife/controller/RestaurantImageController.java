@@ -20,12 +20,7 @@ public class RestaurantImageController {
         this.restaurantImageService = restaurantImageService;
     }
 
-    @GetMapping("/upload")
-    public String showFileUploadPage() {
-        return "upload";
-    }
-
-    @PostMapping("api/v1/restaurants/img/upload")
+    @PostMapping("/upload")
     public ResponseEntity<String> fileUpload(@RequestParam("file") MultipartFile file) {
         try {
             restaurantImageService.uploadFile(file);
@@ -35,10 +30,10 @@ public class RestaurantImageController {
         }
     }
 
-    @PostMapping("api/v1/restaurants/img/upload/{id}")
-    public ResponseEntity<String> fileUploadWithId(@RequestParam("file") MultipartFile file, Long id) {
+    @PostMapping("/upload/id/{id}")
+    public ResponseEntity<String> fileUploadWithId(@RequestParam("file") MultipartFile file, @PathVariable("id") Long id) {
         try {
-            restaurantImageService.uploadFile(file);
+            restaurantImageService.uploadFileWithId(file, id);
             return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
