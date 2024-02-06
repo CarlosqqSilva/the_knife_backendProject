@@ -66,5 +66,7 @@ public class Message {
     public static final String LATITUDE_VALIDATOR = "^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}";
     public static final String INVALID_LATITUDE = "Insert a valid Latitude";
     public static final String INVALID_LONGITUDE = "Insert a valid Longitude";
-
+    public static final String INVALID_TYPE = "Insert a valid Type";
+    public static final String TYPE_VALIDATOR = "^[a-zA-Z\\s]{1,50}$";
+    public static final String VALID_FIRSTNAME = "Insert a valid first name";
 }

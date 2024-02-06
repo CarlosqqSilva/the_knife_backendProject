@@ -1,5 +1,6 @@
 package org.mindswap.springtheknife.dto.user;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 
@@ -22,11 +23,13 @@ public record UserCreateDto (
      String email,
 
      @NotBlank(message = FIRSTNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z ]{0,25}$")
+     @Pattern(regexp = "^[a-zA-Z]{1,50}$", message = VALID_FIRSTNAME)
      String firstName,
      @NotBlank(message = LASTNAME_MANDATORY)
-     @Pattern(regexp = "^[a-zA-Z ]{0,25}$", message = VALID_LASTNAME)
+     @Pattern(regexp = "^[a-zA-Z]{1,50}$", message = VALID_LASTNAME)
      String lastName,
+
+     @Valid
      @NotNull(message = DATE_OF_BIRTH_MANDATORY)
      @Past(message = VALID_DATE_OF_BIRTH)
      LocalDate dateOfBirth,
