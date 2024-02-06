@@ -58,4 +58,5 @@ public class Message {
     public static final String INVALID_COMMENT = "Insert a valid Comment";
     public static final String USER_ID_MANDATORY = "Insert User Id";
     public static final String RESTAURANT_ID_MANDATORY = "Insert Restaurant Id";
+    public static final String BOOKING_FUTURE = "Booking time must be in the present or in the future";
 }
