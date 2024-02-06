@@ -9,7 +9,7 @@ import org.mindswap.springtheknife.model.City;
 import java.util.List;
 
 public interface CityService {
-    List<CityGetDto> getCities() throws Exception;
+    List<CityGetDto> getAllCities(int pageNumber, int pageSize, String sortBy) throws Exception;
 
     City getCityById(Long cityId) throws CityNotFoundException;
 

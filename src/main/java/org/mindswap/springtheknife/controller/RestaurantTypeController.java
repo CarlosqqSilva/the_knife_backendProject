@@ -1,12 +1,14 @@
 package org.mindswap.springtheknife.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
+import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeNotFoundException;
 import org.mindswap.springtheknife.model.RestaurantType;
@@ -30,54 +32,71 @@ public class RestaurantTypeController {
         this.restaurantTypeService = restaurantTypeService;
     }
 
-    @Operation(summary = "Get all RestaurantType", description = "This method returns a list of all Types")
+    @Operation(summary = "Get all RestaurantType", description = "Returns a list of all restaurant types")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the RestaurantType",
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of restaurant types",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantType.class))}),})
+                            array = @ArraySchema(schema = @Schema(implementation = RestaurantTypeDto.class)))})
+    })
     @GetMapping("/")
-    public ResponseEntity<List<RestaurantTypeDto>> getRestaurantType() {
-        return new ResponseEntity<>(restaurantTypeService.getRestaurantType(), HttpStatus.OK);
-    }
-    @Operation(summary = "Get a Type by id", description = "This method returns a Type by id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the RestaurantType",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantType.class))}),
-            @ApiResponse(responseCode = "400", description = "Type id not found",
-                    content = @Content),
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<RestaurantTypeDto> getById (@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
-        return new ResponseEntity<>(restaurantTypeService.getById(id), HttpStatus.OK);
-    }
-    @Operation(summary = "Create a new Type", description = "This method creates a new Type")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New Type created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RestaurantType.class))}),
-            @ApiResponse(responseCode = "400", description = "Verify the Type details",
-                    content = @Content),
-    })
-    @PostMapping("/")
-    public ResponseEntity<RestaurantTypeDto> addType (@Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
-        return new ResponseEntity<>(restaurantTypeService.addType(restaurantType), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantTypeDto>> getRestaurantType(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @RequestParam(value = "sortBy") String sortBy
+    ) {
+        return new ResponseEntity<>(restaurantTypeService.getAllRestaurantType(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
-    @Operation(summary = "Update a Type", description = "Updates a Type in the database")
+    @Operation(summary = "Get a Restaurant Type by ID", description = "Returns a restaurant type by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated"),
-            @ApiResponse(responseCode = "400", description = "Type property already exists")})
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the restaurant type",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RestaurantTypeDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Restaurant type not found",
+                    content = @Content)
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<RestaurantTypeDto> getById(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
+        return new ResponseEntity<>(restaurantTypeService.getById(id), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Create a new Restaurant Type", description = "Creates a new restaurant type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Restaurant type successfully created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RestaurantTypeDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Verify the restaurant type details",
+                    content = @Content)
+    })
+    @PostMapping("/")
+    public ResponseEntity<RestaurantTypeDto> addType(@Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
+        return new ResponseEntity<>(restaurantTypeService.addType(restaurantType), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Update a Restaurant Type", description = "Updates a restaurant type in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Restaurant type successfully updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RestaurantTypeDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Restaurant type property already exists",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Restaurant type not found",
+                    content = @Content)
+    })
     @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantTypeDto> patchType (@PathVariable("id") Long id, @Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
+    public ResponseEntity<RestaurantTypeDto> patchType(@PathVariable("id") Long id, @Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
         return new ResponseEntity<>(restaurantTypeService.patchType(id, restaurantType), HttpStatus.OK);
     }
-    @Operation(summary = "Delete a Type", description = "Deletes a Type from the database")
+
+    @Operation(summary = "Delete a Restaurant Type", description = "Deletes a restaurant type from the database")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully deleted"),
-            @ApiResponse(responseCode = "404", description = "Type id not found")})
+            @ApiResponse(responseCode = "200", description = "Restaurant type successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Restaurant type ID not found")
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteType (@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
+    public ResponseEntity<String> deleteType(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
         restaurantTypeService.deleteType(id);
         return new ResponseEntity<>(Message.TYPE_ID + id + Message.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }

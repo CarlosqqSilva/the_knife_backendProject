@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RestaurantTypeService {
 
-    List<RestaurantTypeDto> getRestaurantType();
+    List<RestaurantTypeDto> getAllRestaurantType(int pageNumber, int pageSize, String sortBy);
 
     RestaurantTypeDto getById(Long id) throws RestaurantTypeNotFoundException;
 

@@ -3,7 +3,6 @@ package org.mindswap.springtheknife.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import lombok.*;
 
 import java.util.ArrayList;
@@ -28,9 +27,9 @@ public class Restaurant {
     @Setter
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride( name = "street", column = @Column(name = "street")),
-            @AttributeOverride( name = "number", column = @Column(name = "door_number")),
-            @AttributeOverride( name = "zipCode", column = @Column(name = "zip_code"))
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "number", column = @Column(name = "door_number")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "zip_code"))
     })
     private Address address;
     @Setter
@@ -41,6 +40,7 @@ public class Restaurant {
     private String phoneNumber;
     private Double latitude;
     private Double longitude;
+    @Setter
     private Double rating;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
@@ -53,7 +53,7 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Booking> bookingList;
 
-    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> usersWhoFavorited = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

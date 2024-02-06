@@ -15,8 +15,12 @@ import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mindswap.springtheknife.service.restaurantimage.RestaurantImageService;
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
+import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,30 +29,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RestaurantServiceImpl implements RestaurantService{
+public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
     private final CityServiceImpl cityServiceImpl;
 
-    private final RestaurantTypeImpl restaurantTypeImpl;
+    private final RestaurantTypeServiceImpl restaurantTypeServiceImpl;
     private final RestaurantTypeRepository restaurantTypeRepository;
 
     private final RestaurantImageService restaurantImageService;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeImpl restaurantTypeImpl, RestaurantTypeRepository restaurantTypeRepository, RestaurantImageService restaurantImageService) {
+    public RestaurantServiceImpl(RestaurantRepository clientRepository, CityServiceImpl cityServiceImpl, RestaurantTypeServiceImpl restaurantTypeServiceImpl, RestaurantTypeRepository restaurantTypeRepository, RestaurantImageService restaurantImageService) {
         this.restaurantRepository = clientRepository;
         this.cityServiceImpl = cityServiceImpl;
-        this.restaurantTypeImpl = restaurantTypeImpl;
+        this.restaurantTypeServiceImpl = restaurantTypeServiceImpl;
         this.restaurantTypeRepository = restaurantTypeRepository;
         this.restaurantImageService = restaurantImageService;
     }
 
     @Override
-    public List<RestaurantGetDto> getRestaurants(){
-        List<Restaurant> restaurants = restaurantRepository.findAll();
-        return restaurants.stream().map(RestaurantConverter::fromModelToRestaurantDto).toList();
+    public List<RestaurantGetDto> getAllRestaurants(int pageNumber, int pageSize, String sortBy) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
+        Page<Restaurant> pageRestaurants = restaurantRepository.findAll(pageRequest);
+        return pageRestaurants.stream()
+                .map(RestaurantConverter::fromModelToRestaurantDto)
+                .toList();
     }
 
 
@@ -73,7 +80,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     @Override
     public RestaurantGetDto addRestaurant(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
-        List<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
+        List<RestaurantType> restaurantTypes = restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
 
         Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurant.cityId()));
         if (cityOptional.isEmpty()) {
@@ -172,5 +179,10 @@ public class RestaurantServiceImpl implements RestaurantService{
             newRestaurantsList.add(RestaurantConverter.fromModelToRestaurantDto(newRestaurant));
         }
         return newRestaurantsList;
+    }
+  
+    @Override
+    public Double findAverageRating(Long restaurantId) {
+        return restaurantRepository.findAverageRating(restaurantId);
     }
 }

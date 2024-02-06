@@ -9,13 +9,12 @@ import org.mindswap.springtheknife.utils.Message;
 
 import java.util.Set;
 
+import static org.mindswap.springtheknife.utils.Message.USERNAME_VALIDATOR;
+
 public record UserGetDto(
 
-    Long userId,
-        @NotBlank(message = Message.USERNAME_MANDATORY)
-        @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = Message.VALID_USERNAME)
-    String userName,
-    Set<RestaurantGetDto> favoriteRestaurants
-    ){
-
+        Long userId,
+        String userName,
+        Set<RestaurantGetDto> favoriteRestaurants
+) {
 }

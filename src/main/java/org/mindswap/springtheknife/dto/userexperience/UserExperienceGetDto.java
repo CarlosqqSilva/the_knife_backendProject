@@ -9,6 +9,8 @@ public record UserExperienceGetDto(
 
         Long id,
 
+        Long bookingId,
+
         UserGetDto user,
 
         RestaurantGetDto restaurant,

@@ -42,4 +42,8 @@ public class UserExperience {
 
     private LocalDateTime timestamp;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    private Booking booking;
+
 }
