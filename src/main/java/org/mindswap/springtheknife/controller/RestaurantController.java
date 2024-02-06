@@ -60,7 +60,12 @@ public class RestaurantController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<RestaurantGetDto> addRestaurantWithImage(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException, RestaurantNotFoundException {
+    public ResponseEntity<RestaurantGetDto> addRestaurantWithImage(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurantWithImage(restaurant), HttpStatus.OK);
+    }
+
+    @PostMapping("/list/generate")
+    public ResponseEntity<List<RestaurantGetDto>> addRestaurantListWithImage(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurantsWithImage(restaurantList), HttpStatus.OK);
     }
 }

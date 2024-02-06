@@ -29,4 +29,6 @@ public interface RestaurantService {
     RestaurantGetDto patchRestaurant(Long id, RestaurantPatchDto restaurant) throws RestaurantNotFoundException;
 
     RestaurantGetDto addRestaurantWithImage(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException;
+
+    List<RestaurantGetDto> addListOfRestaurantsWithImage(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException;
 }

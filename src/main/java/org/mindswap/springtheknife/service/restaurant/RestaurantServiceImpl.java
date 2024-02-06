@@ -104,13 +104,9 @@ public class RestaurantServiceImpl implements RestaurantService{
                 throw new RestaurantAlreadyExistsException("This restaurant already exists.");
             }
             Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurantPostDto, cityServiceImpl.getCityById(restaurantPostDto.cityId()), restaurantTypes);
-
             restaurantRepository.save(newRestaurant);
-            restaurantImageService.saveRestaurantImage(newRestaurant);
-
             newRestaurantsList.add(RestaurantConverter.fromModelToRestaurantDto(newRestaurant));
         }
-
         return newRestaurantsList;
     }
 
@@ -153,5 +149,28 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurantImageService.saveRestaurantImage(newRestaurant);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
+    }
+
+    @Override
+    public List<RestaurantGetDto> addListOfRestaurantsWithImage(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
+        for (RestaurantPostDto restaurantPostDto : restaurantList) {
+            List<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
+            Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurantPostDto.cityId()));
+            if (cityOptional.isEmpty()) {
+                throw new CityNotFoundException(restaurantPostDto.cityId() + Message.CITY_NOT_FOUND);
+            }
+            Optional<Restaurant> restaurantOpt = this.restaurantRepository.findByEmail(restaurantPostDto.email());
+            if (restaurantOpt.isPresent()) {
+                throw new RestaurantAlreadyExistsException("This restaurant already exists.");
+            }
+            Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurantPostDto, cityServiceImpl.getCityById(restaurantPostDto.cityId()), restaurantTypes);
+
+            restaurantRepository.save(newRestaurant);
+            restaurantImageService.saveRestaurantImage(newRestaurant);
+
+            newRestaurantsList.add(RestaurantConverter.fromModelToRestaurantDto(newRestaurant));
+        }
+        return newRestaurantsList;
     }
 }
