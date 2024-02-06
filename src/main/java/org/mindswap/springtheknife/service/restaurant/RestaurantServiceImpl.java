@@ -84,13 +84,8 @@ public class RestaurantServiceImpl implements RestaurantService{
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
 
-
-
         Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
-
         restaurantRepository.save(newRestaurant);
-
-        restaurantImageService.saveRestaurantImage(newRestaurant);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
     }
@@ -112,8 +107,6 @@ public class RestaurantServiceImpl implements RestaurantService{
 
             restaurantRepository.save(newRestaurant);
             restaurantImageService.saveRestaurantImage(newRestaurant);
-
-            //TODO: add the restaurant images to the restaurant model image set here?
 
             newRestaurantsList.add(RestaurantConverter.fromModelToRestaurantDto(newRestaurant));
         }
@@ -140,5 +133,25 @@ public class RestaurantServiceImpl implements RestaurantService{
             dbRestaurant.setEmail(restaurant.email());
         }
         return RestaurantConverter.fromModelToRestaurantDto(restaurantRepository.save(dbRestaurant));
+    }
+
+    @Override
+    public RestaurantGetDto addRestaurantWithImage(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        List<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
+
+        Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurant.cityId()));
+        if (cityOptional.isEmpty()) {
+            throw new CityNotFoundException(restaurant.cityId() + Message.CITY_NOT_FOUND);
+        }
+        Optional<Restaurant> restaurantOpt = this.restaurantRepository.findByEmail(restaurant.email());
+        if (restaurantOpt.isPresent()) {
+            throw new RestaurantAlreadyExistsException("This restaurant already exists.");
+        }
+
+        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+        restaurantRepository.save(newRestaurant);
+        restaurantImageService.saveRestaurantImage(newRestaurant);
+
+        return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
     }
 }

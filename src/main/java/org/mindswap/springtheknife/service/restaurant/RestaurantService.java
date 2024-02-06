@@ -27,4 +27,6 @@ public interface RestaurantService {
     void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException;
 
     RestaurantGetDto patchRestaurant(Long id, RestaurantPatchDto restaurant) throws RestaurantNotFoundException;
+
+    RestaurantGetDto addRestaurantWithImage(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException;
 }

@@ -26,11 +26,14 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
 
     @Override
     public RestaurantImage saveRestaurantImage(Restaurant restaurant) throws IOException {
-        String prompt = restaurant.getRestaurantTypes().getFirst().getType() + "restaurant facade";
         RestaurantImage restaurantImage = new RestaurantImage();
+        String prompt = restaurant.getRestaurantTypes().getFirst().getType() + "restaurant facade";
+        byte[] image = restaurantImage.convertToByteArray(prompt);
+
         restaurantImage.setRestaurant(restaurant);
-        restaurantImage.setImages(prompt);
+        restaurantImage.setImages(image);
         restaurantImage.setImagePath(restaurantImage.createImageFile(restaurant.getId()));
+
         return restaurantImageRepository.save(restaurantImage);
     }
 
@@ -44,10 +47,27 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
             Files.createDirectories(uploadPath);
         }
 
-        // Save the file to the server
-        Path filePath = uploadPath.resolve(file.getOriginalFilename());
+        Path filePath = uploadPath.resolve("usr_img.jpg");
         Files.copy(file.getInputStream(), filePath);
 
         // You can do additional processing or save the file path to a database here
+        RestaurantImage restaurantImage = new RestaurantImage();
+        restaurantImage.setImagePath(filePath.toString());
+        restaurantImageRepository.save(restaurantImage);
+    }
+
+    @Override
+    public void uploadFileWithId(MultipartFile file, Long id) throws Exception {
+        if (file.isEmpty()) {
+            throw new Exception("Empty file");
+        }
+
+        Path uploadPath = Paths.get(UPLOAD_PATH);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Path filePath = uploadPath.resolve(String.format("%s/usr_img.jpg", id));
+        Files.copy(file.getInputStream(), filePath);
     }
 }

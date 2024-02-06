@@ -23,6 +23,7 @@ public class RestaurantImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private byte[] images;
 
     @Setter
@@ -34,17 +35,21 @@ public class RestaurantImage {
     private Restaurant restaurant;
 
 
-    public void setImages(String prompt) throws IOException {
+    public byte[] convertToByteArray(String prompt) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        images = mapper.convertValue(ImageApiHandler.getImageDataFromAPI(prompt), byte[].class);
+        return mapper.convertValue(ImageApiHandler.getImageDataFromAPI(prompt), byte[].class);
     }
 
     public String createImageFile(Long id) throws IOException {
         ByteArrayInputStream stream = new ByteArrayInputStream(images);
-        File file = new File("src/main/imagefiles/" + id + "/");
+        String filePath = String.format("src/main/imagefiles/%s/", id);
+
+        File file = new File(filePath);
         file.mkdirs();
-        ImageIO.write(ImageIO.read(stream), "png", new File("src/main/imagefiles/" + id + "/rest_exterior.png"));
-        return "src/main/imagefiles/" + id + "/teste.png";
+        filePath = filePath + "/rest_default.png";
+
+        ImageIO.write(ImageIO.read(stream), "png", new File(filePath));
+        return filePath;
     }
 
 }
