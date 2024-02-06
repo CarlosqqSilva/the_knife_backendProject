@@ -79,9 +79,8 @@ public class UserController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
-        userServiceImpl.createUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<UserGetDto> createUser(@Valid @RequestBody UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
+        return new ResponseEntity<>(userServiceImpl.createUser(user), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update a user", description = "Updates a user by its ID")
