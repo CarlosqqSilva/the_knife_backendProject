@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+<h2>Restaurant Image Upload</h2>
+<form method="post" action="api/v1/restaurants/img/upload" enctype="multipart/form-data">
+    <label for="file">Choose a file:</label>
+    <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png">
+    <br>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

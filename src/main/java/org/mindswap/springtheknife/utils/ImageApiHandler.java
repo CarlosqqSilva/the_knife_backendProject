@@ -29,20 +29,16 @@ public class ImageApiHandler {
                         .defaultCodecs()
                         .maxInMemorySize(BUFFER_SIZE))
                 .baseUrl(API_URL)
-                .defaultCookie("cookie-name", "cookie-value")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
 
-
-        String response = webClient.post()
+        JSONObject json = new JSONObject(webClient.post()
                 .uri(API_URL)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(payload)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block();
-
-        JSONObject json = new JSONObject(response);
+                .block());
 
         return json.getJSONArray("images").getString(0);
     }
