@@ -74,6 +74,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @DisplayName("Test get all Users when users on database returns list of users")
     public void testGetAllUsers() throws Exception {
 
         List<UserGetDto> users = new ArrayList<>();
@@ -100,6 +101,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @DisplayName("Test get User by Id")
     public void testGetUser() throws Exception {
 
         UserGetDto user = new UserGetDto(1L, "username1", new HashSet<>());
@@ -117,6 +119,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @DisplayName("Test create User")
     public void testCreateUser() throws Exception {
 
         UserCreateDto user = new UserCreateDto("existingUsername", "password", "email@example.com", "firstName", "lastName", LocalDate.of(2000, 2, 2), new HashSet<>());
@@ -135,6 +138,7 @@ public class UserControllerTests {
 
 
     @Test
+    @DisplayName("Test update User")
     public void testPatchUser() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("userName", "updatedUsername");
@@ -152,6 +156,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @DisplayName("Test delete User")
     public void testDeleteUser() throws Exception {
         doNothing().when(userService).deleteUser(any(Long.class));
 

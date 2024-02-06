@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.dto.user.UserCreateDto;
 import org.mindswap.springtheknife.dto.user.UserGetDto;
@@ -60,6 +61,7 @@ public class UserServiceTests {
 
 
     @Test
+    @DisplayName("Test get all users")
     void testGetAllUsers() {
         List<User> users = new ArrayList<>();
         Page<User> pageUsers = new PageImpl<>(users);
@@ -72,6 +74,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test get user by id")
     void testGetUserById() throws UserNotFoundException {
         long userId = 1L;
         User existingUser = new User();
@@ -89,6 +92,7 @@ public class UserServiceTests {
 
 
     @Test
+    @DisplayName("Test delete user by id")
     void testDeleteUser() throws UserNotFoundException {
         long userId = 1L;
         User existingUser = new User();
@@ -100,6 +104,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test update user")
     void testUpdateUser() throws UserNotFoundException, UserAlreadyExistsException {
         Long userId = 1L;
         User existingUser = new User();
@@ -121,6 +126,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test update user throws UserNotFoundException")
     void testUpdateUserThrowsUserNotFoundException() throws UserAlreadyExistsException {
         Long userId = 1L;
         UserPatchDto userPatchDto = new UserPatchDto("username", "password", "email@example.com");
@@ -131,6 +137,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test update user throws UserAlreadyExistsException")
     void testUpdateUserThrowsUserAlreadyExistsException() throws UserNotFoundException {
         Long userId = 1L;
         User existingUser = new User();
@@ -144,6 +151,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test create user")
     void testCreateUser() throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
         UserCreateDto userCreateDto = new UserCreateDto("username", "password", "email@example.com", "firstName", "lastName", LocalDate.now(), new HashSet<>());
 
@@ -160,6 +168,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test create user throws UserAlreadyExistsException")
     void testCreateUserThrowsUserAlreadyExistsException() {
         UserCreateDto userCreateDto = new UserCreateDto("existingUsername", "password", "email@example.com", "firstName", "lastName", LocalDate.now(), new HashSet<>());
         User existingUser = new User();
@@ -171,6 +180,7 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Test create user throws UserEmailAlreadyExistsException")
     void testCreateUserThrowsUserEmailAlreadyExistsException() {
         UserCreateDto userCreateDto = new UserCreateDto("username", "password", "existingEmail@example.com", "firstName", "lastName", LocalDate.now(), new HashSet<>());
         User existingUser = new User();

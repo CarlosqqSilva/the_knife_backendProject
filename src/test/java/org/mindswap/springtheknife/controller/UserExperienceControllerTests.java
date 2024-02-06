@@ -80,6 +80,7 @@ public class UserExperienceControllerTests {
     }
 
     @Test
+    @DisplayName("Test get all UserExperience when users on database returns list of UserExperience")
     public void testGetAllUsersExperiences() throws Exception {
 
 
@@ -94,9 +95,9 @@ public class UserExperienceControllerTests {
         );
 
         RestaurantGetDto restaurant1 = new RestaurantGetDto(
-                "Restaurant1",
-                "Description1",
-                "ImageURL1",
+                "city1",
+                "restaurant1",
+                "email1",
                 new Address(),
                 "Contact1",
                 4.5,
@@ -104,12 +105,12 @@ public class UserExperienceControllerTests {
         );
 
         RestaurantGetDto restaurant2 = new RestaurantGetDto(
-                "Restaurant2",
-                "Description2",
-                "ImageURL2",
+                "city2",
+                "restaurant2",
+                "email2",
                 new Address(),
                 "Contact2",
-                5.0,
+                4.5,
                 Set.of(restaurantType2)
         );
 
@@ -125,8 +126,8 @@ public class UserExperienceControllerTests {
                 Set.of(restaurant2)
         );
 
-
         UserExperienceGetDto userExperience1 = new UserExperienceGetDto(
+                1L,
                 1L,
                 user1,
                 restaurant1,
@@ -136,6 +137,7 @@ public class UserExperienceControllerTests {
         );
 
         UserExperienceGetDto userExperience2 = new UserExperienceGetDto(
+                2L,
                 2L,
                 user2,
                 restaurant2,
@@ -158,6 +160,7 @@ public class UserExperienceControllerTests {
 
 
     @Test
+    @DisplayName("Test get UserExperience by id")
     public void testGetUserExperienceById() throws Exception {
 
         Long userExperienceId = 1L;
@@ -167,9 +170,9 @@ public class UserExperienceControllerTests {
                 "Type1"
         );
         RestaurantGetDto restaurant1 = new RestaurantGetDto(
-                "Restaurant1",
-                "Description1",
-                "ImageURL1",
+                "city1",
+                "restaurant1",
+                "email1",
                 new Address(),
                 "Contact1",
                 4.5,
@@ -182,6 +185,7 @@ public class UserExperienceControllerTests {
         );
         UserExperienceGetDto expectedUserExperience = new UserExperienceGetDto(
                 userExperienceId,
+                1L,
                 user1,
                 restaurant1,
                 4.5,
@@ -200,9 +204,11 @@ public class UserExperienceControllerTests {
 
 
     @Test
+    @DisplayName("Test add UserExperience")
     public void testAddUserExperience() throws Exception {
         // Arrange
         UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(
+                1L,
                 1L,
                 1L,
                 4.5,
@@ -216,9 +222,9 @@ public class UserExperienceControllerTests {
                 "Type1"
         );
         RestaurantGetDto restaurant1 = new RestaurantGetDto(
+                "City1",
                 "Restaurant1",
-                "Description1",
-                "ImageURL1",
+                "Email1",
                 new Address(),
                 "Contact1",
                 4.5,
@@ -231,6 +237,7 @@ public class UserExperienceControllerTests {
         );
         UserExperienceGetDto expectedUserExperience = new UserExperienceGetDto(
                 userExperienceId,
+                1L,
                 user1,
                 restaurant1,
                 4.5,
@@ -243,12 +250,13 @@ public class UserExperienceControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/userexperiences/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userExperienceCreateDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.rating").value(expectedUserExperience.rating()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comment").value(expectedUserExperience.comment()));
     }
 
     @Test
+    @DisplayName("Test delete UserExperience")
     public void testDeleteUserExperience() throws Exception {
 
         Long userExperienceId = 1L;
@@ -261,6 +269,7 @@ public class UserExperienceControllerTests {
 
 
     @Test
+    @DisplayName("Test update UserExperience")
     public void testUpdateUserExperience() throws Exception {
         // Arrange
         Long userExperienceId = 1L;
