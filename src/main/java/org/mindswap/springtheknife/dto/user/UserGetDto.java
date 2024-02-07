@@ -7,6 +7,7 @@ import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
 import java.util.Set;
 
 public record UserGetDto(
@@ -16,6 +17,6 @@ public record UserGetDto(
         @Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$", message = Message.VALID_USERNAME)
     String userName,
     Set<RestaurantGetDto> favoriteRestaurants
-    ){
+    ) implements Serializable {
 
 }

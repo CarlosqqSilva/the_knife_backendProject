@@ -16,6 +16,9 @@ import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -46,6 +49,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
+    @Cacheable(cacheNames = "Restaurant", key = "{#pageNumber, #pageSize, #sortBy}")
     public List<RestaurantGetDto> getAllRestaurants(int pageNumber, int pageSize, String sortBy) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<Restaurant> pageRestaurants = restaurantRepository.findAll(pageRequest);
@@ -56,13 +60,13 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 
     @Override
+    @Cacheable(cacheNames = "RestaurantById", key = "id" )
     public RestaurantGetDto getRestaurant(Long id) throws RestaurantNotFoundException {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         if (restaurantOptional.isEmpty()) {
             throw new RestaurantNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST);
         }
         return RestaurantConverter.fromModelToRestaurantDto(restaurantOptional.get());
-
     }
 
     @Override
@@ -116,12 +120,14 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
+    @CacheEvict(cacheNames = "RestaurantDelete", allEntries = true)
     public void deleteRestaurant(Long restaurantId) throws RestaurantNotFoundException {
         restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + restaurantId + " not found."));
         restaurantRepository.deleteById(restaurantId);
     }
 
     @Override
+    @CachePut(cacheNames = "RestaurantPatch", key="#id")
     public RestaurantGetDto patchRestaurant(Long id, RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
         Restaurant dbRestaurant = restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException("Restaurant with id " + id + " not found."));
         if (restaurantRepository.findByEmail(restaurant.email()).isPresent()) {

@@ -4,12 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
+
 public record RestaurantTypeDto(
 
         Long id,
         @Schema(example = "ItalianFood")
         @NotNull(message = Message.TYPE_MANDATORY)
         String type
-) {
-
+) implements Serializable {
 }

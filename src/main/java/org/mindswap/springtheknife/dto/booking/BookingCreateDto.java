@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import org.mindswap.springtheknife.Enum.BookingStatus;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record BookingCreateDto(
@@ -19,5 +20,5 @@ public record BookingCreateDto(
         @Enumerated(EnumType.STRING)
         BookingStatus status
 
-) {
+) implements Serializable {
 }

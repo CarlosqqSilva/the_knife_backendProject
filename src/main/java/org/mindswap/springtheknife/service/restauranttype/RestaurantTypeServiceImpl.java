@@ -8,6 +8,9 @@ import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +31,7 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
     }
 
     @Override
+    @Cacheable(cacheNames = "RestaurantType", key = "{#pageNumber, #pageSize, #sortBy}")
     public List<RestaurantTypeDto> getAllRestaurantType(int pageNumber, int pageSize, String sortBy) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<RestaurantType> pageRestaurantType = restaurantTypeRepository.findAll(pageRequest);
@@ -41,6 +45,7 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
             }
 
     @Override
+    @Cacheable(cacheNames = "RestaurantTypeById", key = "id" )
     public RestaurantTypeDto getById(Long id) throws RestaurantTypeNotFoundException {
         RestaurantType restaurantType = restaurantTypeRepository.findById(id).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + id + Message.NOT_FOUND));
         return RestaurantTypeConverter.fromModelToRestaurantTypeDto(restaurantType);
@@ -57,12 +62,14 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "RestaurantTypeDelete", allEntries = true)
     public void deleteType (Long restaurantTypeId) throws RestaurantTypeNotFoundException {
         restaurantTypeRepository.findById(restaurantTypeId).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + restaurantTypeId + Message.NOT_FOUND));
         restaurantTypeRepository.deleteById(restaurantTypeId);
     }
 
     @Override
+    @CachePut(cacheNames = "RestaurantPatch", key="#id")
     public RestaurantTypeDto patchType (Long id, RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
         RestaurantType dbRestaurantType = restaurantTypeRepository.findById(id).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + id + Message.NOT_FOUND));
         if (restaurantTypeRepository.findByType(restaurantType.type()).isPresent()) {

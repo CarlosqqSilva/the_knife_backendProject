@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
+
 public record UserPatchDto(
 
 
@@ -19,7 +21,6 @@ public record UserPatchDto(
     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
     String email
-) {
-
+) implements Serializable {
 }
 

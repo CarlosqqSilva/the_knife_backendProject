@@ -3,6 +3,7 @@ package org.mindswap.springtheknife.dto.user;
 import jakarta.validation.constraints.*;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,6 @@ public record UserCreateDto (
      LocalDate dateOfBirth,
 
      Set<Long> favoriteRestaurants
-)  {
+) implements Serializable {
 
 }

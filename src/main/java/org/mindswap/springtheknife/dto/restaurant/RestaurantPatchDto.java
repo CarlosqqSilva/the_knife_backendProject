@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.mindswap.springtheknife.model.Address;
 
+import java.io.Serializable;
+
 import static org.mindswap.springtheknife.utils.Message.*;
 import static org.mindswap.springtheknife.utils.Message.VALID_EMAIL;
 
@@ -17,5 +19,5 @@ public record RestaurantPatchDto(
         @Pattern(regexp = EMAIL_VALIDATOR, message =VALID_EMAIL)
         String email
 
-) {
+) implements Serializable {
 }

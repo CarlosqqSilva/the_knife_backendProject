@@ -1,5 +1,6 @@
 package org.mindswap.springtheknife.service.booking;
 
+import lombok.SneakyThrows;
 import org.mindswap.springtheknife.converter.BookingConverter;
 import org.mindswap.springtheknife.dto.booking.BookingCreateDto;
 import org.mindswap.springtheknife.dto.booking.BookingGetDto;
@@ -13,10 +14,15 @@ import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,16 +43,20 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<BookingGetDto> getAllBookings(int pageNumber, int pageSize, String sortBy) {
+    @Cacheable(cacheNames = "BookingById", key = "{#pageNumber, #pageSize, #sortBy}")
+    public List<BookingGetDto> getAllBookings(int pageNumber, int pageSize, String sortBy) throws InterruptedException {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<Booking> pageBookings = bookingRepository.findAll(pageRequest);
+        Thread.sleep(2000L);
         return pageBookings.stream()
                 .map(BookingConverter::fromModelToBookingDto)
                 .toList();
     }
 
     @Override
-    public BookingGetDto getBookingById(Long id) throws BookingNotFoundException {
+    @Cacheable(cacheNames = "BookingById", key = "id")
+    public BookingGetDto getBookingById(Long id) throws BookingNotFoundException, InterruptedException {
+        Thread.sleep(2000L);
         Optional<Booking> bookingOptional = bookingRepository.findById(id);
         if(bookingOptional.isEmpty()){
             throw new BookingNotFoundException(Message.BOOKING_ID + id + Message.NOT_FOUND);
@@ -65,12 +75,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "BookingDelete", allEntries = true)
     public void deleteBooking (Long bookingId) throws BookingNotFoundException {
         bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException(Message.BOOKING_ID + bookingId + Message.NOT_FOUND));
         bookingRepository.deleteById(bookingId);
     }
 
     @Override
+    @CachePut(cacheNames = "BookingPatch", key="#id")
     public BookingGetDto patchBooking (Long id, BookingPatchDto booking) throws BookingNotFoundException {
         Booking dbBooking = bookingRepository.findById(id).orElseThrow(() -> new BookingNotFoundException(Message.BOOKING_ID + id + Message.NOT_FOUND));
         if (bookingRepository.findByBookingTime(booking.bookingTime()).isPresent()) {

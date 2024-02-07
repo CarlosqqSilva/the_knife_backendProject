@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,9 +17,10 @@ import java.util.Set;
 @Table(name = "restaurants")
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +62,5 @@ public class Restaurant {
     @JoinTable(name = "restaurants_by_type",
                joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
-    private Set<RestaurantType> restaurantTypes;
+    private Set<RestaurantType> restaurantTypes = new HashSet<>();
 }

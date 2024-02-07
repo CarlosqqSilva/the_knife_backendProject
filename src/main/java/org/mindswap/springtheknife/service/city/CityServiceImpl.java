@@ -9,6 +9,9 @@ import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,20 +26,22 @@ public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
     @Autowired
-    public CityServiceImpl (CityRepository cityRepository) {
+    public CityServiceImpl(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
     }
 
     @Override
+    @Cacheable(cacheNames = "City", key = "{#pageNumber, #pageSize, #sortBy}")
     public List<CityGetDto> getAllCities(int pageNumber, int pageSize, String sortBy) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<City> pageCities = this.cityRepository.findAll(pageRequest);
         return pageCities.stream()
-        .map(CityConverter::fromModelToCityGetDto)
+                .map(CityConverter::fromModelToCityGetDto)
                 .toList();
     }
 
     @Override
+    @Cacheable(cacheNames = "getCity", key = "#id")
     public CityGetDto getCity(Long id) throws CityNotFoundException {
         Optional<City> cityOptional = cityRepository.findById(id);
         if (cityOptional.isEmpty()) {
@@ -56,18 +61,20 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto create(CityDto city) throws CityAlreadyExistsException {
         Optional<City> cityOptional = this.cityRepository.findByName(city.name());
-        if(cityOptional.isPresent()) {
+        if (cityOptional.isPresent()) {
             throw new CityAlreadyExistsException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
         }
         cityRepository.save(CityConverter.fromCreateDtoToModel(city));
         return CityConverter.fromCreateDtoToDto(city);
 
     }
+
     @Override
+    @CachePut(cacheNames = "CityPatch", key = "#cityId")
     public void update(long cityId, City city) throws CityNotFoundException {
         Optional<City> cityOptional = cityRepository.findById(cityId);
         if (cityOptional.isEmpty()) {
-            throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " "  + Message.NOT_EXIST);
+            throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " " + Message.NOT_EXIST);
         }
         City cityToUpdate = cityOptional.get();
         if (city.getName() != null && !city.getName().isEmpty() && !city.getName().equals(cityToUpdate.getName())) {
@@ -75,7 +82,9 @@ public class CityServiceImpl implements CityService {
         }
         cityRepository.save(cityToUpdate);
     }
+
     @Override
+    @CacheEvict(cacheNames = "CityDelete", allEntries = true)
     public void delete(long cityId) throws CityNotFoundException {
         boolean exists = cityRepository.existsById(cityId);
         if (!exists) {
@@ -83,5 +92,4 @@ public class CityServiceImpl implements CityService {
         }
         cityRepository.deleteById(cityId);
     }
-  
 }

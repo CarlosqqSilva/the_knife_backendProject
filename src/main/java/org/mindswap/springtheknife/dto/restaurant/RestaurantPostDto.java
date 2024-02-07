@@ -5,6 +5,7 @@ import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.model.Address;
 import org.mindswap.springtheknife.model.RestaurantType;
 
+import java.io.Serializable;
 import java.util.Set;
 import static org.mindswap.springtheknife.utils.Message.*;
 
@@ -31,5 +32,5 @@ public record RestaurantPostDto(
         @NotNull
         Set<Long> restaurantTypes
         
-) {
+)implements Serializable {
 }

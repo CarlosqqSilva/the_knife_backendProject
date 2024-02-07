@@ -9,9 +9,10 @@ import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.dto.user.UserGetDto;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public record BookingGetDto(
+public record BookingGetDto (
 
         Long id,
 
@@ -21,5 +22,5 @@ public record BookingGetDto(
         LocalDateTime bookingTime,
         @Enumerated(EnumType.STRING)
         BookingStatus status
-) {
+) implements Serializable {
 }
