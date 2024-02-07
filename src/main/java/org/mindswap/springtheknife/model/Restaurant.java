@@ -3,7 +3,6 @@ package org.mindswap.springtheknife.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import lombok.*;
 
 import java.io.Serializable;
@@ -30,9 +29,9 @@ public class Restaurant implements Serializable {
     @Setter
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride( name = "street", column = @Column(name = "street")),
-            @AttributeOverride( name = "number", column = @Column(name = "door_number")),
-            @AttributeOverride( name = "zipCode", column = @Column(name = "zip_code"))
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "number", column = @Column(name = "door_number")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "zip_code"))
     })
     private Address address;
     @Setter
@@ -43,9 +42,10 @@ public class Restaurant implements Serializable {
     private String phoneNumber;
     private Double latitude;
     private Double longitude;
+    @Setter
     private Double rating;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<UserExperience> userExperienceList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -55,12 +55,15 @@ public class Restaurant implements Serializable {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Booking> bookingList;
 
-    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "favoriteRestaurants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> usersWhoFavorited = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurants_by_type",
                joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "restaurant_type_id"))
-    private Set<RestaurantType> restaurantTypes = new HashSet<>();
+    private List<RestaurantType> restaurantTypes;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    Set<RestaurantImage> restaurantImages;
 }

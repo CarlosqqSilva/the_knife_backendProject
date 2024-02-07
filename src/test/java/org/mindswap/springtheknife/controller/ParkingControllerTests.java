@@ -1,5 +1,6 @@
 package org.mindswap.springtheknife.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,8 +23,13 @@ public class ParkingControllerTests {
     }
 
     @Test
-    public void testGetParkingData() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/parking/checkParking"))
+    @DisplayName("Test Get Parking Data")
+    void testGetParkingData() throws Exception {
+        // Arrange
+        Integer limit = 10;
+
+        // Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/parking/checkParking/" + limit))
                 .andExpect(status().isOk());
     }
 }

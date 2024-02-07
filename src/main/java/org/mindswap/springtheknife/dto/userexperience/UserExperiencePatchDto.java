@@ -8,13 +8,13 @@ import java.io.Serializable;
 public record UserExperiencePatchDto(
 
 
-        @NotNull(message = Message.RATING_MANDATORY)
-        @Min(0)
-        @Max(10)
+
+        @Min(value = 0, message = Message.INVALID_RATING)
+        @Max(value = 10, message = Message.INVALID_RATING)
         Double rating,
 
-        @NotBlank(message = Message.COMMENT_MANDATORY)
-        @Pattern(regexp = "^[^\\n]{1,250}$", message = Message.INVALID_COMMENT)
+
+        @Pattern(regexp = Message.COMMENT_VALIDATOR, message = Message.INVALID_COMMENT)
         String comment
 )implements Serializable {
 }

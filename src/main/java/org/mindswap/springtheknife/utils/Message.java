@@ -16,7 +16,7 @@ public class Message {
     public static final String DATE_OF_BIRTH_MANDATORY = "Insert Date of Birth";
     public static final String VALID_EMAIL = "Insert a valid Email";
     public static final String VALID_LASTNAME = "Insert a valid LastName";
-    public static final String VALID_DATE_OF_BIRTH = "Insert a valid Date of Birth";
+    public static final String VALID_DATE_OF_BIRTH = "Insert a valid Date of Birth.";
     public static final String EMAIL_MANDATORY = "Insert an Email";
     public static final String VALID_USERNAME = "Insert a valid UserName";
     public static final String VALID_PASSWORD = "Insert a valid Password";
@@ -43,14 +43,13 @@ public class Message {
     public static final String CITY_NOT_FOUND = "City not found";
     public static final String RESTAURANT_NAME_MANDATORY = "Restaurant must have a name.";
     public static final String VALID_RESTAURANT_NAME = "Restaurant must have a valid name.";
-    public static final String RESTAURANT_VALIDATOR = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,25}$";
+    public static final String RESTAURANT_VALIDATOR = "^[a-zA-Z0-9\\s]{1,250}$";
     public static final String RESTAURANT_ADDRESS_MANDATORY = "Restaurant must have an address.";
     public static final String EMAIL_VALIDATOR = "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$";
     public static final String PHONE_NUMBER_MANDATORY = "Restaurant must have a phone number.";
     public static final String PHONE_NUMBER_VALIDATOR = "^\\+351(9[1236]|2)\\d{8}$";
     public static final String LATITUDE_MANDATORY = "Insert Restaurant Latitude";
     public static final String LONGITUDE_MANDATORY = "Insert Restaurant Longitude";
-    public static final String LONGITUDE_VALIDATOR = "^[-+]?((1[0-7]\\d(\\.\\d+)?)|(180(\\.0+)?)|([1-9]?\\d(\\.\\d+)?))$";
     public static final String INVALID_CITY_ID = "Insert a valid City Id";
     public static final String INVALID_PHONE_NUMBER = "Insert a valid phone number";
     public static final String INVALID_RATING = "Insert a valid Rating between 0 and 10";
@@ -60,4 +59,21 @@ public class Message {
     public static final String USER_ID_MANDATORY = "Insert User Id";
     public static final String RESTAURANT_ID_MANDATORY = "Insert Restaurant Id";
     public static final String SUCCESSFULLY_PATCHED = "Successfully patched";
+    public static final String BOOKING_FUTURE = "Booking time must be in the present or in the future";
+    public static final String BOOKING_ID_MANDATORY = "Insert Booking Id";
+    public static final String BOOKING_ID_NOT_FOUND = "Invalid Booking Id";
+    public static final String BOOKING_STATUS_ILLEGAL = "Cannot give experience rating cause your booking status isn't COMPLETE.";
+    public static final String USER_EXPERIENCE_ID_EXISTS = "User Experience Id already exists.";
+    public static final String BOOKING_CLOSED = "Can´t change the booking status because it´s already closed.";
+    public static final String LATITUDE_VALIDATOR = "^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}";
+    public static final String INVALID_LATITUDE = "Insert a valid Latitude";
+    public static final String INVALID_LONGITUDE = "Insert a valid Longitude";
+    public static final String INVALID_TYPE = "Insert a valid Type";
+    public static final String TYPE_VALIDATOR = "^[a-zA-Z\\s]{1,50}$";
+    public static final String VALID_FIRSTNAME = "Insert a valid first name";
+    public static final String NAME_VALIDATOR = "^[a-zA-Z]{1,50}$";
+    public static final String PASSWORD_VALIDATOR = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$";
+    public static final String USERNAME_VALIDATOR = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+){0,19}$";
+    public static final String VALID_DATE = "Insert a valid Date.";
+    public static final String COMMENT_VALIDATOR = "^[^\\n]{1,250}$";
 }

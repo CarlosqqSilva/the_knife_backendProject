@@ -4,18 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.converter.UserExperienceConverter;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
+import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
-import org.mindswap.springtheknife.model.City;
-import org.mindswap.springtheknife.model.Restaurant;
-import org.mindswap.springtheknife.model.User;
-import org.mindswap.springtheknife.model.UserExperience;
+import org.mindswap.springtheknife.model.*;
 import org.mindswap.springtheknife.repository.UserExperienceRepository;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
@@ -74,6 +73,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to get all user experiences")
     void testGetAllUsersExperiences() {
 
         int pageNumber = 0;
@@ -103,6 +103,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to get user experience by id")
     void testGetUserExperienceById() throws UserExperienceNotFoundException {
 
         Long id = 1L;
@@ -120,6 +121,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to get user experience by id - Not Found")
     void testGetUserExperienceById_NotFound() {
 
         Long id = 1L;
@@ -129,26 +131,30 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to add user experience by booking id - User not found")
     void testAddNewUserExperience_UserNotFound() throws UserNotFoundException {
 
+        Long bookingId = 1L;
         Long userId = 1L;
         Long restaurantId = 1L;
         Double rating = 5.0;
         String comment = "Test comment";
-        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(userId, restaurantId, rating, comment);
+        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
         when(userServiceImpl.getUserById(userId)).thenThrow(new UserNotFoundException("User not found"));
 
         assertThrows(UserNotFoundException.class, () -> userExperienceService.addNewUserExperience(userExperienceCreateDto));
     }
 
     @Test
+    @DisplayName("Test to add user experience by booking id - Restaurant not found")
     void testAddNewUserExperience_RestaurantNotFound() throws UserNotFoundException, RestaurantNotFoundException {
 
+        Long bookingId = 1L;
         Long userId = 1L;
         Long restaurantId = 1L;
         Double rating = 5.0;
         String comment = "Test comment";
-        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(userId, restaurantId, rating, comment);
+        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
         User user = new User();
         when(userServiceImpl.getUserById(userId)).thenReturn(user);
         when(restaurantServiceImpl.getById(restaurantId)).thenThrow(new RestaurantNotFoundException("Restaurant not found"));
@@ -157,13 +163,16 @@ public class UserExperienceServiceTests {
     }
 
     @Test
-    void testAddNewUserExperience() throws UserNotFoundException, RestaurantNotFoundException {
+    @DisplayName("Test to add user experience by booking id")
+    void testAddNewUserExperience() throws UserNotFoundException, RestaurantNotFoundException, UserExperienceNotFoundException, BookingNotFoundException {
 
+        Long bookingId = 1L;
         Long userId = 1L;
         Long restaurantId = 1L;
         Double rating = 5.0;
         String comment = "Test comment";
-        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(userId, restaurantId, rating, comment);
+        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
+        Booking booking = new Booking();
         User user = new User();
         Restaurant restaurant = Mockito.mock(Restaurant.class);
         City city = new City();
@@ -171,7 +180,7 @@ public class UserExperienceServiceTests {
         Mockito.when(restaurant.getCity()).thenReturn(city);
         when(userServiceImpl.getUserById(userId)).thenReturn(user);
         when(restaurantServiceImpl.getById(restaurantId)).thenReturn(restaurant);
-        UserExperience userExperience = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperienceCreateDto, user, restaurant);
+        UserExperience userExperience = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperienceCreateDto, booking, user, restaurant);
         userExperience.setTimestamp(LocalDateTime.now());
         when(userExperienceRepository.save(any())).thenReturn(userExperience);
 
@@ -181,6 +190,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to delete user experience by booking id - User experience not found")
     void testDeleteUserExperience_UserExperienceNotFound() {
 
         Long userExperienceId = 1L;
@@ -190,6 +200,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to delete user experience")
     void testDeleteUserExperience() throws UserExperienceNotFoundException {
 
         Long userExperienceId = 1L;
@@ -202,6 +213,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to update user experience - User experience not found")
     void testUpdateUserExperience_UserExperienceNotFound() {
 
         Long userExperienceId = 1L;
@@ -213,6 +225,7 @@ public class UserExperienceServiceTests {
     }
 
     @Test
+    @DisplayName("Test to update user experience")
     void testUpdateUserExperience() throws UserExperienceNotFoundException {
 
         Long userExperienceId = 1L;

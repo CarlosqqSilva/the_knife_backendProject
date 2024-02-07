@@ -1,5 +1,6 @@
 package org.mindswap.springtheknife.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,6 +23,7 @@ public class WeatherControllerTests {
     }
 
     @Test
+    @DisplayName("Test get current weather data")
     public void testGetCurrentWeatherData() throws Exception {
         String location = "London";
 

@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -72,7 +73,7 @@ public class RestaurantController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
+    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException, RestaurantNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurant(restaurant), HttpStatus.CREATED);
     }
 
@@ -87,8 +88,8 @@ public class RestaurantController {
                     content = @Content)
     })
     @PostMapping("/list/")
-    public ResponseEntity<List<RestaurantGetDto>> addRestaurant(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
-        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurants(restaurantList), HttpStatus.OK);
+    public ResponseEntity<List<RestaurantGetDto>> addRestaurantList(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurants(restaurantList), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update a restaurant", description = "Updates a restaurant by its ID")
@@ -102,7 +103,7 @@ public class RestaurantController {
                     content = @Content)
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantGetDto> patchRestaurant(@Valid @PathVariable("id") Long id, @Valid @RequestBody RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
+    public ResponseEntity<RestaurantGetDto> patchRestaurant(@PathVariable("id") Long id, @Valid @RequestBody RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.patchRestaurant(id, restaurant), HttpStatus.OK);
     }
 
@@ -117,5 +118,29 @@ public class RestaurantController {
     public ResponseEntity<String> deleteRestaurant(@PathVariable("id") Long id) throws RestaurantNotFoundException {
         restaurantServiceImpl.deleteRestaurant(id);
         return new ResponseEntity<>("Restaurant with id " + id + " deleted successfully.", HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get average rating of a restaurant", description = "Returns the average rating of a restaurant by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the average rating",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Double.class))),
+            @ApiResponse(responseCode = "404", description = "Restaurant not found",
+                    content = @Content)
+    })
+    @GetMapping("/{id}/averageRating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable("id") Long id) {
+        Double averageRating = restaurantServiceImpl.findAverageRating(id);
+        return ResponseEntity.ok(averageRating);
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<RestaurantGetDto> addRestaurantWithImage(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        return new ResponseEntity<>(restaurantServiceImpl.addRestaurantWithImage(restaurant), HttpStatus.OK);
+    }
+
+    @PostMapping("/list/generate")
+    public ResponseEntity<List<RestaurantGetDto>> addRestaurantListWithImage(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurantsWithImage(restaurantList), HttpStatus.OK);
     }
 }

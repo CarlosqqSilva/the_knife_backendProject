@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
@@ -53,6 +54,7 @@ public class RestaurantTypeControllerTests {
 
 
     @Test
+    @DisplayName("Test to get all restaurant types")
     public void testGetAllRestaurantTypes() throws Exception {
         mockMvc.perform(get("/api/v1/restaurantTypes/")
                         .param("pageNumber", "0")
@@ -63,6 +65,7 @@ public class RestaurantTypeControllerTests {
     }
 
     @Test
+    @DisplayName("Test to get restaurant type by id")
     public void testGetRestaurantTypeById() throws Exception {
 
         RestaurantTypeDto restaurantType = new RestaurantTypeDto(1L, "ItalianFood");
@@ -76,6 +79,7 @@ public class RestaurantTypeControllerTests {
     }
 
     @Test
+    @DisplayName("Test to get restaurant type by name")
     public void testAddType() throws Exception {
 
         RestaurantTypeDto restaurantType = new RestaurantTypeDto(1L, "ItalianFood");
@@ -85,12 +89,13 @@ public class RestaurantTypeControllerTests {
         mockMvc.perform(post("/api/v1/restaurantTypes/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restaurantType)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(restaurantTypeService).addType(restaurantType);
     }
 
     @Test
+    @DisplayName("Test to update restaurant type")
     public void testPatchType() throws Exception {
 
         RestaurantTypeDto restaurantType = new RestaurantTypeDto(1L, "ItalianFood");
@@ -106,6 +111,7 @@ public class RestaurantTypeControllerTests {
     }
 
     @Test
+    @DisplayName("Test to delete restaurant type")
     public void testDeleteType() throws Exception {
 
         Long id = 1L;

@@ -21,12 +21,14 @@ public record RestaurantPostDto(
         @NotNull(message = PHONE_NUMBER_MANDATORY)
         @Pattern(regexp = PHONE_NUMBER_VALIDATOR, message = INVALID_PHONE_NUMBER)
         String phoneNumber,
-
         @NotNull(message = LATITUDE_MANDATORY)
+        @Min(value = -90, message = INVALID_LATITUDE)
+        @Max(value = 90, message = INVALID_LATITUDE)
         Double latitude,
         @NotNull(message = LONGITUDE_MANDATORY)
+        @Min(value = -180, message = INVALID_LONGITUDE)
+        @Max(value = 180, message = INVALID_LONGITUDE)
         Double longitude,
-
         @Min(value = 1, message = INVALID_CITY_ID)
         Long cityId,
         @NotNull

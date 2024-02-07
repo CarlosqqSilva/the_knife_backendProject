@@ -18,9 +18,8 @@ public record BookingGetDto (
 
         UserGetDto user,
         RestaurantGetDto restaurant,
-        @NotNull(message = Message.BOOKING_MANDATORY)
         LocalDateTime bookingTime,
-        @Enumerated(EnumType.STRING)
+
         BookingStatus status
 ) implements Serializable {
 }

@@ -13,9 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
-  
+
     Optional<Restaurant> findByEmail(String email);
+
     Optional<Restaurant> findByPhoneNumber(String phoneNumber);
+
+    @Query("SELECT AVG(ue.rating) FROM UserExperience ue WHERE ue.restaurant.id = :restaurantId")
+    Double findAverageRating(Long restaurantId);
 
     Page<Restaurant> findAll(Pageable pageable);
 

@@ -23,7 +23,7 @@ public class RestaurantType implements Serializable {
     private String type;
 
     @ManyToMany(mappedBy = "restaurantTypes")
-   private Set<Restaurant> restaurants;
+    private Set<Restaurant> restaurants;
 
 
 

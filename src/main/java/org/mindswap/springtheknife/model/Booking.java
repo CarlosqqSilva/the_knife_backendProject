@@ -36,4 +36,7 @@ public class Booking implements Serializable {
     @ManyToOne(cascade =CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @OneToOne(mappedBy = "booking")
+    private UserExperience userExperience;
 }
