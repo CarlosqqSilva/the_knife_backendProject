@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mindswap.springtheknife.converter.RestaurantConverter;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
@@ -220,6 +221,20 @@ class RestaurantServiceTest {
 
         verify(restaurantRepository, times(1)).findById(restaurantId);
         verify(restaurantRepository, times(1)).save(any(Restaurant.class));
+    }
 
+    @Test
+    @DisplayName("Test get average rating of a restaurant")
+    void testFindAverageRating() {
+        Long restaurantId = 1L;
+        Double expectedAverageRating = 4.5;
+
+        when(restaurantRepository.findAverageRating(restaurantId)).thenReturn(expectedAverageRating);
+
+        Double actualAverageRating = restaurantService.findAverageRating(restaurantId);
+
+        assertEquals(expectedAverageRating, actualAverageRating);
+
+        verify(restaurantRepository, times(1)).findAverageRating(restaurantId);
     }
 }
