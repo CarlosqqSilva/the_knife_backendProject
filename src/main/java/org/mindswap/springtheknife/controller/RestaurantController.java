@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -72,7 +73,7 @@ public class RestaurantController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException {
+    public ResponseEntity<RestaurantGetDto> addRestaurant(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException, RestaurantNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.addRestaurant(restaurant), HttpStatus.CREATED);
     }
 
@@ -87,7 +88,7 @@ public class RestaurantController {
                     content = @Content)
     })
     @PostMapping("/list/")
-    public ResponseEntity<List<RestaurantGetDto>> addRestaurantList(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException {
+    public ResponseEntity<List<RestaurantGetDto>> addRestaurantList(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
         return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurants(restaurantList), HttpStatus.CREATED);
     }
 
@@ -102,7 +103,7 @@ public class RestaurantController {
                     content = @Content)
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantGetDto> patchRestaurant(@Valid @PathVariable("id") Long id, @Valid @RequestBody RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
+    public ResponseEntity<RestaurantGetDto> patchRestaurant(@PathVariable("id") Long id, @Valid @RequestBody RestaurantPatchDto restaurant) throws RestaurantNotFoundException {
         return new ResponseEntity<>(restaurantServiceImpl.patchRestaurant(id, restaurant), HttpStatus.OK);
     }
 
@@ -118,10 +119,20 @@ public class RestaurantController {
         restaurantServiceImpl.deleteRestaurant(id);
         return new ResponseEntity<>("Restaurant with id " + id + " deleted successfully.", HttpStatus.OK);
     }
-
+  
     @GetMapping("/{id}/averageRating")
     public ResponseEntity<Double> getAverageRating(@PathVariable("id") Long id) {
         Double averageRating = restaurantServiceImpl.findAverageRating(id);
         return ResponseEntity.ok(averageRating);
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<RestaurantGetDto> addRestaurantWithImage(@Valid @RequestBody RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        return new ResponseEntity<>(restaurantServiceImpl.addRestaurantWithImage(restaurant), HttpStatus.OK);
+    }
+
+    @PostMapping("/list/generate")
+    public ResponseEntity<List<RestaurantGetDto>> addRestaurantListWithImage(@Valid @RequestBody List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
+        return new ResponseEntity<>(restaurantServiceImpl.addListOfRestaurantsWithImage(restaurantList), HttpStatus.OK);
     }
 }

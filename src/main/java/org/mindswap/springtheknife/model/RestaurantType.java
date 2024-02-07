@@ -22,7 +22,7 @@ public class RestaurantType {
     private String type;
 
     @ManyToMany(mappedBy = "restaurantTypes")
-   private Set<Restaurant> restaurants;
+    private Set<Restaurant> restaurants;
 
 
 

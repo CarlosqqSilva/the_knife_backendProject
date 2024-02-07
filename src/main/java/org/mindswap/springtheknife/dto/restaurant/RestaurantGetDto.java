@@ -20,7 +20,6 @@ public record RestaurantGetDto(
         String phoneNumber,
         Double rating,
         Set<RestaurantTypeDto> restaurantTypes
-        
 ) {
 
 }

@@ -7,6 +7,7 @@ import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.RestaurantType;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class RestaurantConverter {
 
     }
 
-    public static Restaurant fromRestaurantCreateDtoToEntity(RestaurantPostDto restaurant, City city, Set<RestaurantType> restaurantTypes) {
+    public static Restaurant fromRestaurantCreateDtoToEntity(RestaurantPostDto restaurant, City city, List<RestaurantType> restaurantTypes) {
         return Restaurant.builder()
                 .city(city)
                 .name(restaurant.name())
