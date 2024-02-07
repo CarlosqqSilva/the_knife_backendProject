@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
    }
 
     @Override
-    @Cacheable(cacheNames = "UserById", key = "id" )
+    @Cacheable(cacheNames = "UserById", key = "#id" )
     public UserGetDto getUser(Long id) throws UserNotFoundException {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {

@@ -44,19 +44,17 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Cacheable(cacheNames = "BookingById", key = "{#pageNumber, #pageSize, #sortBy}")
-    public List<BookingGetDto> getAllBookings(int pageNumber, int pageSize, String sortBy) throws InterruptedException {
+    public List<BookingGetDto> getAllBookings(int pageNumber, int pageSize, String sortBy) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<Booking> pageBookings = bookingRepository.findAll(pageRequest);
-        Thread.sleep(2000L);
         return pageBookings.stream()
                 .map(BookingConverter::fromModelToBookingDto)
                 .toList();
     }
 
     @Override
-    @Cacheable(cacheNames = "BookingById", key = "id")
-    public BookingGetDto getBookingById(Long id) throws BookingNotFoundException, InterruptedException {
-        Thread.sleep(2000L);
+    @Cacheable(cacheNames = "BookingById", key = "#id")
+    public BookingGetDto getBookingById(Long id) throws BookingNotFoundException {
         Optional<Booking> bookingOptional = bookingRepository.findById(id);
         if(bookingOptional.isEmpty()){
             throw new BookingNotFoundException(Message.BOOKING_ID + id + Message.NOT_FOUND);

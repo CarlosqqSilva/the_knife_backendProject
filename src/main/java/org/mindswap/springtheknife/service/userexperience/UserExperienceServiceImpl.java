@@ -55,7 +55,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     }
 
     @Override
-    @Cacheable(cacheNames = "UserExperienceById", key = "id" )
+    @Cacheable(cacheNames = "UserExperienceById", key = "#id" )
     public UserExperienceGetDto getUserExperienceById(Long id) throws UserExperienceNotFoundException {
         Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
         if (userExperienceOptional.isEmpty()) {

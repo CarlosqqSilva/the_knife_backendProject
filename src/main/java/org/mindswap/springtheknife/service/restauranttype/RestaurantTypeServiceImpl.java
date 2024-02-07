@@ -45,7 +45,7 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
             }
 
     @Override
-    @Cacheable(cacheNames = "RestaurantTypeById", key = "id" )
+    @Cacheable(cacheNames = "RestaurantTypeById", key = "#id" )
     public RestaurantTypeDto getById(Long id) throws RestaurantTypeNotFoundException {
         RestaurantType restaurantType = restaurantTypeRepository.findById(id).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + id + Message.NOT_FOUND));
         return RestaurantTypeConverter.fromModelToRestaurantTypeDto(restaurantType);

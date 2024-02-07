@@ -60,7 +60,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 
     @Override
-    @Cacheable(cacheNames = "RestaurantById", key = "id" )
+    @Cacheable(cacheNames = "RestaurantById", key = "#id" )
     public RestaurantGetDto getRestaurant(Long id) throws RestaurantNotFoundException {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         if (restaurantOptional.isEmpty()) {
