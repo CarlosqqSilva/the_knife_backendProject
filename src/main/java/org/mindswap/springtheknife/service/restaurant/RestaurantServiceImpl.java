@@ -14,7 +14,6 @@ import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.RestaurantTypeRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mindswap.springtheknife.service.restaurantimage.RestaurantImageService;
-import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeImpl;
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +90,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
 
-        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()), restaurantTypes);
         restaurantRepository.save(newRestaurant);
 
         return RestaurantConverter.fromModelToRestaurantDto(newRestaurant);
@@ -101,7 +100,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<RestaurantGetDto> addListOfRestaurants(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
         List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
         for (RestaurantPostDto restaurantPostDto : restaurantList) {
-            List<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
+            List<RestaurantType> restaurantTypes = restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
             Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurantPostDto.cityId()));
             if (cityOptional.isEmpty()) {
                 throw new CityNotFoundException(restaurantPostDto.cityId() + Message.CITY_NOT_FOUND);
@@ -140,7 +139,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantGetDto addRestaurantWithImage(RestaurantPostDto restaurant) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
-        List<RestaurantType> restaurantTypes =  restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
+        List<RestaurantType> restaurantTypes = restaurant.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
 
         Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurant.cityId()));
         if (cityOptional.isEmpty()) {
@@ -151,7 +150,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new RestaurantAlreadyExistsException("This restaurant already exists.");
         }
 
-        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()),restaurantTypes);
+        Restaurant newRestaurant = RestaurantConverter.fromRestaurantCreateDtoToEntity(restaurant, cityServiceImpl.getCityById(restaurant.cityId()), restaurantTypes);
         restaurantRepository.save(newRestaurant);
         restaurantImageService.saveRestaurantImage(newRestaurant);
 
@@ -162,7 +161,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<RestaurantGetDto> addListOfRestaurantsWithImage(List<RestaurantPostDto> restaurantList) throws RestaurantAlreadyExistsException, CityNotFoundException, IOException {
         List<RestaurantGetDto> newRestaurantsList = new ArrayList<>();
         for (RestaurantPostDto restaurantPostDto : restaurantList) {
-            List<RestaurantType> restaurantTypes =  restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
+            List<RestaurantType> restaurantTypes = restaurantPostDto.restaurantTypes().stream().map(restaurantTypeRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
             Optional<City> cityOptional = Optional.ofNullable(this.cityServiceImpl.getCityById(restaurantPostDto.cityId()));
             if (cityOptional.isEmpty()) {
                 throw new CityNotFoundException(restaurantPostDto.cityId() + Message.CITY_NOT_FOUND);
@@ -180,7 +179,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
         return newRestaurantsList;
     }
-  
+
     @Override
     public Double findAverageRating(Long restaurantId) {
         return restaurantRepository.findAverageRating(restaurantId);
