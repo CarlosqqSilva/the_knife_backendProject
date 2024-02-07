@@ -119,7 +119,15 @@ public class RestaurantController {
         restaurantServiceImpl.deleteRestaurant(id);
         return new ResponseEntity<>("Restaurant with id " + id + " deleted successfully.", HttpStatus.OK);
     }
-  
+
+    @Operation(summary = "Get average rating of a restaurant", description = "Returns the average rating of a restaurant by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the average rating",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Double.class))),
+            @ApiResponse(responseCode = "404", description = "Restaurant not found",
+                    content = @Content)
+    })
     @GetMapping("/{id}/averageRating")
     public ResponseEntity<Double> getAverageRating(@PathVariable("id") Long id) {
         Double averageRating = restaurantServiceImpl.findAverageRating(id);

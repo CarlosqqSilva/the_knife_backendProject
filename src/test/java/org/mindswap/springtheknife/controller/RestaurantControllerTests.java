@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.hamcrest.Matchers.is;
-
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mindswap.springtheknife.dto.restaurant.*;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPatchDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantPostDto;
 import org.mindswap.springtheknife.model.Address;
 import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
@@ -21,9 +20,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,14 +35,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 public class RestaurantControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
     RestaurantRepository restaurantRepository;
     @MockBean
     RestaurantServiceImpl restaurantService;
-
     ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
     @AfterEach
@@ -87,9 +88,9 @@ public class RestaurantControllerTests {
         when(restaurantService.getRestaurant(1L)).thenReturn(new RestaurantGetDto("Porto", "Pizza", "pizza@ge.com", new Address(), "+351219879876", 0.0, new HashSet<>()));
 
         mockMvc.perform(get("/api/v1/restaurants/{id}", 1L))
-              .andExpect(status().isOk())
-              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-              .andExpect(jsonPath("$.name", is("Pizza")));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("Pizza")));
     }
 
     @Test
@@ -122,11 +123,11 @@ public class RestaurantControllerTests {
 
         //Then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/restaurants/")
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content(mapper.writeValueAsString(newRestaurant)))
-              .andExpect(status().isCreated())
-              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-              .andExpect(jsonPath("$.name", is("Pizza")));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(newRestaurant)))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("Pizza")));
     }
 
     @Test
@@ -181,7 +182,7 @@ public class RestaurantControllerTests {
                 }
                 """;
 
-        RestaurantGetDto patchedRestaurant= new RestaurantGetDto("Porto", "Pizza", "6@asdasd.pt", new Address("rua", "33", "4100"), "+351219879876", 0.0, new HashSet<>());
+        RestaurantGetDto patchedRestaurant = new RestaurantGetDto("Porto", "Pizza", "6@asdasd.pt", new Address("rua", "33", "4100"), "+351219879876", 0.0, new HashSet<>());
 
         when(restaurantService.patchRestaurant(any(Long.class), any(RestaurantPatchDto.class))).thenReturn(patchedRestaurant);
 
@@ -191,5 +192,19 @@ public class RestaurantControllerTests {
                 .andExpect(status().isOk());
 
         verify(restaurantService, times(1)).patchRestaurant(any(Long.class), any(RestaurantPatchDto.class));
+    }
+
+    @Test
+    @DisplayName("Test get average rating of a restaurant")
+    void testGetAverageRating() throws Exception {
+        Long restaurantId = 1L;
+        Double expectedAverageRating = 4.5;
+
+        when(restaurantService.findAverageRating(restaurantId)).thenReturn(expectedAverageRating);
+
+        mockMvc.perform(get("/api/v1/restaurants/{id}/averageRating", restaurantId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(expectedAverageRating.toString()));
     }
 }
