@@ -6,9 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
 import java.util.List;
 
-public record CityGetDto (
+public record CityGetDto(
 
         Long id,
 
@@ -16,5 +17,5 @@ public record CityGetDto (
 
         List<RestaurantGetDto> restaurantList
 
-) {
-    }
+) implements Serializable {
+}

@@ -9,6 +9,7 @@ import org.mindswap.springtheknife.exceptions.booking.BookingNotFoundException;
 import org.mindswap.springtheknife.exceptions.restaurant.RestaurantNotFoundException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
+import org.mindswap.springtheknife.model.User;
 import org.mindswap.springtheknife.model.UserExperience;
 import org.mindswap.springtheknife.repository.BookingRepository;
 import org.mindswap.springtheknife.repository.UserExperienceRepository;
@@ -17,6 +18,9 @@ import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -49,6 +53,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     }
 
     @Override
+    @Cacheable(cacheNames = "UserExperience", key = "{#pageNumber, #pageSize, #sortBy}")
     public List<UserExperienceGetDto> getAllUsersExperiences(int pageNumber, int pageSize, String sortBy) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<UserExperience> pageUserExperiences = userExperienceRepository.findAll(pageRequest);
@@ -58,6 +63,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     }
 
     @Override
+    @Cacheable(cacheNames = "UserExperienceById", key = "#id" )
     public UserExperienceGetDto getUserExperienceById(Long id) throws UserExperienceNotFoundException {
         Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
         if (userExperienceOptional.isEmpty()) {
@@ -90,6 +96,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     }
 
     @Override
+    @CachePut(cacheNames = "UserExperiencePatch", key="#id")
     public UserExperiencePatchDto updateUserExperience(Long id, UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException {
         Optional<UserExperience> userExperienceOptional = userExperienceRepository.findById(id);
         if (!userExperienceOptional.isPresent()) {
@@ -106,10 +113,10 @@ public class UserExperienceServiceImpl implements UserExperienceService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "UserExperienceDelete", allEntries = true)
     public void deleteUserExperience(Long userExperienceId) throws UserExperienceNotFoundException {
         userExperienceRepository.findById(userExperienceId).orElseThrow(() -> new UserExperienceNotFoundException(userExperienceId + Message.USER_EXPERIENCE_ID_NOT_FOUND));
         userExperienceRepository.deleteById(userExperienceId);
     }
-
 }
 

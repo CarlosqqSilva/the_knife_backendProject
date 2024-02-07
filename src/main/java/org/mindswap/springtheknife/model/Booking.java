@@ -6,7 +6,7 @@ import lombok.*;
 import org.mindswap.springtheknife.Enum.BookingStatus;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Booking {
+public class Booking implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

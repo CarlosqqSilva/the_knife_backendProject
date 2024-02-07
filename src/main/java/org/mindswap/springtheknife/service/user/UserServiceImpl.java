@@ -13,6 +13,9 @@ import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.UserRepository;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,6 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(cacheNames = "User", key = "{#pageNumber, #pageSize, #sortBy}")
     public List<UserGetDto> getAllUsers(int pageNumber, int pageSize, String sortBy) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy);
         Page<User> pageUsers = userRepository.findAll(pageRequest);
@@ -46,6 +50,7 @@ public class UserServiceImpl implements UserService {
    }
 
     @Override
+    @Cacheable(cacheNames = "UserById", key = "#id" )
     public UserGetDto getUser(Long id) throws UserNotFoundException {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
@@ -81,6 +86,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CachePut(cacheNames = "UserPatch", key="#id")
     public UserPatchDto updateUser(Long id, UserPatchDto user) throws UserNotFoundException, UserAlreadyExistsException {
         Optional<User> userOptional= userRepository.findById(id);
         if(userOptional.isEmpty()) {
@@ -102,11 +108,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "UserDelete", allEntries = true)
     public void deleteUser(Long id) throws UserNotFoundException {
         userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id + Message.USER_ID_DOES_NOT_EXIST));
         userRepository.deleteById(id);
     }
-
 }
 
 

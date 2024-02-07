@@ -3,6 +3,8 @@ package org.mindswap.springtheknife.dto.userexperience;
 import jakarta.validation.constraints.*;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
+
 public record UserExperiencePatchDto(
 
 
@@ -14,5 +16,5 @@ public record UserExperiencePatchDto(
 
         @Pattern(regexp = Message.COMMENT_VALIDATOR, message = Message.INVALID_COMMENT)
         String comment
-) {
+)implements Serializable {
 }

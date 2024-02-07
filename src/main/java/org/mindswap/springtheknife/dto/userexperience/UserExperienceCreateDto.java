@@ -3,6 +3,7 @@ package org.mindswap.springtheknife.dto.userexperience;
 import jakarta.validation.constraints.*;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
 
 public record UserExperienceCreateDto(
         @Min(value = 1, message = Message.BOOKING_ID_MANDATORY)
@@ -23,7 +24,7 @@ public record UserExperienceCreateDto(
         @Pattern(regexp = Message.COMMENT_VALIDATOR, message = Message.INVALID_COMMENT)
         String comment
 
-)
+)implements Serializable
 {
 
 }

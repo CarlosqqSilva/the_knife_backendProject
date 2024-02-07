@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.mindswap.springtheknife.utils.Message;
 
+import java.io.Serializable;
+
 public record RestaurantTypeDto(
 
         Long id,
@@ -13,6 +15,5 @@ public record RestaurantTypeDto(
         @NotNull(message = Message.TYPE_MANDATORY)
         @Pattern(regexp = Message.TYPE_VALIDATOR, message = Message.INVALID_TYPE)
         String type
-) {
-
+) implements Serializable {
 }

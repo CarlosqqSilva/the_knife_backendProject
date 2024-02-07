@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "userExperience")
-public class UserExperience {
+public class UserExperience implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
