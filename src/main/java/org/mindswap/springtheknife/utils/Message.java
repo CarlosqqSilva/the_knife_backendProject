@@ -1,10 +1,5 @@
 package org.mindswap.springtheknife.utils;
 
-import jakarta.validation.constraints.Pattern;
-import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
-
-import javax.swing.text.html.parser.DTDConstants;
-
 public class Message {
     public final static String USER_ID_DOES_NOT_EXIST = " User ID does not exist.";
     public static final String USER_ID_ALREADY_EXISTS = " User ID already exists.";
@@ -32,8 +27,8 @@ public class Message {
     public static final String VALID_STATUS = "Valid status";
     public static final String CITY_WITH_ID = "City with id ";
     public static final String NOT_EXIST = " does not exist";
-    public static final String DUPLICATE_NAME ="City with name";
-    public static final String EXIST = " already exists";
+    public static final String DUPLICATE_NAME = "City with name";
+    public static final String EXIST = "already exists";
     public static final String NAME_ERROR = "Must have name";
     public static final String TYPE_MANDATORY = "Must have Type";
     public static final String TYPE_ID = "Type Id ";
