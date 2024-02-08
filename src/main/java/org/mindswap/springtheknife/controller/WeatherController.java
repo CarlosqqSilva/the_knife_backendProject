@@ -38,7 +38,7 @@ public class WeatherController {
     })
     @GetMapping("/currentWeather/")
     public Mono<String> getCurrentWeatherData(@RequestParam("location") String location) {
-        String url = "http://localhost:8081/currentWeather/currentWeatherResource?location=" + location;
+        String url = "http://weatherapi:8081/currentWeather/currentWeatherResource?location=" + location;
 
 
         return webClient.get()
