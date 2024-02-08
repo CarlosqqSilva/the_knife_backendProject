@@ -2,7 +2,7 @@
 
 Welcome to TheKnife, an API for restaurant search, reservation, and feedback.
 
-Built with Java 8 and utilizing the Spring Boot 3.2.2 framework, PostgreSQL for data storage, Quarkus for integration with external APIs, and image storage.
+Built with Java 21 and utilizing the Spring Boot 3.2.2 framework, PostgreSQL for data storage, Quarkus for integration with external APIs, and image storage.
 
 ## Features:
 - Restaurant Search: Easily locate nearby restaurants based on user preferences.
