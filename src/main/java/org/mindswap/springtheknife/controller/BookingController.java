@@ -57,7 +57,7 @@ public class BookingController {
                     content = @Content),
     })
     @GetMapping("/{id}")
-    public ResponseEntity<BookingGetDto> getBookingById (@PathVariable("id") Long id) throws BookingNotFoundException {
+    public ResponseEntity<BookingGetDto> getBookingById(@PathVariable("id") Long id) throws BookingNotFoundException {
         return new ResponseEntity<>(bookingServiceImpl.getBookingById(id), HttpStatus.OK);
     }
 
@@ -87,7 +87,7 @@ public class BookingController {
                     content = @Content)
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<BookingGetDto> patchBooking (@PathVariable("id") Long id, @Valid @RequestBody BookingPatchDto booking) throws BookingNotFoundException, OperationNotAllowedException {
+    public ResponseEntity<BookingGetDto> patchBooking(@PathVariable("id") Long id, @Valid @RequestBody BookingPatchDto booking) throws BookingNotFoundException, OperationNotAllowedException {
         return new ResponseEntity<>(bookingServiceImpl.patchBooking(id, booking), HttpStatus.OK);
     }
 

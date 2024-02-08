@@ -60,7 +60,7 @@ public class CityController {
                     content = @Content)
     })
     @GetMapping("/{cityId}")
-    public ResponseEntity<CityGetDto> getCity(@PathVariable("cityId") Long cityId) throws CityNotFoundException {
+    public ResponseEntity<CityGetDto> getCityById(@PathVariable("cityId") Long cityId) throws CityNotFoundException {
         return new ResponseEntity<>(cityServiceImpl.getCity(cityId), HttpStatus.OK);
     }
 
@@ -73,11 +73,11 @@ public class CityController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<CityDto> addNewCity(@Valid @RequestBody CityDto city, BindingResult bindingResult) throws CityAlreadyExistsException {
+    public ResponseEntity<CityDto> addCity(@Valid @RequestBody CityDto city, BindingResult bindingResult) throws CityAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CityDto city1 = cityServiceImpl.create(city);
+        CityDto city1 = cityServiceImpl.createCity(city);
         return new ResponseEntity<>(city1, HttpStatus.CREATED);
     }
 
@@ -92,8 +92,8 @@ public class CityController {
                     content = @Content)
     })
     @PatchMapping(path = "{cityId}")
-    public ResponseEntity<String> updateCity(@Valid @RequestBody City city, @PathVariable @Parameter(name = "cityId", description = "city_id", example = "1") long cityId) throws CityNotFoundException {
-        cityServiceImpl.update(cityId, city);
+    public ResponseEntity<String> patchCity(@Valid @RequestBody City city, @PathVariable @Parameter(name = "cityId", description = "city_id", example = "1") long cityId) throws CityNotFoundException {
+        cityServiceImpl.updateCity(cityId, city);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -103,7 +103,7 @@ public class CityController {
             @ApiResponse(responseCode = "404", description = "City ID not found")})
     @DeleteMapping("/{cityId}")
     public ResponseEntity<String> deleteCity(@PathVariable @Parameter(name = "cityId", example = "1") long cityId) throws CityNotFoundException {
-        cityServiceImpl.delete(cityId);
+        cityServiceImpl.deleteCity(cityId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

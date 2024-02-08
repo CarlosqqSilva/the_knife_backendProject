@@ -94,7 +94,7 @@ public class RestaurantTypeTests {
         when(restaurantTypeRepository.findByType(existingTypeDto.type())).thenReturn(Optional.of(new RestaurantType()));
 
         assertThrows(RestaurantTypeAlreadyExistsException.class, () -> {
-            restaurantTypeService.addType(existingTypeDto);
+            restaurantTypeService.addRestaurantType(existingTypeDto);
         });
 
         verify(restaurantTypeRepository, never()).save(any(RestaurantType.class));
@@ -114,7 +114,7 @@ public class RestaurantTypeTests {
         when(restaurantTypeRepository.save(existingType)).thenReturn(existingType);
 
         RestaurantTypeDto restaurantTypeDto = new RestaurantTypeDto(typeId, newType);
-        RestaurantTypeDto result = restaurantTypeService.patchType(typeId, restaurantTypeDto);
+        RestaurantTypeDto result = restaurantTypeService.patchRestaurantType(typeId, restaurantTypeDto);
 
         assertEquals(newType, result.type());
 
@@ -132,7 +132,7 @@ public class RestaurantTypeTests {
         when(restaurantTypeRepository.findById(id)).thenReturn(Optional.of(type));
         doNothing().when(restaurantTypeRepository).deleteById(id);
 
-        assertDoesNotThrow(() -> restaurantTypeService.deleteType(id));
+        assertDoesNotThrow(() -> restaurantTypeService.deleteRestaurantType(id));
 
         verify(restaurantTypeRepository, times(1)).deleteById(id);
     }
@@ -148,7 +148,7 @@ public class RestaurantTypeTests {
 
         when(restaurantTypeRepository.findById(restaurantTypeId)).thenReturn(Optional.of(existingType));
 
-        RestaurantTypeDto result = restaurantTypeService.getById(restaurantTypeId);
+        RestaurantTypeDto result = restaurantTypeService.getRestaurantTypeById(restaurantTypeId);
 
         assertEquals(RestaurantTypeConverter.fromModelToRestaurantTypeDto(existingType), result);
 

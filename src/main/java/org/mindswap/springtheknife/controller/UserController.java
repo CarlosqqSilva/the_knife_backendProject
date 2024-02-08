@@ -63,7 +63,7 @@ public class UserController {
                     content = @Content)
     })
     @GetMapping("/{userId}")
-    public ResponseEntity<UserGetDto> getUser(@PathVariable("userId") Long userId) throws UserNotFoundException {
+    public ResponseEntity<UserGetDto> getUserById(@PathVariable("userId") Long userId) throws UserNotFoundException {
         return new ResponseEntity<>(userServiceImpl.getUser(userId), HttpStatus.OK);
 
     }
@@ -79,7 +79,7 @@ public class UserController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<UserGetDto> createUser(@Valid @RequestBody UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
+    public ResponseEntity<UserGetDto> addUser(@Valid @RequestBody UserCreateDto user) throws UserAlreadyExistsException, UserEmailAlreadyExistsException {
         return new ResponseEntity<>(userServiceImpl.createUser(user), HttpStatus.CREATED);
     }
 

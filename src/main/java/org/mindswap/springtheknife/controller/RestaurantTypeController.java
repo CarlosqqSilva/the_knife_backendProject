@@ -8,10 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.mindswap.springtheknife.dto.restaurantTypeDto.RestaurantTypeDto;
-import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.restaurantType.RestaurantTypeNotFoundException;
-import org.mindswap.springtheknife.model.RestaurantType;
 import org.mindswap.springtheknife.service.restauranttype.RestaurantTypeService;
 import org.mindswap.springtheknife.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class RestaurantTypeController {
                             array = @ArraySchema(schema = @Schema(implementation = RestaurantTypeDto.class)))})
     })
     @GetMapping("/")
-    public ResponseEntity<List<RestaurantTypeDto>> getRestaurantType(
+    public ResponseEntity<List<RestaurantTypeDto>> getAllRestaurantTypes(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
             @RequestParam(value = "sortBy") String sortBy
@@ -58,8 +56,8 @@ public class RestaurantTypeController {
                     content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantTypeDto> getById(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
-        return new ResponseEntity<>(restaurantTypeService.getById(id), HttpStatus.OK);
+    public ResponseEntity<RestaurantTypeDto> getRestaurantTypeById(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
+        return new ResponseEntity<>(restaurantTypeService.getRestaurantTypeById(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Create a new Restaurant Type", description = "Creates a new restaurant type")
@@ -71,8 +69,8 @@ public class RestaurantTypeController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<RestaurantTypeDto> addType(@Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
-        return new ResponseEntity<>(restaurantTypeService.addType(restaurantType), HttpStatus.CREATED);
+    public ResponseEntity<RestaurantTypeDto> addRestaurantType(@Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
+        return new ResponseEntity<>(restaurantTypeService.addRestaurantType(restaurantType), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update a Restaurant Type", description = "Updates a restaurant type in the database")
@@ -86,8 +84,8 @@ public class RestaurantTypeController {
                     content = @Content)
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantTypeDto> patchType(@PathVariable("id") Long id, @Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
-        return new ResponseEntity<>(restaurantTypeService.patchType(id, restaurantType), HttpStatus.OK);
+    public ResponseEntity<RestaurantTypeDto> patchRestaurantType(@PathVariable("id") Long id, @Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
+        return new ResponseEntity<>(restaurantTypeService.patchRestaurantType(id, restaurantType), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete a Restaurant Type", description = "Deletes a restaurant type from the database")
@@ -96,8 +94,8 @@ public class RestaurantTypeController {
             @ApiResponse(responseCode = "404", description = "Restaurant type ID not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteType(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
-        restaurantTypeService.deleteType(id);
+    public ResponseEntity<String> deleteRestaurantType(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
+        restaurantTypeService.deleteRestaurantType(id);
         return new ResponseEntity<>(Message.TYPE_ID + id + Message.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 }

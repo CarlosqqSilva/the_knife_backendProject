@@ -10,12 +10,12 @@ public interface RestaurantTypeService {
 
     List<RestaurantTypeDto> getAllRestaurantType(int pageNumber, int pageSize, String sortBy);
 
-    RestaurantTypeDto getById(Long id) throws RestaurantTypeNotFoundException;
+    RestaurantTypeDto getRestaurantTypeById(Long id) throws RestaurantTypeNotFoundException;
 
-    RestaurantTypeDto addType (RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException;
+    RestaurantTypeDto addRestaurantType(RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException;
 
-    void deleteType (Long restaurantTypeId) throws RestaurantTypeNotFoundException;
+    void deleteRestaurantType(Long restaurantTypeId) throws RestaurantTypeNotFoundException;
 
-    RestaurantTypeDto patchType (Long id, RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException;
+    RestaurantTypeDto patchRestaurantType(Long id, RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException;
 
 }

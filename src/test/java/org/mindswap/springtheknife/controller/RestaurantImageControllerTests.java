@@ -68,7 +68,7 @@ public class RestaurantImageControllerTests {
         MockMultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "some xml".getBytes());
         doNothing().when(restaurantImageService).uploadFileWithId(any(MultipartFile.class), any(Long.class));
 
-        mockMvc.perform(multipart("/api/v1/restaurants/img/upload/id/{id}", restaurantId).file(file))
+        mockMvc.perform(multipart("/api/v1/restaurants/img/upload/{id}", restaurantId).file(file))
                 .andExpect(status().isOk())
                 .andExpect(content().string("File uploaded successfully"));
     }

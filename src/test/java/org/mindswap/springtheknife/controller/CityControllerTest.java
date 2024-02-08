@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.dto.city.CityGetDto;
-import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.CityRepository;
@@ -27,12 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -131,14 +127,14 @@ public class CityControllerTest {
     void testAddNewCity() throws Exception {
         CityDto city = new CityDto("Porto");
 
-        when(cityServiceImpl.create(city)).thenReturn(new CityDto("Porto"));
+        when(cityServiceImpl.createCity(city)).thenReturn(new CityDto("Porto"));
 
         mockMvc.perform(post("/api/v1/cities/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(city)))
                 .andExpect(status().isCreated());
 
-        verify(cityServiceImpl, times(1)).create(any(CityDto.class));
+        verify(cityServiceImpl, times(1)).createCity(any(CityDto.class));
     }
 
     @Test
@@ -150,22 +146,22 @@ public class CityControllerTest {
         long cityId = 1L;
         City updatedCity = new City(1L, "Porto", null);
 
-        ResponseEntity<String> response = cityController.updateCity(updatedCity, cityId);
+        ResponseEntity<String> response = cityController.patchCity(updatedCity, cityId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(cityServiceMock).update(eq(cityId), any(City.class));
+        verify(cityServiceMock).updateCity(eq(cityId), any(City.class));
     }
 
     @Test
     void testDeleteCity() throws Exception {
 
-        doNothing().when(cityServiceImpl).delete(any(Long.class));
+        doNothing().when(cityServiceImpl).deleteCity(any(Long.class));
 
         mockMvc.perform(delete("/api/v1/cities/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(cityServiceImpl, times(1)).delete(any(Long.class));
+        verify(cityServiceImpl, times(1)).deleteCity(any(Long.class));
     }
 }
 

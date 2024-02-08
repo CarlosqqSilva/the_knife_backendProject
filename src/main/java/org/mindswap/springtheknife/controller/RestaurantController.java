@@ -41,7 +41,7 @@ public class RestaurantController {
                             array = @ArraySchema(schema = @Schema(implementation = RestaurantGetDto.class))))
     })
     @GetMapping("/")
-    public ResponseEntity<List<RestaurantGetDto>> getRestaurants(
+    public ResponseEntity<List<RestaurantGetDto>> getAllRestaurants(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
             @RequestParam(value = "sortBy", required = false) String sortBy
