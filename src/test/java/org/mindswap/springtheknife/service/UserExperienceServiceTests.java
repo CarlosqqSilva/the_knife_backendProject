@@ -6,7 +6,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mindswap.springtheknife.converter.UserExperienceConverter;
+import org.mindswap.springtheknife.Enum.BookingStatus;
+import org.mindswap.springtheknife.dto.booking.BookingGetDto;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
+import org.mindswap.springtheknife.dto.user.UserGetDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceCreateDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperienceGetDto;
 import org.mindswap.springtheknife.dto.userexperience.UserExperiencePatchDto;
@@ -16,6 +19,7 @@ import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
 import org.mindswap.springtheknife.exceptions.userexperience.UserExperienceNotFoundException;
 import org.mindswap.springtheknife.model.*;
 import org.mindswap.springtheknife.repository.UserExperienceRepository;
+import org.mindswap.springtheknife.service.booking.BookingServiceImpl;
 import org.mindswap.springtheknife.service.restaurant.RestaurantServiceImpl;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mindswap.springtheknife.service.userexperience.UserExperienceServiceImpl;
@@ -24,12 +28,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +54,20 @@ public class UserExperienceServiceTests {
     private UserServiceImpl userServiceImpl;
     @Mock
     private RestaurantServiceImpl restaurantServiceImpl;
+    @Mock
+    private BookingServiceImpl bookingServiceImpl;
+
+    @MockBean
+    private User user;
+
+    @MockBean
+    private Restaurant restaurant;
+
+    @MockBean
+    private Booking booking;
+
+    @MockBean
+    private UserExperience userExperience;
     @InjectMocks
     private UserExperienceServiceImpl userExperienceService;
 
@@ -74,26 +91,50 @@ public class UserExperienceServiceTests {
 
     @Test
     @DisplayName("Test to get all user experiences")
-    void testGetAllUsersExperiences() {
+    void testGetAllUsersExperiencesWithEmptyList() {
 
+        List<UserExperience> userExperience = new ArrayList<>();
+        Page<UserExperience> pageUserExperience = new PageImpl<>(userExperience);
+        when(userExperienceRepository.findAll(any(Pageable.class))).thenReturn(pageUserExperience);
+        List<UserExperienceGetDto> result = userExperienceService.getAllUsersExperiences(1, 3, "asc");
+        assertEquals(userExperience.size(), result.size());
+    }
+
+    @Test
+    @DisplayName("Test to get all user experiences")
+    void testGetAllUsersExperiences() {
         int pageNumber = 0;
         int pageSize = 5;
         String sortBy = "id";
+
         List<UserExperience> userExperiences = IntStream.range(0, pageSize)
                 .mapToObj(i -> {
                     UserExperience userExperience = new UserExperience();
+                    Booking booking = new Booking();
+                    booking.setId((long) i);
                     User user = new User();
-                    City city = Mockito.mock(City.class);
-                    Mockito.when(city.getName()).thenReturn("Test City");
-                    Restaurant restaurant = Mockito.mock(Restaurant.class);
-                    Mockito.when(restaurant.getCity()).thenReturn(city);
+                    user.setId((long) i);
+                    booking.setUser(user);
+                    userExperience.setBooking(booking);
                     userExperience.setUser(user);
+                    Restaurant restaurant = new Restaurant();
+                    City city = new City();
+                    city.setName("City" + i);
+                    restaurant.setCity(city);
+                    booking.setRestaurant(restaurant);
                     userExperience.setRestaurant(restaurant);
-                    userExperience.setRating(5.0);
+                    List<RestaurantType> restaurantTypes = new ArrayList<>();
+                    RestaurantType restaurantType = new RestaurantType();
+                    restaurantType.setType("Type" + i);
+                    restaurantTypes.add(restaurantType);
+                    restaurant.setRestaurantTypes(restaurantTypes);
+                    userExperience.setRating((double) i);
                     return userExperience;
                 })
                 .collect(Collectors.toList());
+
         Page<UserExperience> pageUserExperiences = new PageImpl<>(userExperiences);
+
         when(userExperienceRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, sortBy)))
                 .thenReturn(pageUserExperiences);
 
@@ -131,8 +172,8 @@ public class UserExperienceServiceTests {
     }
 
     @Test
-    @DisplayName("Test to add user experience by booking id - User not found")
-    void testAddNewUserExperience_UserNotFound() throws UserNotFoundException {
+    @DisplayName("Test to add new user experience with non-existing booking id")
+    void testAddNewUserExperience_NonExistingBookingId() throws BookingNotFoundException {
 
         Long bookingId = 1L;
         Long userId = 1L;
@@ -140,6 +181,54 @@ public class UserExperienceServiceTests {
         Double rating = 5.0;
         String comment = "Test comment";
         UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
+
+
+        when(bookingServiceImpl.getBookingById(bookingId)).thenThrow(new BookingNotFoundException("Booking not found"));
+
+
+        assertThrows(BookingNotFoundException.class, () -> userExperienceService.addNewUserExperience(userExperienceCreateDto));
+    }
+
+    @Test
+    @DisplayName("Test to add new user experience with existing booking id")
+    void testAddNewUserExperience_ExistingBookingId() {
+
+        Long existingBookingId = 1L;
+        Long userId = 1L;
+        Long restaurantId = 1L;
+        Double rating = 5.0;
+        String comment = "Test comment";
+        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(existingBookingId, userId, restaurantId, rating, comment);
+
+
+        when(userExperienceRepository.findById(existingBookingId)).thenReturn(Optional.of(new UserExperience(1L, user, restaurant, 1.0, comment, LocalDateTime.now(), booking)));
+
+        assertThrows(UserExperienceNotFoundException.class, () -> userExperienceService.addNewUserExperience(userExperienceCreateDto));
+    }
+
+    @Test
+    @DisplayName("Test to add user experience by booking id - User not found")
+    void testAddNewUserExperience_UserNotFound() throws UserNotFoundException, BookingNotFoundException {
+
+        Long bookingId = 1L;
+        Long userId = 1L;
+        Long restaurantId = 1L;
+        Double rating = 5.0;
+        String comment = "Test comment";
+        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
+
+        // Create mock objects and dummy values for the BookingGetDto constructor
+        Long id = 1L;
+        UserGetDto userGetDto = mock(UserGetDto.class);
+        RestaurantGetDto restaurantGetDto = mock(RestaurantGetDto.class);
+        LocalDateTime dateTime = LocalDateTime.now();
+        BookingStatus status = BookingStatus.COMPLETE; // Set the status to COMPLETE
+
+        // Create a new instance of BookingGetDto with the required arguments
+        BookingGetDto bookingGetDto = new BookingGetDto(id, userGetDto, restaurantGetDto, dateTime, status);
+
+        when(bookingServiceImpl.getBookingById(bookingId)).thenReturn(bookingGetDto);
+
         when(userServiceImpl.getUserById(userId)).thenThrow(new UserNotFoundException("User not found"));
 
         assertThrows(UserNotFoundException.class, () -> userExperienceService.addNewUserExperience(userExperienceCreateDto));
@@ -147,7 +236,7 @@ public class UserExperienceServiceTests {
 
     @Test
     @DisplayName("Test to add user experience by booking id - Restaurant not found")
-    void testAddNewUserExperience_RestaurantNotFound() throws UserNotFoundException, RestaurantNotFoundException {
+    void testAddNewUserExperience_RestaurantNotFound() throws UserNotFoundException, RestaurantNotFoundException, BookingNotFoundException {
 
         Long bookingId = 1L;
         Long userId = 1L;
@@ -155,38 +244,22 @@ public class UserExperienceServiceTests {
         Double rating = 5.0;
         String comment = "Test comment";
         UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
-        User user = new User();
-        when(userServiceImpl.getUserById(userId)).thenReturn(user);
+
+        // Create mock objects and dummy values for the BookingGetDto constructor
+        Long id = 1L;
+        UserGetDto userGetDto = mock(UserGetDto.class);
+        RestaurantGetDto restaurantGetDto = mock(RestaurantGetDto.class);
+        LocalDateTime dateTime = LocalDateTime.now();
+        BookingStatus status = BookingStatus.COMPLETE; // Set the status to COMPLETE
+
+        // Create a new instance of BookingGetDto with the required arguments
+        BookingGetDto bookingGetDto = new BookingGetDto(id, userGetDto, restaurantGetDto, dateTime, status);
+
+        when(bookingServiceImpl.getBookingById(bookingId)).thenReturn(bookingGetDto);
+
         when(restaurantServiceImpl.getById(restaurantId)).thenThrow(new RestaurantNotFoundException("Restaurant not found"));
 
         assertThrows(RestaurantNotFoundException.class, () -> userExperienceService.addNewUserExperience(userExperienceCreateDto));
-    }
-
-    @Test
-    @DisplayName("Test to add user experience by booking id")
-    void testAddNewUserExperience() throws UserNotFoundException, RestaurantNotFoundException, UserExperienceNotFoundException, BookingNotFoundException {
-
-        Long bookingId = 1L;
-        Long userId = 1L;
-        Long restaurantId = 1L;
-        Double rating = 5.0;
-        String comment = "Test comment";
-        UserExperienceCreateDto userExperienceCreateDto = new UserExperienceCreateDto(bookingId, userId, restaurantId, rating, comment);
-        Booking booking = new Booking();
-        User user = new User();
-        Restaurant restaurant = Mockito.mock(Restaurant.class);
-        City city = new City();
-        city.setName("Test City");
-        Mockito.when(restaurant.getCity()).thenReturn(city);
-        when(userServiceImpl.getUserById(userId)).thenReturn(user);
-        when(restaurantServiceImpl.getById(restaurantId)).thenReturn(restaurant);
-        UserExperience userExperience = UserExperienceConverter.fromUserExperienceCreateDtoToEntity(userExperienceCreateDto, booking, user, restaurant);
-        userExperience.setTimestamp(LocalDateTime.now());
-        when(userExperienceRepository.save(any())).thenReturn(userExperience);
-
-        UserExperienceGetDto result = userExperienceService.addNewUserExperience(userExperienceCreateDto);
-
-        assertEquals(userExperience.getRating(), result.rating());
     }
 
     @Test

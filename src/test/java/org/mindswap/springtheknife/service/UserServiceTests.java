@@ -12,7 +12,9 @@ import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.user.UserAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.user.UserEmailAlreadyExistsException;
 import org.mindswap.springtheknife.exceptions.user.UserNotFoundException;
+import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.model.User;
+import org.mindswap.springtheknife.repository.RestaurantRepository;
 import org.mindswap.springtheknife.repository.UserRepository;
 import org.mindswap.springtheknife.service.user.UserServiceImpl;
 import org.mockito.InjectMocks;
@@ -39,6 +41,9 @@ public class UserServiceTests {
     private static ObjectMapper objectMapper;
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private RestaurantRepository restaurantRepository;
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -158,6 +163,10 @@ public class UserServiceTests {
         when(userRepository.findByUserName(userCreateDto.userName())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(userCreateDto.email())).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        Restaurant restaurant1 = new Restaurant();
+        restaurant1.setId(1L);
+        when(restaurantRepository.findById(anyLong())).thenReturn(Optional.of(restaurant1));
 
         UserGetDto result = userService.createUser(userCreateDto);
 
