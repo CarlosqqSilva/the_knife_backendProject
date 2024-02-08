@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.dto.city.CityGetDto;
-import org.mindswap.springtheknife.dto.user.UserPatchDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.model.City;
 import org.mindswap.springtheknife.repository.CityRepository;
@@ -27,12 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -150,7 +146,7 @@ public class CityControllerTest {
         long cityId = 1L;
         City updatedCity = new City(1L, "Porto", null);
 
-        ResponseEntity<String> response = cityController.updateCity(updatedCity, cityId);
+        ResponseEntity<String> response = cityController.patchCity(updatedCity, cityId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(cityServiceMock).update(eq(cityId), any(City.class));

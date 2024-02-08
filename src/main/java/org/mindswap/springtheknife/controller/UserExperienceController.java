@@ -103,7 +103,7 @@ public class UserExperienceController {
                     content = @Content)
     })
     @PatchMapping(path = "/{userExperienceId}")
-    public ResponseEntity<UserExperiencePatchDto> updateUserExperience
+    public ResponseEntity<UserExperiencePatchDto> patchUserExperience
             (@PathVariable("userExperienceId") Long userExperienceId,
              @Valid @RequestBody UserExperiencePatchDto userExperience) throws UserExperienceNotFoundException {
         userExperienceService.updateUserExperience(userExperienceId, userExperience);

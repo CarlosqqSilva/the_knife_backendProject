@@ -1,5 +1,12 @@
 package org.mindswap.springtheknife.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.service.restaurantimage.RestaurantImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +37,13 @@ public class RestaurantImageController {
         }
     }
 
-    @PostMapping("/upload/id/{id}")
+    @Operation(summary = "Upload restaurant image", description = "Creates a new restaurant image in the db")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully saved the image",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = RestaurantGetDto.class))))
+    })
+    @PostMapping("/upload/{id}")
     public ResponseEntity<String> fileUploadWithId(@RequestParam("file") MultipartFile file, @PathVariable("id") Long id) {
         try {
             restaurantImageService.uploadFileWithId(file, id);

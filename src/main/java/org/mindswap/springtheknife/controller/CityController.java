@@ -60,7 +60,7 @@ public class CityController {
                     content = @Content)
     })
     @GetMapping("/{cityId}")
-    public ResponseEntity<CityGetDto> getCity(@PathVariable("cityId") Long cityId) throws CityNotFoundException {
+    public ResponseEntity<CityGetDto> getCityById(@PathVariable("cityId") Long cityId) throws CityNotFoundException {
         return new ResponseEntity<>(cityServiceImpl.getCity(cityId), HttpStatus.OK);
     }
 
@@ -73,7 +73,7 @@ public class CityController {
                     content = @Content)
     })
     @PostMapping("/")
-    public ResponseEntity<CityDto> addNewCity(@Valid @RequestBody CityDto city, BindingResult bindingResult) throws CityAlreadyExistsException {
+    public ResponseEntity<CityDto> addCity(@Valid @RequestBody CityDto city, BindingResult bindingResult) throws CityAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -92,7 +92,7 @@ public class CityController {
                     content = @Content)
     })
     @PatchMapping(path = "{cityId}")
-    public ResponseEntity<String> updateCity(@Valid @RequestBody City city, @PathVariable @Parameter(name = "cityId", description = "city_id", example = "1") long cityId) throws CityNotFoundException {
+    public ResponseEntity<String> patchCity(@Valid @RequestBody City city, @PathVariable @Parameter(name = "cityId", description = "city_id", example = "1") long cityId) throws CityNotFoundException {
         cityServiceImpl.update(cityId, city);
         return new ResponseEntity<>(HttpStatus.OK);
     }
