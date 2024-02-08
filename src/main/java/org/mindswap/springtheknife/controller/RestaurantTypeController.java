@@ -57,7 +57,7 @@ public class RestaurantTypeController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantTypeDto> getRestaurantTypeById(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
-        return new ResponseEntity<>(restaurantTypeService.getById(id), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantTypeService.getRestaurantTypeById(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Create a new Restaurant Type", description = "Creates a new restaurant type")
@@ -70,7 +70,7 @@ public class RestaurantTypeController {
     })
     @PostMapping("/")
     public ResponseEntity<RestaurantTypeDto> addRestaurantType(@Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
-        return new ResponseEntity<>(restaurantTypeService.addType(restaurantType), HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurantTypeService.addRestaurantType(restaurantType), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update a Restaurant Type", description = "Updates a restaurant type in the database")
@@ -85,7 +85,7 @@ public class RestaurantTypeController {
     })
     @PatchMapping("/{id}")
     public ResponseEntity<RestaurantTypeDto> patchRestaurantType(@PathVariable("id") Long id, @Valid @RequestBody RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
-        return new ResponseEntity<>(restaurantTypeService.patchType(id, restaurantType), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantTypeService.patchRestaurantType(id, restaurantType), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete a Restaurant Type", description = "Deletes a restaurant type from the database")
@@ -95,7 +95,7 @@ public class RestaurantTypeController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRestaurantType(@PathVariable("id") Long id) throws RestaurantTypeNotFoundException {
-        restaurantTypeService.deleteType(id);
+        restaurantTypeService.deleteRestaurantType(id);
         return new ResponseEntity<>(Message.TYPE_ID + id + Message.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 }

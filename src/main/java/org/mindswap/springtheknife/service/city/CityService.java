@@ -13,11 +13,11 @@ public interface CityService {
 
     City getCityById(Long cityId) throws CityNotFoundException;
 
-    CityDto create(CityDto city) throws CityAlreadyExistsException;
+    CityDto createCity(CityDto city) throws CityAlreadyExistsException;
 
-    void update(long cityId, City city) throws CityNotFoundException;
+    void updateCity(long cityId, City city) throws CityNotFoundException;
 
-    void delete(long cityId) throws CityNotFoundException;
+    void deleteCity(long cityId) throws CityNotFoundException;
 
     CityGetDto getCity(Long id) throws CityNotFoundException;
 }

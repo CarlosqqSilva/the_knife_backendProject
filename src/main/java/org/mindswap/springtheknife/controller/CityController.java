@@ -77,7 +77,7 @@ public class CityController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CityDto city1 = cityServiceImpl.create(city);
+        CityDto city1 = cityServiceImpl.createCity(city);
         return new ResponseEntity<>(city1, HttpStatus.CREATED);
     }
 
@@ -93,7 +93,7 @@ public class CityController {
     })
     @PatchMapping(path = "{cityId}")
     public ResponseEntity<String> patchCity(@Valid @RequestBody City city, @PathVariable @Parameter(name = "cityId", description = "city_id", example = "1") long cityId) throws CityNotFoundException {
-        cityServiceImpl.update(cityId, city);
+        cityServiceImpl.updateCity(cityId, city);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -103,7 +103,7 @@ public class CityController {
             @ApiResponse(responseCode = "404", description = "City ID not found")})
     @DeleteMapping("/{cityId}")
     public ResponseEntity<String> deleteCity(@PathVariable @Parameter(name = "cityId", example = "1") long cityId) throws CityNotFoundException {
-        cityServiceImpl.delete(cityId);
+        cityServiceImpl.deleteCity(cityId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

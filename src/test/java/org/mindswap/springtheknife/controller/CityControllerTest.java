@@ -127,14 +127,14 @@ public class CityControllerTest {
     void testAddNewCity() throws Exception {
         CityDto city = new CityDto("Porto");
 
-        when(cityServiceImpl.create(city)).thenReturn(new CityDto("Porto"));
+        when(cityServiceImpl.createCity(city)).thenReturn(new CityDto("Porto"));
 
         mockMvc.perform(post("/api/v1/cities/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(city)))
                 .andExpect(status().isCreated());
 
-        verify(cityServiceImpl, times(1)).create(any(CityDto.class));
+        verify(cityServiceImpl, times(1)).createCity(any(CityDto.class));
     }
 
     @Test
@@ -149,19 +149,19 @@ public class CityControllerTest {
         ResponseEntity<String> response = cityController.patchCity(updatedCity, cityId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(cityServiceMock).update(eq(cityId), any(City.class));
+        verify(cityServiceMock).updateCity(eq(cityId), any(City.class));
     }
 
     @Test
     void testDeleteCity() throws Exception {
 
-        doNothing().when(cityServiceImpl).delete(any(Long.class));
+        doNothing().when(cityServiceImpl).deleteCity(any(Long.class));
 
         mockMvc.perform(delete("/api/v1/cities/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(cityServiceImpl, times(1)).delete(any(Long.class));
+        verify(cityServiceImpl, times(1)).deleteCity(any(Long.class));
     }
 }
 

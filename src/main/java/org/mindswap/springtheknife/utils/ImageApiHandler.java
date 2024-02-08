@@ -16,7 +16,7 @@ public class ImageApiHandler {
 
     private static final String API_URL = "http://127.0.0.1:7860/sdapi/v1/txt2img";
     private static final Integer BUFFER_SIZE = (16 * 256 * 512); // Max size of ~2MB
-    private static final Integer STEPS = 15; //Amount of steps used to generate the image 15/25 should be good enough
+    private static final Integer STEPS = 15; //Amount of steps used to generate the image. 15/25 should be good enough
 
     public static String getImageDataFromAPI(String prompt) {
 

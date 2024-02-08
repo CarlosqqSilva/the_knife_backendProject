@@ -46,13 +46,13 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
 
     @Override
     @Cacheable(cacheNames = "RestaurantTypeById", key = "#id" )
-    public RestaurantTypeDto getById(Long id) throws RestaurantTypeNotFoundException {
+    public RestaurantTypeDto getRestaurantTypeById(Long id) throws RestaurantTypeNotFoundException {
         RestaurantType restaurantType = restaurantTypeRepository.findById(id).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + id + Message.NOT_FOUND));
         return RestaurantTypeConverter.fromModelToRestaurantTypeDto(restaurantType);
     }
 
     @Override
-    public RestaurantTypeDto addType (RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
+    public RestaurantTypeDto addRestaurantType(RestaurantTypeDto restaurantType) throws RestaurantTypeAlreadyExistsException {
         Optional<RestaurantType> typeOptional = restaurantTypeRepository.findByType(restaurantType.type());
         if (typeOptional.isPresent()) {
             throw new RestaurantTypeAlreadyExistsException(Message.ALREADY_EXISTS);
@@ -63,14 +63,14 @@ public class RestaurantTypeServiceImpl implements RestaurantTypeService {
 
     @Override
     @CacheEvict(cacheNames = "RestaurantTypeDelete", allEntries = true)
-    public void deleteType (Long restaurantTypeId) throws RestaurantTypeNotFoundException {
+    public void deleteRestaurantType(Long restaurantTypeId) throws RestaurantTypeNotFoundException {
         restaurantTypeRepository.findById(restaurantTypeId).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + restaurantTypeId + Message.NOT_FOUND));
         restaurantTypeRepository.deleteById(restaurantTypeId);
     }
 
     @Override
     @CachePut(cacheNames = "RestaurantPatch", key="#id")
-    public RestaurantTypeDto patchType (Long id, RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
+    public RestaurantTypeDto patchRestaurantType(Long id, RestaurantTypeDto restaurantType) throws RestaurantTypeNotFoundException {
         RestaurantType dbRestaurantType = restaurantTypeRepository.findById(id).orElseThrow(() -> new RestaurantTypeNotFoundException(Message.TYPE_ID + id + Message.NOT_FOUND));
         if (restaurantTypeRepository.findByType(restaurantType.type()).isPresent()) {
             throw new IllegalStateException(Message.TYPE_TAKEN);

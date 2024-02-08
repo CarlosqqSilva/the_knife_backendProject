@@ -5,11 +5,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
 import org.mindswap.springtheknife.dto.city.CityDto;
 import org.mindswap.springtheknife.dto.city.CityGetDto;
-import org.mindswap.springtheknife.dto.restaurant.RestaurantGetDto;
 import org.mindswap.springtheknife.exceptions.city.CityNotFoundException;
 import org.mindswap.springtheknife.exceptions.city.CityAlreadyExistsException;
 import org.mindswap.springtheknife.model.City;
-import org.mindswap.springtheknife.model.Restaurant;
 import org.mindswap.springtheknife.repository.CityRepository;
 import org.mindswap.springtheknife.service.city.CityServiceImpl;
 import org.mockito.InjectMocks;
@@ -71,7 +69,7 @@ class CityServiceTests {
 
         when(cityRepository.existsById(cityId)).thenReturn(true);
 
-        cityService.delete(cityId);
+        cityService.deleteCity(cityId);
 
         verify(cityRepository, times(1)).deleteById(cityId);
     }
@@ -83,7 +81,7 @@ class CityServiceTests {
         when(cityRepository.findByName(existingCityDto.name())).thenReturn(Optional.of(new City()));
 
         assertThrows(CityAlreadyExistsException.class, () -> {
-            cityService.create(existingCityDto);
+            cityService.createCity(existingCityDto);
         });
 
         verify(cityRepository, never()).save(any(City.class));
@@ -94,10 +92,10 @@ class CityServiceTests {
         CityDto cityDto = new CityDto("Porto");
         Mockito.when(this.cityRepository.findByName(cityDto.name())).thenReturn(Optional.of(new City()));
         assertThrows(CityAlreadyExistsException.class, () -> {
-            this.cityService.create(cityDto);
+            this.cityService.createCity(cityDto);
         });
         Assertions.assertEquals("City with name Porto already exists", ((CityAlreadyExistsException) assertThrows(CityAlreadyExistsException.class, () -> {
-            this.cityService.create(cityDto);
+            this.cityService.createCity(cityDto);
         })).getMessage());
     }
 
@@ -110,7 +108,7 @@ class CityServiceTests {
         when(cityRepository.findById(cityId)).thenReturn(Optional.of(existingCity));
         when(cityRepository.save(existingCity)).thenReturn(updatedCity);
 
-        cityService.update(cityId, updatedCity);
+        cityService.updateCity(cityId, updatedCity);
 
         assertEquals(updatedCity.getName(), existingCity.getName());
 

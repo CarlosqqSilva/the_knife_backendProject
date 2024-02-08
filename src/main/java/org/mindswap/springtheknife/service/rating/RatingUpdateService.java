@@ -17,7 +17,7 @@ public class RatingUpdateService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    @Scheduled(fixedRate = 10000) // runs every hour (todo change to 3600000 later on)
+    @Scheduled(fixedRate = 5000) //Current restaurant rating update in the server is happening every 5 seconds for demo
     public void updateRestaurantRatings() {
         List<Restaurant> allRestaurants = restaurantRepository.findAll();
         for (Restaurant restaurant : allRestaurants) {

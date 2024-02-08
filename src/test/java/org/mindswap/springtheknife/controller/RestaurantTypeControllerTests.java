@@ -70,12 +70,12 @@ public class RestaurantTypeControllerTests {
 
         RestaurantTypeDto restaurantType = new RestaurantTypeDto(1L, "ItalianFood");
 
-        when(restaurantTypeService.getById(1L)).thenReturn(restaurantType);
+        when(restaurantTypeService.getRestaurantTypeById(1L)).thenReturn(restaurantType);
 
         mockMvc.perform(get("/api/v1/restaurantTypes/" + restaurantType.id()))
                 .andExpect(status().isOk());
 
-        verify(restaurantTypeService).getById(restaurantType.id());
+        verify(restaurantTypeService).getRestaurantTypeById(restaurantType.id());
     }
 
     @Test
@@ -84,14 +84,14 @@ public class RestaurantTypeControllerTests {
 
         RestaurantTypeDto restaurantType = new RestaurantTypeDto(1L, "ItalianFood");
 
-        when(restaurantTypeService.addType(restaurantType)).thenReturn(restaurantType);
+        when(restaurantTypeService.addRestaurantType(restaurantType)).thenReturn(restaurantType);
 
         mockMvc.perform(post("/api/v1/restaurantTypes/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restaurantType)))
                 .andExpect(status().isCreated());
 
-        verify(restaurantTypeService).addType(restaurantType);
+        verify(restaurantTypeService).addRestaurantType(restaurantType);
     }
 
     @Test
@@ -100,14 +100,14 @@ public class RestaurantTypeControllerTests {
 
         RestaurantTypeDto restaurantType = new RestaurantTypeDto(1L, "ItalianFood");
 
-        when(restaurantTypeService.patchType(restaurantType.id(), restaurantType)).thenReturn(restaurantType);
+        when(restaurantTypeService.patchRestaurantType(restaurantType.id(), restaurantType)).thenReturn(restaurantType);
 
         mockMvc.perform(patch("/api/v1/restaurantTypes/" + restaurantType.id())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restaurantType)))
                 .andExpect(status().isOk());
 
-        verify(restaurantTypeService).patchType(restaurantType.id(), restaurantType);
+        verify(restaurantTypeService).patchRestaurantType(restaurantType.id(), restaurantType);
     }
 
     @Test
@@ -116,11 +116,11 @@ public class RestaurantTypeControllerTests {
 
         Long id = 1L;
 
-        doNothing().when(restaurantTypeService).deleteType(id);
+        doNothing().when(restaurantTypeService).deleteRestaurantType(id);
 
         mockMvc.perform(delete("/api/v1/restaurantTypes/" + id))
                 .andExpect(status().isOk());
 
-        verify(restaurantTypeService).deleteType(id);
+        verify(restaurantTypeService).deleteRestaurantType(id);
     }
 }

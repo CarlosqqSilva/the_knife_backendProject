@@ -59,7 +59,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public CityDto create(CityDto city) throws CityAlreadyExistsException {
+    public CityDto createCity(CityDto city) throws CityAlreadyExistsException {
         Optional<City> cityOptional = this.cityRepository.findByName(city.name());
         if (cityOptional.isPresent()) {
             throw new CityAlreadyExistsException(Message.DUPLICATE_NAME + " " + city.name() + " " + Message.EXIST);
@@ -71,7 +71,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @CachePut(cacheNames = "CityPatch", key = "#cityId")
-    public void update(long cityId, City city) throws CityNotFoundException {
+    public void updateCity(long cityId, City city) throws CityNotFoundException {
         Optional<City> cityOptional = cityRepository.findById(cityId);
         if (cityOptional.isEmpty()) {
             throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " " + Message.NOT_EXIST);
@@ -85,7 +85,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @CacheEvict(cacheNames = "CityDelete", allEntries = true)
-    public void delete(long cityId) throws CityNotFoundException {
+    public void deleteCity(long cityId) throws CityNotFoundException {
         boolean exists = cityRepository.existsById(cityId);
         if (!exists) {
             throw new CityNotFoundException(Message.CITY_WITH_ID + " " + cityId + " " + Message.NOT_EXIST);
