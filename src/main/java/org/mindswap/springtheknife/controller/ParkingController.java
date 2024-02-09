@@ -41,7 +41,7 @@ public class ParkingController {
     @GetMapping("/checkParking/{limit}")
     public Mono<List<Parking.Record>> getParkingData(@PathVariable("limit") Integer limit) {
 
-        String url = "http://localhost:8081/parking/" + limit;
+        String url = "http://weatherapi:8081/parking/" + limit;
 
         return webClient.get()
                 .uri(url)
