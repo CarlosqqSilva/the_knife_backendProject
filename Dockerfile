@@ -7,7 +7,7 @@ RUN mvn -f /home/app/pom.xml clean package
 
 FROM eclipse-temurin:21-alpine
 
-COPY --from=build /home/app/target/spring-the-knife-0.0.1-SNAPSHOT.jar /home/app/spring-the-knife-0.0.1-SNAPSHOT.jar
+COPY --from=build /home/app/target/spring-the-knife-0.0.1-SNAPSHOT.jar /spring-the-knife-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
 
