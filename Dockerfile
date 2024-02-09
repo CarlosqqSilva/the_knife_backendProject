@@ -1,17 +1,13 @@
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 
-WORKDIR /app
+WORKDIR /home/app
+COPY the-knife/src /home/app/src
+COPY the-knife/pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
 
-COPY pom.xml .
-COPY src ./src
+FROM eclipse-temurin:21-alpine
 
-RUN mvn package -DskipTests
-
-FROM eclipse-temurin:21-jdk-alpine
-
-WORKDIR /app
-
-COPY --from=build /app/target/spring-the-knife-0.0.1-SNAPSHOT.jar .
+COPY --from=build the-knife/home/app/target/spring-the-knife-0.0.1-SNAPSHOT.jar /app/spring-the-knife-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
 
