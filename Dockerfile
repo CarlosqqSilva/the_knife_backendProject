@@ -11,4 +11,4 @@ COPY --from=build /home/app/target/spring-the-knife-0.0.1-SNAPSHOT.jar /app/spri
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "spring-the-knife-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app/spring-the-knife-0.0.1-SNAPSHOT.jar"]
